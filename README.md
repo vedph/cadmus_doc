@@ -61,3 +61,9 @@ Web frontend.
 - [setting up Docker](deploy/docker-setup.md)
 - [building Docker images](deploy/docker-build.md)
 - [using Docker images](deploy/docker-usage.md)
+
+## Extending
+
+- [plugins overview](plugins/overview.md)
+- [extending backend](plugins/backend.md)
+- [extending frontend](plugins/frontend.md)
