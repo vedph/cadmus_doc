@@ -57,6 +57,7 @@ Web frontend.
 
 ## Deploying
 
+- [development environment](deploy/develop.md)
 - [setting up Docker](deploy/docker-setup.md)
 - [building Docker images](deploy/docker-build.md)
 - [using Docker images](deploy/docker-usage.md)
