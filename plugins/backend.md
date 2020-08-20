@@ -93,3 +93,5 @@ services.AddSingleton<IPartSeederFactoryProvider,
 ```
 
 Once you have done this, just rebuild the project and the corresponding Docker image.
+
+Currently, as the projects using Cadmus are limited and it's still an evolving product, the practical approach to keep a single repository is to just include all the models in the unique API project, and provide a settings-based parameter defining the project to be used. According to this parameter, in `ConfigureServices` we setup the registration of the required services.
