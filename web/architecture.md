@@ -106,3 +106,32 @@ core <|-- ui
 material <|-- ui
 @enduml
 ```
+
+## Editing Architecture
+
+### Items List
+
+- store: `ItemsStore` including `ItemsState` and extending `EntityState<ItemInfo, string>`. The only edit operation here is deleting an item, via `ItemsListService`, which invokes the deletion API and removes the deleted item from the store.
+- component: `ItemListComponent`.
+
+Operations:
+
+- *add item*: move to item editor (`/items/new`).
+- *edit item*: move to item editor (`/items/<id>`).
+- *delete item*: delete via `ItemsListService`.
+
+### Add or Edit Item
+
+- store: `EditItemStore` including `EditItemState` and extending `Store<EditItemState>`. The service handling this store is `EditItemService`, which can load an item, save an item, delete an item's part, add a new layer part, and set a part's thesaurus scope.
+- component: `ItemEditorComponent`.
+
+Operations:
+
+- save item's metadata: via `EditItemService`.
+- add/edit a non-layer part: move to part editor (`/items/<id>/<part-group>/<part-typeid>/<part-id>?rid=<role-id>`).
+- delete a part: delete via `EditItemService`.
+- add a layer part: via `EditItemService`.
+- edit a layer part: move to layer part editor (same route as above for editing non-layer parts).
+- set thesauri scopes for selected parts: via `EditItemService`.
+
+TODO: 
