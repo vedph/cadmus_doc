@@ -67,3 +67,7 @@ Web frontend.
 - [plugins overview](plugins/overview.md)
 - [extending backend](plugins/backend.md)
 - [extending frontend](plugins/frontend.md)
+
+## Web App Help
+
+- [editing item](web/help/editing-item.md)
