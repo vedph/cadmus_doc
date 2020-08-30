@@ -138,6 +138,22 @@ Operations:
 
 ### Edit Part
 
-Part editors are all found in lazily-loaded libraries.
+- store: `Edit<PartName>PartStore` extending `Store<EditPartState>`. The store ID is equal to the part type ID. The service `Edit<PartName>PartService` extends `EditPartServiceBase`. The query `Edit<PartName>PartQuery` extends `EditPartQueryBase`, in turn extending `Query<EditPartState>`.
+- component: `<PartName>PartComponent`, `<PartName>PartFeatureComponent`.
 
-TODO: 
+Part editors are all found in lazily-loaded libraries, each at its own route like `/items/<id>/<part-group>/<part-typeid>/<part-id>?rid=<role-id>` (where `rid` is optional).
+
+Each part editor is a dumb UI component extending `ModelEditorComponentBase<ModelType>`; it gets and emits the edited model serialized in a JSON string. So, its implementation consists of its own editing logic and UI, plus some plumbing for updating the UI from the model, getting the model from the UI, and getting thesauri when required.
+
+Each of these editor components is wrapped inside a part editor feature component, which extends `EditPartFeatureBase` and corresponds to a route in the application. Its UI contains only the current item bar at the top, and the dumb editor component.
+
+### Edit Fragment
+
+- store: `Edit<FragmentName>FragmentStore` extending `Store<EditFragmentState>`. `Edit<FragmentName>FragmentService` extends `EditFragmentServiceBase`. `Edit<FragmentName>FragmentQuery` extends `EditFragmentQueryBase`.
+- component: `<FragmentName>FragmentComponent` extending `ModelEditorComponentBase<ModelType>`, `<FragmentName>FragmentFeatureComponent` extending `EditFragmentFeatureBase`.
+
+Fragment editors, like part editors, are all found in lazily loaded libraries, each at its own route like `/items/<id>/<part-group>/fragment/<part-id>/<fr-typeid>/<loc>?rid=<role-id>` (where `rid` is optional).
+
+Each fragment editor is a dumb UI component extending `ModelEditorComponentBase<ModelType>`; it gets and emits the edited model serialized in a JSON string. So, its implementation consists of its own editing logic and UI, plus some plumbing for updating the UI from the model, getting the model from the UI, and getting thesauri when required.
+
+Each of these editor components is wrapped inside a fragment editor feature component, which extends `EditFragmentFeatureBase`, and corresponds to a route in the application. Its UI contains only the current item bar, the decorated base text, and the dumb editor component.
