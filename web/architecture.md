@@ -109,6 +109,8 @@ material <|-- ui
 
 ## Editing Architecture
 
+From the standpoint of the editing process, the architecture is hierarchical: we start from a list of items, edit an item from it, edit a part from that item, and eventually edit a fragment from that part (for layer parts).
+
 ### Items List
 
 - store: `ItemsStore` including `ItemsState` and extending `EntityState<ItemInfo, string>`. The only edit operation here is deleting an item, via `ItemsListService`, which invokes the deletion API and removes the deleted item from the store.
@@ -127,11 +129,15 @@ Operations:
 
 Operations:
 
-- save item's metadata: via `EditItemService`.
-- add/edit a non-layer part: move to part editor (`/items/<id>/<part-group>/<part-typeid>/<part-id>?rid=<role-id>`).
-- delete a part: delete via `EditItemService`.
-- add a layer part: via `EditItemService`.
-- edit a layer part: move to layer part editor (same route as above for editing non-layer parts).
-- set thesauri scopes for selected parts: via `EditItemService`.
+- *save metadata*: via `EditItemService`.
+- *add/edit a non-layer part*: move to part editor (`/items/<id>/<part-group>/<part-typeid>/<part-id>?rid=<role-id>`).
+- *delete a part*: delete via `EditItemService`.
+- *add a layer part*: via `EditItemService`. The part gets added with no fragments. You will then edit it.
+- *edit a layer part*: move to layer part editor (same route as above for editing non-layer parts).
+- *set thesauri scopes* for selected parts: via `EditItemService`.
+
+### Edit Part
+
+Part editors are all found in lazily-loaded libraries.
 
 TODO: 
