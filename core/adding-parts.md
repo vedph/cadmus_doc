@@ -19,8 +19,17 @@ Guidelines for **implementing a part**:
 **Part template** sample (in the following template replace `__NAME__` with your part's name, minus the `Part` suffix):
 
 ```cs
+using System;
+using System.Collections.Generic;
+using System.Text;
+using Cadmus.Core;
+using Fusi.Tools.Config;
+
+// ...
+
 /// <summary>
-/// Tag: <c>net.fusisoft.__NAME__</c>.
+/// TODO: add summary
+/// <para>Tag: <c>net.fusisoft.__NAME__</c>.</para>
 /// </summary>
 [Tag("net.fusisoft.__NAME__")]
 public class __NAME__Part : PartBase
@@ -36,6 +45,8 @@ public class __NAME__Part : PartBase
     /// <returns>The pins.</returns>
     public override IEnumerable<DataPin> GetDataPins(IItem item)
     {
+        throw new NotImplementedException();
+
         // TODO: implement indexing logic...
         // sample:
         // return Tag != null
@@ -47,10 +58,10 @@ public class __NAME__Part : PartBase
     }
 
     /// <summary>
-    /// Returns a <see cref="String" /> that represents this instance.
+    /// Converts to string.
     /// </summary>
     /// <returns>
-    /// A <see cref="String" /> that represents this instance.
+    /// A <see cref="string" /> that represents this instance.
     /// </returns>
     public override string ToString()
     {
@@ -59,6 +70,89 @@ public class __NAME__Part : PartBase
         sb.Append("[__NAME__]");
 
         // TODO: append summary data...
+
+        return sb.ToString();
+    }
+}
+```
+
+As this is a typical scenario, here is a variant for those parts which essentially just include a list of objects (of type `__ENTRY__`):
+
+```cs
+using System;
+using System.Collections.Generic;
+using System.Text;
+using Cadmus.Core;
+using Fusi.Tools.Config;
+
+// ...
+
+/// <summary>
+/// TODO: add summary
+/// <para>Tag: <c>net.fusisoft.__NAME__</c>.</para>
+/// </summary>
+[Tag("net.fusisoft.__NAME__")]
+public class __NAME__Part : PartBase
+{
+    /// <summary>
+    /// Gets or sets the entries.
+    /// </summary>
+    public List<__ENTRY__> Entries { get; set; }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="__NAME__Part"/> class.
+    /// </summary>
+    public __NAME__Part()
+    {
+        Entries = new List<__ENTRY__>();
+    }
+
+    /// <summary>
+    /// Get all the key=value pairs (pins) exposed by the implementor.
+    /// </summary>
+    /// <param name="item">The optional item. The item with its parts
+    /// can optionally be passed to this method for those parts requiring
+    /// to access further data.</param>
+    /// <returns>The pins.</returns>
+    public override IEnumerable<DataPin> GetDataPins(IItem item)
+    {
+        throw new NotImplementedException();
+
+        // TODO: implement indexing logic...
+        // sample:
+        // return Tag != null
+        //    ? new[]
+        //    {
+        //        CreateDataPin("tag", Tag)
+        //    }
+        //    : Enumerable.Empty<DataPin>();
+    }
+
+    /// <summary>
+    /// Converts to string.
+    /// </summary>
+    /// <returns>
+    /// A <see cref="string" /> that represents this instance.
+    /// </returns>
+    public override string ToString()
+    {
+        StringBuilder sb = new StringBuilder();
+
+        sb.Append("[__NAME__]");
+
+        if (Entries?.Count > 0)
+        {
+            sb.Append(' ');
+            int n = 0;
+            foreach (var entry in Entries)
+            {
+                if (++n > 3) break;
+                if (n > 1) sb.Append("; ");
+                sb.Append(entry);
+            }
+            if (Entries.Count > 3)
+                sb.Append("...(").Append(Entries.Count).Append(')');
+        }
 
         return sb.ToString();
     }
