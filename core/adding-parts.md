@@ -92,7 +92,7 @@ using Fusi.Tools.Config;
 /// <para>Tag: <c>net.fusisoft.__NAME__</c>.</para>
 /// </summary>
 [Tag("net.fusisoft.__NAME__")]
-public class __NAME__Part : PartBase
+public sealed class __NAME__Part : PartBase
 {
     /// <summary>
     /// Gets or sets the entries.
@@ -227,6 +227,97 @@ public sealed class __NAME__PartTest
     //     Assert.Equal("tag", pin.Name);
     //     Assert.Equal("some-tag", pin.Value);
     // }
+}
+```
+
+The corresponding test for the list-only part scenario:
+
+```cs
+using Cadmus.Core;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Xunit;
+
+// ...
+
+public sealed class __NAME__PartTest
+{
+    private static __NAME__Part GetPart(int count)
+    {
+        __NAME__Part part = new __NAME__Part
+        {
+            ItemId = Guid.NewGuid().ToString(),
+            RoleId = "some-role",
+            CreatorId = "zeus",
+            UserId = "another",
+        };
+
+        for (int n = 1; n <= count; n++)
+        {
+            part.Entries.Add(new __ENTRY__
+            {
+                // TODO: set properties
+            });
+        }
+
+        return part;
+    }
+
+    [Fact]
+    public void Part_Is_Serializable()
+    {
+        __NAME__Part part = GetPart(2);
+
+        string json = TestHelper.SerializePart(part);
+        __NAME__Part part2 =
+            TestHelper.DeserializePart<__NAME__Part>(json);
+
+        Assert.Equal(part.Id, part2.Id);
+        Assert.Equal(part.TypeId, part2.TypeId);
+        Assert.Equal(part.ItemId, part2.ItemId);
+        Assert.Equal(part.RoleId, part2.RoleId);
+        Assert.Equal(part.CreatorId, part2.CreatorId);
+        Assert.Equal(part.UserId, part2.UserId);
+
+        Assert.Equal(2, part.Entries.Count);
+        // TODO: details
+    }
+
+    [Fact]
+    public void GetDataPins_NoEntries_Ok()
+    {
+        __NAME__Part part = GetPart(0);
+
+        List<DataPin> pins = part.GetDataPins(null).ToList();
+
+        Assert.Single(pins);
+        DataPin pin = pins[0];
+        Assert.Equal("tot-count", pin.Name);
+        TestHelper.AssertPinIds(part, pin);
+        Assert.Equal("0", pin.Value);
+    }
+
+    [Fact]
+    public void GetDataPins_Entries_Ok()
+    {
+        __NAME__Part part = GetPart(3);
+
+        List<DataPin> pins = part.GetDataPins(null).ToList();
+
+        Assert.Equal(5, pins.Count);
+
+        DataPin pin = pins.Find(p => p.Name == "tot-count");
+        Assert.NotNull(pin);
+        TestHelper.AssertPinIds(part, pin);
+        Assert.Equal("3", pin.Value);
+
+        // TODO: assert counts and values e.g.:
+        // pin = pins.Find(p => p.Name == "pos-bottom-count");
+        // Assert.NotNull(pin);
+        // TestHelper.AssertPinIds(part, pin);
+        // Assert.Equal("2", pin.Value);
+    }
 }
 ```
 
