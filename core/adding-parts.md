@@ -217,7 +217,7 @@ public sealed class __NAME__PartTest
     // {
     //     __NAME__Part part = GetPart();
 
-    //     List<DataPin> pins = part.GetDataPins().ToList();
+    //     List<DataPin> pins = part.GetDataPins(null).ToList();
     //     Assert.Single(pins);
 
     //     DataPin pin = pins[0];
