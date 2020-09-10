@@ -113,19 +113,27 @@ public class __NAME__Part : PartBase
     /// <param name="item">The optional item. The item with its parts
     /// can optionally be passed to this method for those parts requiring
     /// to access further data.</param>
-    /// <returns>The pins.</returns>
+    /// <returns>The pins: <c>tot-count</c> and a collection of pins with
+    /// these keys: ....</returns>
     public override IEnumerable<DataPin> GetDataPins(IItem item)
     {
-        throw new NotImplementedException();
+        DataPinBuilder builder = new DataPinBuilder();
 
-        // TODO: implement indexing logic...
-        // sample:
-        // return Tag != null
-        //    ? new[]
-        //    {
-        //        CreateDataPin("tag", Tag)
-        //    }
-        //    : Enumerable.Empty<DataPin>();
+        builder.Set("tot", Entries?.Count ?? 0, false);
+
+        if (Entries?.Count > 0)
+        {
+            foreach (var entry in Entries)
+            {
+                // TODO: add values or increase counts like:
+                // id unique values if not null:
+                // builder.AddValue("id", entry.Id);
+                // type-X-count counts if not null, unfiltered:
+                // builder.Increase(entry.Type, false, "type-");
+            }
+        }
+
+        return builder.Build(this);
     }
 
     /// <summary>
