@@ -162,6 +162,7 @@ The hierarchical edit model is as follows:
 - `part`
 - `baseText`
 - `baseTextPart`
+- `locations`: the token-based text locations. These coordinates can be used also for tile-based text locations.
 - `breakChance`: the estimated chance of broken fragments in this layer: 0=safe, 1=potentially broken, 2=broken.
 - `layerHints`: the layer fragments reconciliation hints. There is one hint for each fragment in the layer.
 - `loading`
