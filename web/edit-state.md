@@ -132,6 +132,25 @@ The hierarchical edit model is as follows:
    - save fragment.
    - close and return to (3B) layer part editor.
 
+## Items List
+
+```plantuml
+@startuml
+    skinparam backgroundColor #EEEBDC
+    skinparam handwritten true
+
+    class "EntityState<ItemInfo, string>" as EntityStateT
+
+    EntityStateT <|-- ItemsState
+
+    ItemsStore "1"*--"1" ItemsState
+
+    ItemsListService "1"*--"1" ItemsStore
+@enduml
+```
+
+The `ItemsState` is a paged list of `ItemInfo` objects. It is stored by an `ItemsStore`, which gets updated by an `ItemsListService`.
+
 ## Edit Item
 
 - `item`
@@ -147,6 +166,31 @@ The hierarchical edit model is as follows:
 - `deletingPart`
 - `loading`
 - `error`
+
+```plantuml
+@startuml
+    skinparam backgroundColor #EEEBDC
+    skinparam handwritten true
+
+    EditItemService *-- ItemService
+
+    EditItemService *-- EditItemStore
+
+    class "Store<EditItemState>" as EditItemStateT
+    EditItemStateT <|-- EditItemStore
+
+    EditItemQuery *-- EditItemStore
+
+    ItemEditorComponent *-- EditItemService
+    ItemEditorComponent *-- EditItemQuery
+@enduml
+```
+
+The item state is stored in an `EditItemStore`, derived from `Store<EditItemState>`.
+
+Data are queried from the store with an `EditItemQuery`, and stored in it with an `EditItemService`, which in turn uses an `ItemService` to talk to the backend.
+
+The item editor component (`ItemEditorComponent`) uses both `EditItemQuery` to read data, and `EditItemService` to write data.
 
 ## Edit Part
 
