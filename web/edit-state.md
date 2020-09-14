@@ -132,6 +132,24 @@ The hierarchical edit model is as follows:
    - save fragment.
    - close and return to (3B) layer part editor.
 
+The general state-based edit pattern data flow is thus:
+
+```plantuml
+@startuml
+    skinparam backgroundColor #EEEBDC
+    skinparam handwritten true
+
+    store *-- state
+    query <|-- store
+    service --|> store
+    service *-- coresvc
+    client <|-- query
+    client --|> service
+@enduml
+```
+
+Data `state` is stored in a `store`. A `client` component uses a `query` to get data from a store, and a `service` to put data in a store. In most cases, this service uses a core service (`coresvc`) which talks to the backend.
+
 ## Items List
 
 ```plantuml
@@ -140,16 +158,23 @@ The hierarchical edit model is as follows:
     skinparam handwritten true
 
     class "EntityState<ItemInfo, string>" as EntityStateT
+    class "EntityStore<ItemState>" as EntityStoreT
 
     EntityStateT <|-- ItemsState
 
     ItemsStore "1"*--"1" ItemsState
+    EntityStoreT <|-- ItemsStore
 
     ItemsListService "1"*--"1" ItemsStore
+
+
+    ItemListComponent *-- ItemsListService
+    class "PaginatorPlugin<ItemsState>" as PaginatorPluginT
+    ItemListComponent *-- PaginatorPluginT
 @enduml
 ```
 
-The `ItemsState` is a paged list of `ItemInfo` objects. It is stored by an `ItemsStore`, which gets updated by an `ItemsListService`.
+The `ItemsState` is a list of `ItemInfo` objects. It is stored by an `ItemsStore`, which gets updated by an `ItemsListService`.
 
 ## Edit Item
 
