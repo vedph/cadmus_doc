@@ -132,7 +132,7 @@ A type ID, used for parts and part fragments, should include only letters `a-z`,
 
 Dashes are used to represent spaces, while dots define a naming hierarchy.
 
-As a convention, an ID should be modeled after a reversed URI domain, and prefixed with `fr.` in the case of part fragments. For instance, a note part ID might be `net.fusisoft.note`, and a comment layer fragment ID might be `fr.net.fusisoft.comment`.
+As a convention, an ID should be modeled after a reversed URI domain, and prefixed with `fr.` in the case of part fragments. For instance, a note part ID might be `it.vedph.note`, and a comment layer fragment ID might be `fr.it.vedph.comment`.
 
 These IDs are used in configuration profiles to define the parts and fragments types used in a Cadmus database.
 
@@ -154,22 +154,22 @@ In this map, for those classes implementing `ITextLayerFragment` (and decorated 
 
 In this case, in the map the type ID results by combining the part's type ID with the fragment's type ID, as follows:
 
-1. part type ID (e.g. `net.fusisoft.token-text-layer`, decorating the part representing a text layer using token-based text coordinates);
+1. part type ID (e.g. `it.vedph.token-text-layer`, decorating the part representing a text layer using token-based text coordinates);
 2. colon (`:`);
-3. part role ID, which for text layer parts is equal to the fragment's type ID (e.g. `fr.net.fusisoft.comment`), optionally followed by a role for the layer part, prefixed by colon.
+3. part role ID, which for text layer parts is equal to the fragment's type ID (e.g. `fr.it.vedph.comment`), optionally followed by a role for the layer part, prefixed by colon.
 
-For instance, `net.fusisoft.token-text-layerfr.net.fusisoft.comment` is the inferred type ID for a fragment with type ID `fr.net.fusisoft.comment`, combined with a layer part with type ID `net.fusisoft.token-text-layer`.
+For instance, `it.vedph.token-text-layerfr.it.vedph.comment` is the inferred type ID for a fragment with type ID `fr.it.vedph.comment`, combined with a layer part with type ID `it.vedph.token-text-layer`.
 
-Should this layer part have a role, this appears at the end of the type ID, e.g. `net.fusisoft.token-text-layer:fr.net.fusisoft.comment:scholarly` for scholarly comments.
+Should this layer part have a role, this appears at the end of the type ID, e.g. `it.vedph.token-text-layer:fr.it.vedph.comment:scholarly` for scholarly comments.
 
 An apposite function in `PartBase`, `BuildProviderId`, is used to build the type ID to instantiate a part via a part provider, given a specified part type ID and role ID.
 
-The result of this function is either equal to the part's type ID (e.g. `net.fusisoft.note`), or, for a layer part, equal to the part's type ID + `:` + the fragment's type ID (e.g. `net.fusisoft.token-text-layer:fr.net.fusisoft.comment`).
+The result of this function is either equal to the part's type ID (e.g. `it.vedph.note`), or, for a layer part, equal to the part's type ID + `:` + the fragment's type ID (e.g. `it.vedph.token-text-layer:fr.it.vedph.comment`).
 
 The convention underlying this method assumes that any fragment type ID starts with the `fr.` prefix (defined as a constant in `PartBase`), and that a layer part has the fragment type ID as its role ID.
 
-For instance, a token-based text layer part for comments has type ID=`net.fusisoft.token-text-layer`, and role ID=`fr.net.fusisoft.comment`.
-So, each layer part has the corresponding fragment ID as its role. Should we want to use the same fragment type with different roles, we add a new part type definition with role=fragment ID + colon + role ID, e.g. `fr.net.fusisoft.commentscholarly`.
+For instance, a token-based text layer part for comments has type ID=`it.vedph.token-text-layer`, and role ID=`fr.it.vedph.comment`.
+So, each layer part has the corresponding fragment ID as its role. Should we want to use the same fragment type with different roles, we add a new part type definition with role=fragment ID + colon + role ID, e.g. `fr.it.vedph.commentscholarly`.
 
 A couple of unit tests should make this discussion more concrete:
 
@@ -177,7 +177,7 @@ A couple of unit tests should make this discussion more concrete:
 [Fact]
 public void Get_NotePart_Ok()
 {
-    Type t = GetProvider().Get("net.fusisoft.note");
+    Type t = GetProvider().Get("it.vedph.note");
 
     Assert.Equal(typeof(NotePart), t);
 }
@@ -186,7 +186,7 @@ public void Get_NotePart_Ok()
 public void Get_CommentLayerPart_Ok()
 {
     Type t = GetProvider().Get(
-        "net.fusisoft.token-text-layer:fr.net.fusisoft.comment");
+        "it.vedph.token-text-layer:fr.it.vedph.comment");
 
     Assert.Equal(typeof(TokenTextLayerPart<CommentLayerFragment>), t);
 }

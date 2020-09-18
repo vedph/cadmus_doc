@@ -26,6 +26,7 @@ This is the core namespace for the Cadmus system. It includes the following name
 
     abstract class IHasDataPins {
         +IEnumerable<DataPin> GetDataPins()
+        +IList<DataPinDefinition> GetDataPinDefinitions()
     }
     HasDataPins "1"*--"0..*" DataPin
 
@@ -148,7 +149,7 @@ A number of interfaces and classes are provided to define the attributes of thei
 
 Every "pluggable" component, like parts or fragments, is decorated with a `TagAttribute`. This attribute has a single `Tag` value, which must be unique in the Cadmus ecosystem. This value is used to find and instantiate the component type.
 
-To ensure uniqueness, the convention is prefixing the ID with a domain name. Also, you should use just `a-z` lowercase letters or digits, dots, and dashes. For instance, `net.fusisoft.categories` is the ID for the categories part.
+To ensure uniqueness, the convention is prefixing the ID with a domain name. Also, you should use just `a-z` lowercase letters or digits, dots, and dashes. For instance, `it.vedph.categories` is the ID for the categories part.
 
 ### A.3. Data Blocks
 
@@ -263,7 +264,7 @@ For instance, here is the configuration for the hierarchy items browser:
 ```json
 "browsers": [
   {
-    "id": "net.fusisoft.item-browser.mongo.hierarchy"
+    "id": "it.vedph.item-browser.mongo.hierarchy"
   }
 ]
 ```
@@ -275,7 +276,7 @@ A corresponding thesaurus in the [profile](profiles.md), with ID `item-browsers@
   "id": "item-browsers@en",
   "entries": [
     {
-      "id": "net.fusisoft.item-browser.mongo.hierarchy",
+      "id": "it.vedph.item-browser.mongo.hierarchy",
       "value": "items hierarchy"
     }
   ]
