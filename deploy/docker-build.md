@@ -3,7 +3,7 @@
 The images which can be built are:
 
 - `cadmus_api` for the backend;
-- `cadmus_web` for the frontend.
+- `cadmus_web` for the frontend. This just adds the top layer to the stack of `cadmus_api`.
 
 ## Image cadmus_api
 
@@ -44,7 +44,7 @@ The `env.js` file is an "environment" settings file you can use to configure ess
 - `databaseId`: the name of the Cadmus database: `cadmus`;
 - `name`: the title of the web application: `Demo`.
 
-1. build the image:
+2. build the image:
 
 ```ps1
 docker build . -t vedph2020/cadmus_web:latest
