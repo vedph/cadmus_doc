@@ -58,6 +58,22 @@ public class __NAME__Part : PartBase
     }
 
     /// <summary>
+    /// Gets the definitions of data pins used by the implementor.
+    /// </summary>
+    /// <returns>Data pins definitions.</returns>
+    public override IList<DataPinDefinition> GetDataPinDefinitions()
+    {
+        return new List<DataPinDefinition>(new[]
+        {
+            // TODO: add pins definitions...
+            // sample:
+            // new DataPinDefinition(DataPinValueType.Integer,
+            //    "tot-count",
+            //    "The total count of entries.")
+        });
+    }
+
+    /// <summary>
     /// Converts to string.
     /// </summary>
     /// <returns>
@@ -134,6 +150,22 @@ public sealed class __NAME__Part : PartBase
         }
 
         return builder.Build(this);
+    }
+
+    /// <summary>
+    /// Gets the definitions of data pins used by the implementor.
+    /// </summary>
+    /// <returns>Data pins definitions.</returns>
+    public override IList<DataPinDefinition> GetDataPinDefinitions()
+    {
+        return new List<DataPinDefinition>(new[]
+        {
+            // TODO: add pins definitions...
+            // sample:
+            // new DataPinDefinition(DataPinValueType.Integer,
+            //    "tot-count",
+            //    "The total count of entries.")
+        });
     }
 
     /// <summary>
