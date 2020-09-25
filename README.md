@@ -70,4 +70,4 @@ Web frontend.
 
 ## Web App Help
 
-- [editing item](web/help/editing-item.md)
+- [help home](web/help/index.md)

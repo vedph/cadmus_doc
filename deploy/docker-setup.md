@@ -91,3 +91,7 @@ sudo npm uninstall -g @angular/cli
 sudo npm cache verify
 sudo npm install -g @angular/cli@latest
 ```
+
+## Mac
+
+Docker setup can be downloaded from <https://docs.docker.com/docker-for-mac/install/>.
