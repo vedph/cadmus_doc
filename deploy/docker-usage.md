@@ -18,7 +18,7 @@ Assuming that you already have **Docker** installed, to use Cadmus you can follo
 
 This image and its compose script are used to start a container providing the full backend stack (databases and API).
 
-When firing this compose, if everything went OK open your browser at `localhost:60304/swagger`. You will see the current Cadmus API surface.
+When firing this compose, if everything went OK open your browser at `localhost:60380/swagger`. You will see the current Cadmus API surface.
 
 To *connect to MongoDB databases* from the Linux Docker host, using e.g. Compass (<https://www.mongodb.com/download-center?jmp=nav#compass>):
 

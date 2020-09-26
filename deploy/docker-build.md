@@ -40,7 +40,7 @@ nx build --prod
 
 The `env.js` file is an "environment" settings file you can use to configure essential environment variables without having to rebuild the application (see [this article](https://www.jvandemo.com/how-to-use-environment-variables-to-configure-your-angular-application-without-a-rebuild/)). All what you have to do is editing values inside that file, once the application has been built. Currently, these values are defined:
 
-- `apiUrl`: the root URL to the API: `http://localhost:60304/api/`;
+- `apiUrl`: the root URL to the API: `http://localhost:60380/api/`;
 - `databaseId`: the name of the Cadmus database: `cadmus`;
 - `name`: the title of the web application: `Demo`.
 

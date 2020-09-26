@@ -16,7 +16,7 @@ docker-compose up
 
 This should start the underlying MongoDB and MySql services, and the Cadmus API layer, which will display a number of diagnostic messages to the terminal; you should see a mock database being created and seeded with 100 items. Wait until the messages stop with no errors.
 
-4. open a web browser and navigate to `http://localhost:4200` for the Cadmus web application. You could also navigate to `http://localhost:60304/swagger` to see the API. Login with these credentials:
+4. open a web browser and navigate to `http://localhost:4200` for the Cadmus web application. You could also navigate to `http://localhost:60380/swagger` to see the API. Login with these credentials:
 
 - username: `zeus`
 - password: `P4ss-W0rd!`

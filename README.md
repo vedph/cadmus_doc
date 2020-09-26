@@ -11,6 +11,8 @@ Note: all the diagrams found in this documentation are made using [PlantUml](htt
 
 ## Stack
 
+- [architecture overview](overview.md)
+
 Cadmus essentially includes this stack of layers:
 
 1. *database*: MongoDB for data, MySql for index.
