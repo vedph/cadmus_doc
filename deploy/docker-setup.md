@@ -73,7 +73,9 @@ Useful apps links for Ubuntu:
 
 - [TeamViewer](https://www.teamviewer.com/en/download/linux/)
 - [Chrome](https://www.google.com/intl/en-US/chrome/)
+- [Studio 3T](https://studio3t.com/download/): download TAR.GZ, then extract and run `sudo sh extractedfilename.sh`.
 - [MongoDB Compass](https://www.mongodb.com/download-center?jmp=nav#compass)
+- [MySql Workbench](https://dev.mysql.com/downloads/workbench/): download DEB and install. Root password is `mysql`.
 - [VSCode](https://code.visualstudio.com/download)
 - [NodeJS](https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-16-04):
 
