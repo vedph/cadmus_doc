@@ -16,21 +16,23 @@ b) on *MySql*:
 
 For all these databases, you can define the connection strings in the API settings. As these settings can be overridden by other sources like environment variables, it's easy to change them without having to change the existing backend image.
 
-Thus, from the point of view of data there is no change to be made to the existing Cadmus Docker images.
+Thus, from the point of view of *data* there is no change to be made to the existing Cadmus Docker images.
 
 ## Software
 
-The API project includes only infrastructure and a RESTful API. All the core business and data logic are outside of it, in the Cadmus core project. The pluggable components proper, i.e. parts and fragments, can be defined in any number of (typically) NuGet packages. So, any third party can provide its own components which can be plugged into the Cadmus architecture.
+The API project includes only infrastructure and a RESTful API. All the core business and data logic are outside of it, in the Cadmus core project. API related services are in the API services library.
 
-Yet, these components are bound to the API layer at design time, rather than later at runtime. To this end, what you have to do is cloning the API repository, adding or removing references to the components you want to use, and [rebuild the Docker image](../deploy/docker-build.md). The details of this process are outlined in the next section.
+The pluggable components proper, i.e. parts and fragments, can be defined in any number of (typically) NuGet packages. So, any third party can provide its own components which can be plugged into the Cadmus architecture.
+
+These pluggable components are bound to the API layer at design time, rather than later at runtime. You can build the API for your own components by either cloning the Cadmus API repository and modifying it, or creating a new ASP.NET web app from scratch and importing the required libraries. In both cases, you end up with an API which must serve a predefined set of plugged components.
 
 ### Adding New Models
 
 Adding a new set of models, i.e. parts and/or fragments, implies creating 3 new projects (with these suggested naming conventions), typically all in the same solution, to be distributed as NuGet packages:
 
-1. `Cadmus.<NAME>.Parts`: class library with the model classes representing your parts and fragments. This is usually no more than a set of POCO classes with no logic, except for the data pins generation where applicable.
+1. `Cadmus.<NAME>.Parts`: class library with the model classes representing your parts and fragments. This is usually no more than a set of POCO classes with no logic, except for data pins generation where applicable.
 
-2. `Cadmus.Seed.<NAME>.Parts`: class library with the seeders for the classes and fragments defined in the project at the above step (1). This has as dependencies the core Cadmus seeder (`Cadmus.Seed`), and the corresponding parts/fragments project, and providing a seeder for each part and fragment defined there. Having a seeder next to each component is a recommended practice, as it provides the system with the capability of creating mock data on the fly, and also helps designers better understand their models by facing the challenge of providing realistic data for them.
+2. `Cadmus.Seed.<NAME>.Parts`: class library with the seeders for the classes and fragments defined in the project at the previous step. This has as dependencies the core Cadmus seeder (`Cadmus.Seed`), and the corresponding parts/fragments project, and providing a seeder for each part and fragment defined there. Having a seeder next to each component is a recommended practice; it provides the system with the capability of creating mock data on the fly, and also helps designers better understand their models by facing the challenge of providing realistic data for them.
 
 3. `Cadmus.<NAME>.Services`: class library with the services to be used in the API infrastructure. This must add two simple services:
 
@@ -78,7 +80,7 @@ public PartSeederFactory GetFactory(string profile)
 
 ### Modifying the API Project
 
-In the API project:
+In the API project you start with the base Cadmus API code, targeted to the standard pluggable components. To modify it for the newly plugged components:
 
 1. add references to the NuGet packages `Cadmus.<NAME>.Parts`, `Cadmus.Seed.<NAME>.Parts`, and `Cadmus.<NAME>.Services`, as illustrated above.
 
@@ -95,3 +97,5 @@ services.AddSingleton<IPartSeederFactoryProvider,
 Once you have done this, just rebuild the project and the corresponding Docker image.
 
 Currently, as the projects using Cadmus are limited and it's still an evolving product, the practical approach to keep a single repository is to just include all the models in the unique API project, and provide a settings-based parameter defining the project to be used. According to this parameter, in `ConfigureServices` we setup the registration of the required services.
+
+Anyway, as the projects progresses we can easily switch to separate projects and repositories, by creating a new ASP.NET Core app for each API, importing libraries, and adding the desired pluggable components.

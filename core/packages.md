@@ -96,22 +96,24 @@ package CadmusApi {
 
 According to the above overview, these are the NuGet dependencies for Cadmus:
 
-- `DiffMatchPatch`
-- `Fusi.Tools`
-- `Fusi.Tools.Config`
-- `Fusi.Text`
-- `Fusi.Antiquity`
-- `MessagingApi`
-- `MessagingApi.SendGrid`
+- `DiffMatchPatch`: the Google library for diffing.
+- `Fusi.Tools`: general purpose components.
+- `Fusi.Tools.Config`: configuration components.
+- `Fusi.Text`: Unicode related components.
+- `Fusi.Antiquity`: Classical antiquities components.
+- `Fusi.Microsoft.Extensions.Configuration.InMemoryJson`: an in-memory JSON source for Microsoft configuration.
+- `MessagingApi`: messaging API models and services.
 
 Cadmus-specific:
 
 - `Cadmus.Core`
+- `Cadmus.Index`
+- `Cadmus.Index.Sql`
 - `Cadmus.Mongo`
-- `Cadmus.Seed`
 - `Cadmus.Parts`
-- `Cadmus.Seed.Parts`
 - `Cadmus.Philology.Parts`
+- `Cadmus.Seed`
+- `Cadmus.Seed.Parts`
 - `Cadmus.Seed.Philology.Parts`
 - `Cadmus.Archive.Parts`
 - `Cadmus.Lexicon.Parts`

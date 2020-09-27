@@ -1,6 +1,6 @@
 # Plugins - Frontend
 
-The frontend web application is based on an Angular multiple-projects repository. In this [architecture](../web/architecture.md), using multiple projects allows for easy extension, as all what you have to do is adding new library projects for your [parts](../web/adding-parts.md)/[fragments](../web/adding-fragments.md) editors and connecting them to the main Cadmus application via a route.
+The refactored frontend web application ([cadmus_shell](https://github.com/vedph/cadmus_shell)) is based on an Angular multiple-projects repository. In this [architecture](../web/architecture.md), using multiple projects allows for easy extension, as all what you have to do is adding new library projects for your [parts](../web/adding-parts.md)/[fragments](../web/adding-fragments.md) editors and connecting them to the main Cadmus application via a route.
 
 Also notice that these projects are not loaded upfront at startup, but rather they get lazily loaded only when their components are first requested. Thus, having several "plugin" projects does not add any relevant contribution to the weight of the application in terms of resources consumption. Of course, including them in the application package even if you are not going to use them would anyway add to the package size, thus affecting the first-time load of the application.
 

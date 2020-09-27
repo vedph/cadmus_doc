@@ -8,7 +8,7 @@ The general idea is allowing developers to build their own backend and frontend,
 
 As for the backend, based on the [cadmus_api](https://github.com/vedph/cadmus_api) repository, the following picture shows the most important components:
 
-![backend](./images/overview_back.png)
+![backend](../images/overview_back.png)
 
 - data are stored in a MongoDB database.
 - data are automatically indexed during editing, in a MySql database. This depends on the MongoDB database, and can be fully rebuilt from it.
@@ -25,7 +25,7 @@ All the backend code is .NET Core C#, packed into NuGet libraries. The API is an
 
 The frontend part is based on the [cadmus_shell](https://github.com/vedph/cadmus_shell) repository.
 
-![frontend](./images/overview_front.png)
+![frontend](../images/overview_front.png)
 
 The `cadmus_shell` repository provides a full working sample shell application, whose primary purpose is providing a stock web application and a development environment for the libraries. All the important code is distributed into a set of NPM libraries:
 

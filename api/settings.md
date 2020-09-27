@@ -2,6 +2,15 @@
 
 The Cadmus API settings are found in `appsettings.json`, as for any typical .NET Core web API application.
 
+Using settings, you can control:
+
+- connection strings to databases (MongoDB and MySql);
+- logging and auditing;
+- data seed;
+- authentication and stock users with their roles;
+- message building and mailing;
+- data indexing.
+
 ## Cadmus-Specific Sections
 
 All these sections are located at the root level of the configuration hierarchy, i.e. in JSON they are direct children of the root object:
