@@ -4,13 +4,13 @@ Here are some quick setup hints for Docker.
 
 ## Windows
 
-- download and install from <https://hub.docker.com/editions/community/docker-ce-desktop-windows> (see <https://docs.docker.com/docker-for-windows/install/>).
+For Windows 10, it is recommended to apply all the latest updates, so that you can take advantage of WSL 2 (Windows Subsystem for Linux). Once your OS is up to date, just follow the directions during Docker setup (you will need to install an additional component when requested).
 
-Once installed, ensure you have switched Docker to Linux containers.
+- download and install Docker Desktop from <https://hub.docker.com/editions/community/docker-ce-desktop-windows> (see <https://docs.docker.com/docker-for-windows/install/>).
 
 ## Ubuntu
 
-In the consumer __Linux machine__, you must have installed *Docker* and *Docker compose*. To install (see <https://docs.docker.com/install/linux/docker-ce/ubuntu/>):
+In the consumer __Linux machine__, you must install both *Docker* and *Docker compose*. To install (see <https://docs.docker.com/install/linux/docker-ce/ubuntu/>):
 
 ```bash
 sudo apt-get update
@@ -96,4 +96,4 @@ sudo npm install -g @angular/cli@latest
 
 ## Mac
 
-Docker setup can be downloaded from <https://docs.docker.com/docker-for-mac/install/>.
+- download and install Docker for Desktop from <https://docs.docker.com/docker-for-mac/install/>. As for Windows, it includes docker-compose.
