@@ -69,13 +69,13 @@ To connect to the MySql database from the Docker host, using e.g. [MySql Workben
 
 ### Image cadmus_web
 
-This image and its compose script are used to start a container providing the full backend and frontend stacks (databases, API, web application).
+This image and its compose script are used to start a container providing the full backend and frontend stacks (databases, API, web application). This image thus provides the full-stack system, ready to be used with a mock database, without the hassle of setting up Angular and its dependencies. The disadvantage is that we need to build and publish this image whenever the frontend is changed, and the frontend is the fastest-moving part of the system.
 
 The directions are similar to the above:
 
-1. save the API `docker-compose.yml` file (from <https://github.com/vedph/cadmus_web>) somewhere in your machine.
+1. save the API `docker-compose.yml` file (from <https://github.com/vedph/cadmus_web>) somewhere in your machine. Please notice that this file comes from another repository, even if it's still named `docker-compose.yml`. You should place each in its own, distinct directory.
 
-2. from a command prompt, enter the directory where you saved the `docker-compose.yml` file, and type the command `docker-compose up` (use `sudo` for Linux). This fires all the services, backend and frontend, so please refer to the instructions above for more.
+2. from a command prompt, enter the directory where you saved the `docker-compose.yml` file, and type the command `docker-compose up` (use `sudo` for Linux). This fires all the services, backend and frontend, so please refer to the instructions above for more. As explained above, you can use `docker-compose down` to remove the containers and restart fresh, with a new database.
 
 3. if everything went OK, open your browser at `localhost:4200`. To login:
 
