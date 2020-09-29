@@ -10,9 +10,9 @@ Here you find a procedure for installing MQDQ database for testing in a dockeriz
 
 ## Procedure
 
-In the target machine you should have installed Studio 3T / Compass and MySql Workbench. The following procedure refers to Studio3T and MySql Workbench, but of course other clients might be used instead.
+In the target machine you should have installed [Studio 3T](https://studio3t.com/download/) and [MySql Workbench](https://dev.mysql.com/downloads/workbench/). The following procedure refers to these two client applications, but of course other clients might be used instead.
 
-### MongoDB
+### MongoDB (Data)
 
 1. open a terminal where the `docker-compose.yml` script for Cadmus web is located.
 2. run `docker-compose up` to start the container.
@@ -24,7 +24,7 @@ In the target machine you should have installed Studio 3T / Compass and MySql Wo
 
 6. at the left, refresh the databases list to check if `cadmus` is now present.
 
-### MySql
+### MySql (Index)
 
 1. ensure that you have MySql client software installed. This not only includes MySql Workbench, but also command line tools like `mysqldump`.
 
