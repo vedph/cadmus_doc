@@ -63,6 +63,7 @@ Web frontend.
 - [setting up Docker](./deploy/docker-setup.md)
 - [building Docker images](./deploy/docker-build.md)
 - [using Docker images](./deploy/docker-usage.md)
+- [importing MQDQ data](./deploy/mqdq.md)
 
 ## Extending
 
