@@ -65,7 +65,9 @@ To connect to the MySql database from the Docker host, using e.g. [MySql Workben
 - server: localhost
 - port: 3306 (the default)
 - user: `root`
-- password: `mysql`
+- password: `mysql` (mind the case: all lowercase)
+
+Note: on some systems, MySql Workbench setup might fail with an error telling you that some Visual Studio files are missing. In this case, stop the installation, visit [this page](https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads), and download the appropriate VC redistributable file (e.g. for Windows this typically is [vc_redist.x64.exe](https://aka.ms/vs/16/release/vc_redist.x64.exe)).
 
 ### Image cadmus_web
 

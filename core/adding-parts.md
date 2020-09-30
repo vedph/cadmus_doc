@@ -32,7 +32,7 @@ using Fusi.Tools.Config;
 /// <para>Tag: <c>it.vedph.__NAME__</c>.</para>
 /// </summary>
 [Tag("it.vedph.__NAME__")]
-public class __NAME__Part : PartBase
+public sealed class __NAME__Part : PartBase
 {
     // TODO: add your properties here...
 

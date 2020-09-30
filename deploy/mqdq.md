@@ -4,8 +4,10 @@ Here you find a procedure for installing MQDQ database for testing in a dockeriz
 
 ## Preparation
 
-1. export the MQDQ database as a mongodump folder, with compressed files. Name it `mqdq` just for reference.
+1. export the MQDQ database as a Mongodump BSON _folder_, with compressed files. Name it `mqdq` just for reference. If you have an `.agz` file to start with, this is a compressed BSON dump. The easiest way to get the format you need is importing it in Studio3T, and re-exporting it as a BSON folder. Then you will be able to use that exported folder as the import source.
+
 2. export the MySql index database as a single SQL file, e.g. using MySql Workbench.
+
 3. copy the exported MongoDB dump folder and MySql dump file to the target machine.
 
 ## Procedure
@@ -15,10 +17,14 @@ In the target machine you should have installed [Studio 3T](https://studio3t.com
 ### MongoDB (Data)
 
 1. open a terminal where the `docker-compose.yml` script for Cadmus web is located.
+
 2. run `docker-compose up` to start the container.
+
 3. launch Studio3T and connect to <localhost:27017>.
-4. delete the `cadmus` database.
-5. from `Import` pick `BSON - mongodump folder`; pick the target connection (click the `Click here to connect to a server...` message) as <localhost:27017>, then choose the folder with the MongoDB dump. Once chosen, in `Import as` type `cadmus` instead of the folder's name (`mqdq`): this means that you will restore the MQDQ database by naming it as `cadmus`. All the collections should be checked for import, as per default settings. Finally, click `Execute`.
+
+4. delete the `cadmus` database. This is the mock database created by the API on startup, so you are not losing anything.
+
+5. from `Import` pick `BSON - mongodump folder` (mind _folder_ here!); pick the target connection (click the `Click here to connect to a server...` message) as <localhost:27017>, then choose the folder with the MongoDB dump. Once chosen, in `Import as` type `cadmus`, instead of the folder's name (`mqdq` or whatever you called it): this means that you will restore the MQDQ database by naming it as `cadmus`. All the collections should be checked for import, as per default settings. Finally, click `Execute`.
 
 ![Importing MQDQ data with Studio 3T](../images/mqdq-studio3t.png)
 
