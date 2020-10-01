@@ -24,7 +24,7 @@ In the target machine you should have installed [Studio 3T](https://studio3t.com
 
 4. delete the `cadmus` database. This is the mock database created by the API on startup, so you are not losing anything.
 
-5. from `Import` pick `BSON - mongodump folder` (mind _folder_ here!); pick the target connection (click the `Click here to connect to a server...` message) as <localhost:27017>, then choose the folder with the MongoDB dump. Once chosen, in `Import as` type `cadmus`, instead of the folder's name (`mqdq` or whatever you called it): this means that you will restore the MQDQ database by naming it as `cadmus`. All the collections should be checked for import, as per default settings. Finally, click `Execute`.
+5. from `Import` pick `BSON - mongodump folder` (mind _folder_ here!); pick the target connection (click the `Click here to connect to a server...` message) as <localhost:27017>, then choose the folder with the MongoDB dump (note: this must not be the folder containing the collections files, which should have the database name -`mqdq`-, but the folder *containing* it; as you can see from the screenshot, in my example I selected the `Documents` folder, which in turn includes the `mqdq` folder with the dump files). Once chosen, in `Import as` type `cadmus`, instead of the folder's name (`mqdq` or whatever you called it): this means that you will restore the MQDQ database by naming it as `cadmus`. All the collections should be checked for import, as per default settings. Finally, click `Execute`.
 
 ![Importing MQDQ data with Studio 3T](../images/mqdq-studio3t.png)
 

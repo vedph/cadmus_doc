@@ -18,6 +18,8 @@ For all these databases, you can define the connection strings in the API settin
 
 Thus, from the point of view of *data* there is no change to be made to the existing Cadmus Docker images.
 
+Anyway, for the backend the usual way of building projects based on Cadmus is creating new parts specialized for that project, and providing an API customized to use them. The former task is specific to each project. The latter task can be completed by just composing Cadmus components together.
+
 ## Software
 
 The API project includes only infrastructure and a RESTful API. All the core business and data logic are outside of it, in the Cadmus core project. API related services are in the API services library.
@@ -26,9 +28,9 @@ The pluggable components proper, i.e. parts and fragments, can be defined in any
 
 These pluggable components are bound to the API layer at design time, rather than later at runtime. You can build the API for your own components by either cloning the Cadmus API repository and modifying it, or creating a new ASP.NET web app from scratch and importing the required libraries. In both cases, you end up with an API which must serve a predefined set of plugged components.
 
-### Adding New Models
+### New Models
 
-Adding a new set of models, i.e. parts and/or fragments, implies creating 3 new projects (with these suggested naming conventions), typically all in the same solution, to be distributed as NuGet packages:
+Adding a new set of models, i.e. parts and/or fragments, implies creating a new solution, by convention usually having a name starting with `Cadmus` (e.g. `CadmusItinera` for the *Itinera* project). The solution should include 3 new projects (with the following suggested naming conventions), to be distributed as NuGet packages:
 
 1. `Cadmus.<NAME>.Parts`: class library with the model classes representing your parts and fragments. This is usually no more than a set of POCO classes with no logic, except for data pins generation where applicable.
 
@@ -78,24 +80,44 @@ public PartSeederFactory GetFactory(string profile)
 }
 ```
 
-### Modifying the API Project
+### New API
 
-In the API project you start with the base Cadmus API code, targeted to the standard pluggable components. To modify it for the newly plugged components:
+To build a new API, just create a new API project and reference all the required libraries, as specified in the following procedure:
 
-1. add references to the NuGet packages `Cadmus.<NAME>.Parts`, `Cadmus.Seed.<NAME>.Parts`, and `Cadmus.<NAME>.Services`, as illustrated above.
+1. create a new ASP.NET Core web API project.
 
-2. in the `ConfigureServices` method of the `Startup` class replace the standard services classes with those using your services as provided in `Cadmus.<NAME>.Services` in these lines:
+2. add these NuGet packages:
 
-```cs
-// repository
-services.AddSingleton<IRepositoryProvider, StandardRepositoryProvider>();
-// part seeder factory provider
-services.AddSingleton<IPartSeederFactoryProvider,
-    StandardPartSeederFactoryProvider>();
-```
+- `AspNetCore.Identity.Mongo`
+- `Microsoft.AspNetCore.Authentication.JwtBearer`
+- `Microsoft.AspNetCore.Mvc.NewtonsoftJson`
+- `Polly`
+- `Serilog`
+- `Serilog.AspNetCore`
+- `Serilog.Exceptions`
+- `Serilog.Extensions.Hosting`
+- `Serilog.Sinks.Console`
+- `Serilog.Sinks.File`
+- `Serilog.Sinks.MongoDB`
+- `Swashbuckle.AspNetCore.Swagger`
+- `Swashbuckle.AspNetCore.SwaggerGen`
+- `Swashbuckle.AspNetCore.SwaggerUi`
+- `Cadmus.Itinera.Models`
+- `Cadmus.Itinera.Services`
+- `Cadmus.Itinera.Controllers`
 
-Once you have done this, just rebuild the project and the corresponding Docker image.
+3. copy `Program.cs` from CadmusApi, adjusting the namespace and text messages as desired.
 
-Currently, as the projects using Cadmus are limited and it's still an evolving product, the practical approach to keep a single repository is to just include all the models in the unique API project, and provide a settings-based parameter defining the project to be used. According to this parameter, in `ConfigureServices` we setup the registration of the required services.
+4. copy `Startup.cs` from CadmusApi, adjusting the namespace.
 
-Anyway, as the projects progresses we can easily switch to separate projects and repositories, by creating a new ASP.NET Core app for each API, importing libraries, and adding the desired pluggable components.
+5. copy settings from `appsettings.json` in CadmusApi, adjusting application title and other app-dependent text as desired. Also, be sure to change:
+
+- the database names (`DatabaseNames`;
+- the Serilog connection string (`Serilog:ConnectionString`).
+
+6. copy `Dockerfile` and `docker-compose.yml` from CadmusApi and adjust them for this project:
+
+- in `Dockerfile`, change the project's name.
+- in `docker-compose.yml`, change the `cadmus-api` image name, and its port (to reflect this project's port).
+
+7. in the project's properties, ensure that the port is not conflicting with other port numbers in your environment (you can also see <https://stackoverflow.com/questions/37365277/how-to-specify-the-port-an-asp-net-core-application-is-hosted-on>).
