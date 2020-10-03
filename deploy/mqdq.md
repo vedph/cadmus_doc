@@ -24,7 +24,7 @@ In the target machine you should have installed [Studio 3T](https://studio3t.com
 
 4. delete the `cadmus` database. This is the mock database created by the API on startup, so you are not losing anything.
 
-5. from `Import` pick `BSON - mongodump folder` (mind _folder_ here!); pick the target connection (click the `Click here to connect to a server...` message) as <localhost:27017>, then choose the folder with the MongoDB dump (note: this must not be the folder containing the collections files, which should have the database name -`mqdq`-, but the folder *containing* it; as you can see from the screenshot, in my example I selected the `Documents` folder, which in turn includes the `mqdq` folder with the dump files). Once chosen, in `Import as` type `cadmus`, instead of the folder's name (`mqdq` or whatever you called it): this means that you will restore the MQDQ database by naming it as `cadmus`. All the collections should be checked for import, as per default settings. Finally, click `Execute`.
+5. from `Import` pick `BSON - mongodump folder` (mind _folder_ here!); pick the target connection (click the `Click here to connect to a server...` message) as <localhost:27017>, then choose the folder with the MongoDB dump (note: this must not be the folder containing the collections files, which should have the database name -`mqdq`-, but the folder _containing_ it; as you can see from the screenshot, in my example I selected the `Documents` folder, which in turn includes the `mqdq` folder with the dump files). Once chosen, in `Import as` type `cadmus`, instead of the folder's name (`mqdq` or whatever you called it): this means that you will restore the MQDQ database by naming it as `cadmus`. All the collections should be checked for import, as per default settings. Finally, click `Execute`.
 
 ![Importing MQDQ data with Studio 3T](../images/mqdq-studio3t.png)
 
@@ -45,18 +45,23 @@ Usually, `mysqldump` gets installed in `usr/bin`. You can find it by using a com
 For Mac, refer to [this post](https://stackoverflow.com/questions/47380458/is-it-possible-to-install-only-mysqldump-on-macos).
 
 2. launch MySql Workbench.
-3. delete the `cadmus` database.
+
+3. delete the `cadmus` database (right click on it and pick `Drop schema`).
+
 4. create a new database named `cadmus` by executing this query:
 
 ```sql
-CREATE SCHEMA `cadmus` DEFAULT CHARACTER SET utf8 ;
+CREATE SCHEMA `cadmus` DEFAULT CHARACTER SET utf8;
 ```
 
-5. ensure to select cadmus as the default database (it should be displayed in bold).
+After executing this, you should refresh the `Schemas` view to see `cadmus` appear in the list.
+
+5. ensure to select `cadmus` as the default database (it should be displayed in bold). Double-clicking it should do this.
+
 6. from `File` pick `Run SQL script...` and select the MySql dump file you copied into your target machine. Enter or pick `cadmus` as the target schema, and `utf8` as its character set, then run the script.
 
 ![Importing MQDQ index with MySql Workbench](../images/mqdq-workbench.png)
 
-7. check that the `cadmus` database has tables `item` and `pin` with some data.
+7. check in the `Schemas` view that the `cadmus` database has tables `item` and `pin` with some data (a refresh is needed, as above).
 
 8. browse to <localhost:4200>. You should find the MQDQ database.
