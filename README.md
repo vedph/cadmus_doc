@@ -1,5 +1,7 @@
 # Cadmus Conceptual Documentation
 
+- [Users help (incomplete)](./web/help/index.md)
+
 Just like the Cadmus project itself, this documentation is work in progress. Its main purpose is highlighting some conceptual points standing behind the general architecture of the system.
 
 For a more theoric and non-technical introduction to the Cadmus system, please see:
@@ -48,15 +50,16 @@ Web REST API.
 
 Web frontend.
 
-- [architecture](./architecture.md): general monorepo architecture.
-- [routes](./routes.md): most relevant route templates.
-- [editor components](./editor-components.md): editor components.
-- [edit state](./edit-state.md): app's local edit state.
-- [roles](./roles.md): user roles for authorizing operations.
-- [adding parts](./adding-parts.md): how to add new parts.
-- [adding fragments](./adding-fragments.md): how to add new fragments.
-- [demo presets](./demo-presets.md): preset JSON samples for editors demo pages.
-
+- [architecture](./web/architecture.md): general monorepo architecture.
+- [routes](./web/routes.md): most relevant route templates.
+- [editor components](./web/editor-components.md): editor components.
+- [edit state](./web/edit-state.md): app's local edit state.
+- [roles](./web/roles.md): user roles for authorizing operations.
+- [adding parts](./web/adding-parts.md): how to add new parts.
+- [adding fragments](./web/adding-fragments.md): how to add new fragments.
+- [demo presets](./web/demo-presets.md): preset JSON samples for editors demo pages.
+- [help home](./web/help/index.md)
+- 
 ## Deploying
 
 - [development environment](./deploy/develop.md)
@@ -70,7 +73,3 @@ Web frontend.
 - [plugins overview](./plugins/overview.md)
 - [extending backend](./plugins/backend.md)
 - [extending frontend](./plugins/frontend.md)
-
-## Web App Help
-
-- [help home](./web/help/index.md)
