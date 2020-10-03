@@ -23,7 +23,7 @@ Cadmus essentially includes this stack of layers:
 4. *web API layer*: REST API. A future GraphQL API is planned.
 5. *web frontend*: Angular 10+ web application.
 
-These layers are distributed across 3 projects: core (2-3), api (4), web (5).
+These layers are distributed across 3 projects: core (2-3), api (4), web (`cadmus-shell`, which should supersede `cadmus-web`) (5).
 
 ## Core
 
@@ -59,7 +59,7 @@ Web frontend.
 - [adding fragments](./web/adding-fragments.md): how to add new fragments.
 - [demo presets](./web/demo-presets.md): preset JSON samples for editors demo pages.
 - [help home](./web/help/index.md)
-- 
+
 ## Deploying
 
 - [development environment](./deploy/develop.md)
