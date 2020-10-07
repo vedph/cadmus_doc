@@ -6,9 +6,9 @@ The fastest way to get playing with Cadmus is using Docker, even if this is not 
 
 1. ensure you have installed [Docker](https://docs.docker.com/engine/install/) on your system. You must install also Docker compose; this is already installed when using an installer (e.g. in Windows), while it requires to be installed via command line in Linux (see below).
 
-2. download the [Docker compose script](https://github.com/vedph/cadmus_web/blob/master/docker-compose.yml), saving it anywhere in your system.
+2. download the Docker compose script from the repository of your web application (e.g. [Cadmus shell](https://github.com/vedph/cadmus_shell/blob/master/docker-compose.yml)), saving it anywhere in your system. Note: be sure to download the file's content, rather than the HTML code of the page showing it. To this end, you can click the `Raw` button at the top bar in the repository's page, to display the raw text of this file, and then save it. Also be sure that its file name is exactly `docker-compose.yml`.
 
-3. open a terminal window, and enter the directory where you downloaded the script. Then type this command (be sure to prefix it with `sudo` for Linux-based platforms):
+3. open a terminal window, and enter the directory where you downloaded the script (for Windows or Linux users, just right click the folder and select the corresponding item from the popup menu; for Mac, the menu item might be hidden: in this case [toggle it](https://ladedu.com/how-to-open-a-terminal-window-at-any-folder-from-finder-in-macos/) in the Finder settings). Then type this command (be sure to prefix it with `sudo` for Linux-based platforms):
 
 ```bash
 docker-compose up
