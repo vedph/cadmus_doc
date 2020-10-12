@@ -2,9 +2,11 @@
 
 Here you find a procedure for installing MQDQ database for testing in a dockerized Cadmus stack.
 
+Note: for MQDQ, the Cadmus frontend `docker-compose.yml` file is [here](https://github.com/vedph/cadmus_mqdq_app/blob/master/docker-compose.yml).
+
 ## Preparation
 
-1. export the MQDQ database as a Mongodump BSON _folder_, with compressed files. Name it `mqdq` just for reference. If you have an `.agz` file to start with, this is a compressed BSON dump. The easiest way to get the format you need is importing it in Studio3T, and re-exporting it as a BSON folder. Then you will be able to use that exported folder as the import source.
+1. export the MQDQ database as a Mongodump BSON _folder_, with compressed files. Name it `mqdq` just for reference. If you have an `.agz` file to start with, this is a *compressed* BSON dump. The easiest way to get the format you need is importing it in Studio3T, and re-exporting it as a *BSON folder*. Then you will be able to use that exported folder as the import source.
 
 2. export the MySql index database as a single SQL file, e.g. using MySql Workbench.
 
