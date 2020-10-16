@@ -152,7 +152,7 @@ Note that you must not explicitly import the target module into your app module,
 1. add the **part model** (derived from `Part`), its type ID constant, and its JSON schema constant to `<part>.ts` (e.g. `note-part.ts`). Remember to add the new file to the exports of the "barrel" `public-api.ts` file in the module. You can use a template like this (replace `__PROJECT__` with the project's name, e.g. `itinera`; and `__NAME__` with your part's name, without the `Part` suffix; e.g. `Note`, adjusting case where required):
 
 ```ts
-import { Part } from "@myrmidon/cadmus-core";
+import { Part } from '@myrmidon/cadmus-core';
 
 /**
  * The __NAME__ part model.
@@ -164,60 +164,60 @@ export interface __NAME__Part extends Part {
 /**
  * The type ID used to identify the __NAME__Part type.
  */
-export const __NAME___PART_TYPEID = "it.vedph.__PROJECT__.__NAME__";
+export const __NAME___PART_TYPEID = 'it.vedph.__PROJECT__.__NAME__';
 
 /**
  * JSON schema for the __NAME__ part. This is used in the editor demo.
  * You can use the JSON schema tool at https://jsonschema.net/.
  */
 export const __NAME___PART_SCHEMA = {
-  $schema: "http://json-schema.org/draft-07/schema#",
+  $schema: 'http://json-schema.org/draft-07/schema#',
   $id:
-    "www.vedph.it/cadmus/parts/__PROJECT__/__LIB__" +
+    'www.vedph.it/cadmus/parts/__PROJECT__/__LIB__' +
     __NAME___PART_TYPEID +
-    ".json",
-  type: "object",
-  title: "__NAME__Part",
+    '.json',
+  type: 'object',
+  title: '__NAME__Part',
   required: [
-    "id",
-    "itemId",
-    "typeId",
-    "timeCreated",
-    "creatorId",
-    "timeModified",
-    "userId",
+    'id',
+    'itemId',
+    'typeId',
+    'timeCreated',
+    'creatorId',
+    'timeModified',
+    'userId',
     // TODO: add other required properties here...
   ],
   properties: {
     timeCreated: {
-      type: "string",
-      pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d+Z$",
+      type: 'string',
+      pattern: '^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d+Z$',
     },
     creatorId: {
-      type: "string",
+      type: 'string',
     },
     timeModified: {
-      type: "string",
-      pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d+Z$",
+      type: 'string',
+      pattern: '^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d+Z$',
     },
     userId: {
-      type: "string",
+      type: 'string',
     },
     id: {
-      type: "string",
-      pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+      type: 'string',
+      pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$',
     },
     itemId: {
-      type: "string",
-      pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+      type: 'string',
+      pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$',
     },
     typeId: {
-      type: "string",
-      pattern: "^[a-z][-0-9a-z._]*$",
+      type: 'string',
+      pattern: '^[a-z][-0-9a-z._]*$',
     },
     roleId: {
-      type: ["string", "null"],
-      pattern: "^([a-z][-0-9a-z._]*)?$",
+      type: ['string', 'null'],
+      pattern: '^([a-z][-0-9a-z._]*)?$',
     },
 
     // TODO: add properties and fill the "required" array as needed
@@ -252,14 +252,14 @@ If you want to infer a schema in the [JSON schema tool](https://jsonschema.net/)
 Sample code:
 
 ```ts
-import { Component, OnInit } from "@angular/core";
-import { FormControl, FormBuilder, Validators } from "@angular/forms";
+import { Component, OnInit } from '@angular/core';
+import { FormControl, FormBuilder, Validators } from '@angular/forms';
 
-import { ModelEditorComponentBase, DialogService } from "@myrmidon/cadmus-ui";
-import { AuthService } from "@myrmidon/cadmus-api";
-import { ThesaurusEntry } from "@myrmidon/cadmus-core";
+import { ModelEditorComponentBase, DialogService } from '@myrmidon/cadmus-ui';
+import { AuthService } from '@myrmidon/cadmus-api';
+import { ThesaurusEntry } from '@myrmidon/cadmus-core';
 
-import { NotePart, NOTE_PART_TYPEID } from "../..";
+import { NotePart, NOTE_PART_TYPEID } from '../YOURPARTFILE';
 
 /**
  * Note part editor component.
@@ -300,11 +300,11 @@ export class NotePartComponent
     });
   }
 
-  ngOnInit() {
+  public ngOnInit(): void {
     this.initEditor();
   }
 
-  private updateForm(model: NotePart) {
+  private updateForm(model: NotePart): void {
     if (!model) {
       this.form.reset();
       return;
@@ -315,11 +315,11 @@ export class NotePartComponent
     this.form.markAsPristine();
   }
 
-  protected onModelSet(model: NotePart) {
+  protected onModelSet(model: NotePart): void {
     this.updateForm(model);
   }
 
-  protected onThesauriSet() {
+  protected onThesauriSet(): void {
     const key = "note-tags";
     if (this.thesauri && this.thesauri[key]) {
       this.tagEntries = this.thesauri[key].entries;
