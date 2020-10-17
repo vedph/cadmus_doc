@@ -394,8 +394,8 @@ Each part editor has its component, and its state management artifacts under the
 3. inside this new component's folder, add a new **store** for your model, named `edit-<partname>-part.store.ts`. Template:
 
 ```ts
-import { Injectable } from "@angular/core";
-import { StoreConfig, Store } from "@datorama/akita";
+import { Injectable } from '@angular/core';
+import { StoreConfig, Store } from '@datorama/akita';
 
 import {
   EditPartState,
@@ -427,14 +427,14 @@ export class Edit__NAME__PartStore
 1. in the same folder, add a new **query** for your model, named `edit-<partname>-part.query.ts`. Template:
 
 ```ts
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 
 import { UtilService } from '@myrmidon/cadmus-core';
 import { EditPartQueryBase } from '@myrmidon/cadmus-state';
 
-import { Edit__NAME__PartStore } from "./edit-__NAME__-part.store";
+import { Edit__NAME__PartStore } from './edit-__NAME__-part.store';
 
-@Injectable({ providedIn: "root" })
+@Injectable({ providedIn: 'root' })
 export class Edit__NAME__PartQuery extends EditPartQueryBase {
   constructor(store: Edit__NAME__PartStore, utilService: UtilService) {
     super(store, utilService);
@@ -445,14 +445,14 @@ export class Edit__NAME__PartQuery extends EditPartQueryBase {
 4. in the same folder, add a new **service** for your model, named `edit-<partname>-part.service.ts`. Template:
 
 ```ts
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 
 import { ItemService, ThesaurusService } from '@myrmidon/cadmus-api';
 import { EditPartServiceBase } from '@myrmidon/cadmus-state';
 
-import { Edit__NAME__PartStore } from "./edit-__NAME__-part.store";
+import { Edit__NAME__PartStore } from './edit-__NAME__-part.store';
 
-@Injectable({ providedIn: "root" })
+@Injectable({ providedIn: 'root' })
 export class Edit__NAME__PartService extends EditPartServiceBase {
   constructor(
     editPartStore: Edit__NAME__PartStore,
@@ -468,20 +468,16 @@ export class Edit__NAME__PartService extends EditPartServiceBase {
 5. implement the feature **editor component** by making it extend `EditPartFeatureBase`, like in this code template:
 
 ```ts
-import { Component, OnInit } from "@angular/core";
-import { Router, ActivatedRoute } from "@angular/router";
-import { Observable } from "rxjs";
+import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs';
 
-import { ThesauriSet } from "@myrmidon/cadmus-core";
+import { ThesauriSet } from '@myrmidon/cadmus-core';
 import { MatSnackBar } from '@myrmidon/cadmus-material';
+import { EditItemQuery, EditItemService, EditPartFeatureBase } from '@myrmidon/cadmus-state';
 
-import { Edit__NAME__PartService } from "./edit-__NAME__-part.service";
-import { Edit__NAME__PartQuery } from "./edit-__NAME__-part.query";
-import {
-  EditItemQuery,
-  EditItemService,
-  EditPartFeatureBase,
-} from "@cadmus/features/edit-state";
+import { Edit__NAME__PartService } from './edit-__NAME__-part.service';
+import { Edit__NAME__PartQuery } from './edit-__NAME__-part.query';
 
 @Component({
   selector: "cadmus-__NAME__-part-feature",
