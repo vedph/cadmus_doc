@@ -249,6 +249,91 @@ If you want to infer a schema in the [JSON schema tool](https://jsonschema.net/)
    5. (from _form to model_): override `getModelFromForm(): YourModel` to get the model from form controls by calling the base class `getModelFromJson`. If this returns null, create a new part object with default values (you just need to set `typeId` for the `Part`'s interface properties); then, fill the part object properties from the form's controls. This merges the inherited properties (from the initial JSON code, if any) with those edited.
    6. build your component's _template_.
 
+Template:
+
+```ts
+import { Component, OnInit } from '@angular/core';
+import { FormControl, FormBuilder, Validators } from '@angular/forms';
+
+import { ModelEditorComponentBase, DialogService } from '@myrmidon/cadmus-ui';
+import { AuthService } from '@myrmidon/cadmus-api';
+import { ThesaurusEntry } from '@myrmidon/cadmus-core';
+
+import { __PARTNAME__Part, __PARTNAME___PART_TYPEID } from '../YOURPARTFILE';
+
+/**
+ * __PARTNAME__ editor component.
+ * Thesauri: TODO thesauri names and optionality
+ */
+@Component({
+  selector: "cadmus-__PARTNAME__-part",
+  templateUrl: "./__PARTNAME__-part.component.html",
+  styleUrls: ["./__PARTNAME__-part.component.css"],
+})
+export class __PARTNAME__PartComponent
+  extends ModelEditorComponentBase<__PARTNAME__Part>
+  implements OnInit {
+
+  // TODO form controls (form: FormGroup is inherited)
+
+  // TODO thesauri entries, e.g.:
+  // public tagEntries: ThesaurusEntry[];
+
+  constructor(authService: AuthService, formBuilder: FormBuilder) {
+    super(authService);
+    // form
+    // TODO build controls and set this.form
+  }
+
+  public ngOnInit(): void {
+    this.initEditor();
+  }
+
+  private updateForm(model: __PARTNAME__Part): void {
+    if (!model) {
+      this.form.reset();
+      return;
+    }
+    // TODO set controls values from model
+    this.form.markAsPristine();
+  }
+
+  protected onModelSet(model: __PARTNAME__Part): void {
+    this.updateForm(model);
+  }
+
+  protected onThesauriSet(): void {
+    // TODO set entries from this.thesauri, e.g.:
+    // const key = "note-tags";
+    // if (this.thesauri && this.thesauri[key]) {
+    // this.tagEntries = this.thesauri[key].entries;
+    // } else {
+    //   this.tagEntries = null;
+    // }
+    // if not using any thesauri, just remove this function
+  }
+
+  protected getModelFromForm(): __PARTNAME__Part {
+    let part = this.getModelFromJson();
+    if (!part) {
+      part = {
+        itemId: this.itemId,
+        id: null,
+        typeId: __PARTNAME___PART_TYPEID,
+        roleId: this.roleId,
+        timeCreated: new Date(),
+        creatorId: null,
+        timeModified: new Date(),
+        userId: null,
+        // TODO default values
+      };
+    }
+    // TODO set part.properties from form controls
+    return part;
+  }
+}
+```
+
 Sample code:
 
 ```ts
