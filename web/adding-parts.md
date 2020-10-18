@@ -304,7 +304,7 @@ export class __PARTNAME__PartComponent
 
   protected onThesauriSet(): void {
     // TODO set entries from this.thesauri, e.g.:
-    // const key = "note-tags";
+    // const key = 'note-tags';
     // if (this.thesauri && this.thesauri[key]) {
     // this.tagEntries = this.thesauri[key].entries;
     // } else {
