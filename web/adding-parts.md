@@ -592,7 +592,7 @@ export class __NAME__PartFeatureComponent
     );
   }
 
-  ngOnInit() {
+  public ngOnInit(): void {
     // TODO: select your thesauri if required, e.g.:
     // this.initEditor(['note-tags']);
     this.initEditor(['your', 'thesauri', 'ids', 'here']);
