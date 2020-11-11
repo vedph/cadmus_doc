@@ -46,7 +46,7 @@ namespace Cadmus.__PROJECT__.Parts
             //// tot-count
             //builder.Set("tot", Entries?.Count ?? 0, false);
 
-            //return builder.Build(this);
+            //return builder.Build(null);
 
             // ...or just use a simpler logic, like:
             // sample:
