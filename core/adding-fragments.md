@@ -1,6 +1,6 @@
 # Adding Fragments
 
-## Template
+## Fragment Template
 
 ```cs
 using System;
@@ -90,6 +90,129 @@ namespace Cadmus.__PROJECT__.Parts
             // TODO: append summary data...
 
             return sb.ToString();
+        }
+    }
+}
+```
+
+## Test Template
+
+```cs
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Xunit;
+using Cadmus.Core;
+using Cadmus.Core.Layers;
+using Fusi.Tools.Config;
+
+namespace Cadmus.__PROJECT__.Parts
+{
+    public sealed class __NAME__FragmentTest
+    {
+        private static __NAME__Fragment GetFragment()
+        {
+            return new __NAME__Fragment
+            {
+                Location = "1.23",
+                // TODO: set fragments data here...
+            };
+        }
+
+        [Fact]
+        public void Fragment_Has_Tag()
+        {
+            TagAttribute attr = typeof(__NAME__Fragment).GetTypeInfo()
+                .GetCustomAttribute<TagAttribute>();
+            string typeId = attr != null ? attr.Tag : GetType().FullName;
+            Assert.NotNull(typeId);
+            Assert.StartsWith(PartBase.FR_PREFIX, typeId);
+        }
+
+        [Fact]
+        public void Fragment_Is_Serializable()
+        {
+            __NAME__Fragment fragment = GetFragment();
+
+            string json = TestHelper.SerializeFragment(fragment);
+            __NAME__Fragment fragment2 =
+                TestHelper.DeserializeFragment<__NAME__Fragment>(json);
+
+            Assert.Equal(fragment.Location, fragment2.Location);
+            // TODO: check fragments data here...
+        }
+
+        // TODO: add GetDataPins tests
+        // [Fact]
+        // public void GetDataPins_Tag_1()
+        // {
+        //     __NAME__Fragment fragment = GetFragment();
+
+        //     List<DataPin> pins = fragment.GetDataPins(null).ToList();
+        // ...
+        // }
+    }
+}
+```
+
+You can add this `TestHelper`:
+
+```cs
+using Cadmus.Core;
+using Cadmus.Core.Layers;
+using System;
+using System.Text.Json;
+using Xunit;
+
+namespace Cadmus.__PROJECT__.Parts.Test
+{
+    internal sealed class TestHelper
+    {
+        private static readonly JsonSerializerOptions _options =
+            new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            };
+
+        public static string SerializePart(IPart part)
+        {
+            if (part == null)
+                throw new ArgumentNullException(nameof(part));
+
+            return JsonSerializer.Serialize(part, part.GetType(), _options);
+        }
+
+        public static T DeserializePart<T>(string json)
+            where T : class, IPart, new()
+        {
+            if (json == null)
+                throw new ArgumentNullException(nameof(json));
+
+            return JsonSerializer.Deserialize<T>(json, _options);
+        }
+
+        public static string SerializeFragment(ITextLayerFragment fr)
+        {
+            if (fr == null)
+                throw new ArgumentNullException(nameof(fr));
+
+            return JsonSerializer.Serialize(fr, fr.GetType(), _options);
+        }
+
+        public static T DeserializeFragment<T>(string json)
+            where T : class, ITextLayerFragment, new()
+        {
+            if (json == null)
+                throw new ArgumentNullException(nameof(json));
+
+            return JsonSerializer.Deserialize<T>(json, _options);
+        }
+
+        public static void AssertPinIds(IPart part, DataPin pin)
+        {
+            Assert.Equal(part.ItemId, pin.ItemId);
+            Assert.Equal(part.Id, pin.PartId);
+            Assert.Equal(part.RoleId, pin.RoleId);
         }
     }
 }
