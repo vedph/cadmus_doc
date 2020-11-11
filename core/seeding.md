@@ -163,7 +163,7 @@ A JSON template for the seeder configuration follows:
   "seed": {
     "options": {
       "seed": 1,
-      "users": [ "zeus" ],
+      "users": ["zeus"],
       "partRoles": [],
       "fragmentRoles": []
     },
@@ -187,23 +187,13 @@ A JSON template for the seeder configuration follows:
       {
         "id": "seed.it.vedph.keywords",
         "options": {
-          "languages": [
-            "eng",
-            "deu",
-            "ita",
-            "fra",
-            "spa"
-          ]
+          "languages": ["eng", "deu", "ita", "fra", "spa"]
         }
       },
       {
         "id": "seed.it.vedph.note",
         "options": {
-          "tags": [
-            "language",
-            "history",
-            "geography"
-          ]
+          "tags": ["language", "history", "geography"]
         }
       },
       {
@@ -214,11 +204,7 @@ A JSON template for the seeder configuration follows:
       {
         "id": "seed.fr.it.vedph.comment",
         "options": {
-          "tags": [
-            "language",
-            "history",
-            "geography"
-          ]
+          "tags": ["language", "history", "geography"]
         }
       }
     ]
@@ -251,13 +237,13 @@ The configuration feeds a seeder factory (`PartSeederFactory`), which is used to
 
 As for **items**, we handle a fixed schema, so a unique item seeder (`ItemSeeder`) is used.
 
-The only variable data is represented here by the item's *sort key*, which can be built using any implementation of `IItemSortKeyBuilder`.
+The only variable data is represented here by the item's _sort key_, which can be built using any implementation of `IItemSortKeyBuilder`.
 
 By default, the item seeder uses the `StandardItemSortKeyBuilder`, which just relies on the item's title.
 
 You can override this key by specifying another item sort key builder in the seeder configuration. In this case, this builder gets called after all the parts have been added to the items being created. This allows the sort key builder to access data from all the item's parts.
 
-*Note*: item sort key builders requiring access to item's parts must first look for parts in the received item object; if not set, it can use the received repository (if any) to retrieve them from the database. In the case of seeders, the item received by the builder always has all its parts.
+_Note_: item sort key builders requiring access to item's parts must first look for parts in the received item object; if not set, it can use the received repository (if any) to retrieve them from the database. In the case of seeders, the item received by the builder always has all its parts.
 
 ## Parts
 
@@ -450,15 +436,167 @@ namespace Cadmus.Seed.Parts.Layers
 }
 ```
 
+## Adding Fragment Seeders Test
+
+Template:
+
+```cs
+using Cadmus.Core;
+using Cadmus.Core.Layers;
+using Fusi.Tools.Config;
+using System;
+using System.Reflection;
+using Xunit;
+
+namespace Cadmus.Seed.YourNamespace
+{
+    public sealed class __NAME__LayerFragmentSeederTest
+    {
+        private static readonly PartSeederFactory _factory;
+        private static readonly SeedOptions _seedOptions;
+        private static readonly IItem _item;
+
+        static __NAME__LayerFragmentSeederTest()
+        {
+            _factory = TestHelper.GetFactory();
+            _seedOptions = _factory.GetSeedOptions();
+            _item = _factory.GetItemSeeder().GetItem(1, "facet");
+        }
+
+        [Fact]
+        public void TypeHasTagAttribute()
+        {
+            Type t = typeof(__NAME__LayerFragmentSeeder);
+            TagAttribute attr = t.GetTypeInfo().GetCustomAttribute<TagAttribute>();
+            Assert.NotNull(attr);
+            Assert.Equal("seed.fr.it.vedph.__NAME__", attr.Tag);
+        }
+
+        [Fact]
+        public void GetFragmentType_Ok()
+        {
+            __NAME__LayerFragmentSeeder seeder = new __NAME__LayerFragmentSeeder();
+            Assert.Equal(typeof(__NAME__LayerFragment), seeder.GetFragmentType());
+        }
+
+        [Fact]
+        public void Seed_WithOptions_Ok()
+        {
+            __NAME__LayerFragmentSeeder seeder = new __NAME__LayerFragmentSeeder();
+            seeder.SetSeedOptions(_seedOptions);
+            seeder.Configure(new __NAME__LayerFragmentSeederOptions
+            {
+                // TODO: your seeder options properties here...
+                // e.g.:
+                // Tags = new[]
+                // {
+                //     "battle",
+                //     "priesthood",
+                //     "consulship"
+                // }
+            });
+
+            ITextLayerFragment fragment = seeder.GetFragment(_item, "1.1", "alpha");
+
+            Assert.NotNull(fragment);
+
+            __NAME__LayerFragment fr = fragment as __NAME__LayerFragment;
+            Assert.NotNull(fr);
+
+            Assert.Equal("1.1", fr.Location);
+            // TODO other assertions...
+        }
+    }
+}
+```
+
+TestHelper sample: this implies you have a sample seed configuration with `facets` and `seed` sections under assets (see e.g. [here](https://github.com/vedph/cadmus_core/blob/master/Cadmus.Seed.Philology.Parts.Test/Assets/SeedConfig.json)).
+
+```cs
+using Cadmus.Core;
+using Cadmus.Core.Config;
+using Cadmus.Philology.Parts.Layers;
+using Cadmus.Seed.Parts.General;
+using Cadmus.Seed.Philology.Parts.Layers;
+using Fusi.Microsoft.Extensions.Configuration.InMemoryJson;
+using Microsoft.Extensions.Configuration;
+using SimpleInjector;
+using System;
+using System.IO;
+using System.Reflection;
+using System.Text;
+using Xunit;
+
+namespace Cadmus.Seed.Parts.Test
+{
+    static internal class TestHelper
+    {
+        static public string LoadResourceText(string name)
+        {
+            if (name == null) throw new ArgumentNullException(nameof(name));
+
+            using (StreamReader reader = new StreamReader(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                    $"Cadmus.Seed.Philology.Parts.Test.Assets.{name}"),
+                Encoding.UTF8))
+            {
+                return reader.ReadToEnd();
+            }
+        }
+
+        static public PartSeederFactory GetFactory()
+        {
+            // map
+            TagAttributeToTypeMap map = new TagAttributeToTypeMap();
+            map.Add(new[]
+            {
+                // Cadmus.Core
+                typeof(StandardItemSortKeyBuilder).Assembly,
+                // Cadmus.Philology.Parts
+                typeof(ApparatusLayerFragment).Assembly
+            });
+
+            // container
+            Container container = new Container();
+            PartSeederFactory.ConfigureServices(
+                container,
+                new StandardPartTypeProvider(map),
+                new[]
+                {
+                    // Cadmus.Seed.Parts
+                    typeof(NotePartSeeder).Assembly,
+                    // Cadmus.Seed.Philology.Parts
+                    typeof(ApparatusLayerFragmentSeeder).Assembly
+                });
+
+            // config
+            IConfigurationBuilder builder = new ConfigurationBuilder()
+                .AddInMemoryJson(LoadResourceText("SeedConfig.json"));
+            var configuration = builder.Build();
+
+            return new PartSeederFactory(container, configuration);
+        }
+
+        static public void AssertPartMetadata(IPart part)
+        {
+            Assert.NotNull(part.Id);
+            Assert.NotNull(part.ItemId);
+            Assert.NotNull(part.UserId);
+            Assert.NotNull(part.CreatorId);
+        }
+    }
+}
+```
+
 ## Seed Usage
 
 In the API layer, the seed infrastructure is used at startup. As the system is designed for dockerization, the provided API layer must be capable of creating and seeding all the databases it requires from the database layer. This way, we can just fire up the API layer, and let it create the required databases if not found.
 
 These databases are 3:
 
-- *authentication* database: for authenticating users and defining their authorizations.
-- *log* database: for logging and auditing.
-- *Cadmus* database: for storing Cadmus data.
+- _authentication_ database: for authenticating users and defining their authorizations.
+- _log_ database: for logging and auditing.
+- _Cadmus_ database: for storing Cadmus data.
 
 When the API layer starts, it checks for the existence of these databases. If they don't exist, they get created, and seeded according to these parameters:
 

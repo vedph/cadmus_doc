@@ -1,5 +1,7 @@
 # Adding Parts
 
+For seeder templates see [seeding](seeding.md).
+
 Server-side parts in the editor are essentially used for indexing. Anyway, their model and logic can be used by any other 3rd party processor for its own purposes.
 
 ## Parts

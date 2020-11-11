@@ -1,5 +1,7 @@
 # Adding Fragments
 
+For seeder templates see [seeding](seeding.md).
+
 ## Fragment Template
 
 ```cs
@@ -17,7 +19,7 @@ namespace Cadmus.__PROJECT__.Parts
     /// </summary>
     /// <seealso cref="ITextLayerFragment" />
     [Tag("fr.it.vedph.__PROJECT__.__NAME__")]
-    public sealed class __NAME__Fragment : ITextLayerFragment
+    public sealed class __NAME__LayerFragment : ITextLayerFragment
     {
         /// <summary>
         /// Gets or sets the location of this fragment.
@@ -108,11 +110,11 @@ using Fusi.Tools.Config;
 
 namespace Cadmus.__PROJECT__.Parts
 {
-    public sealed class __NAME__FragmentTest
+    public sealed class __NAME__LayerFragmentTest
     {
-        private static __NAME__Fragment GetFragment()
+        private static __NAME__LayerFragment GetFragment()
         {
-            return new __NAME__Fragment
+            return new __NAME__LayerFragment
             {
                 Location = "1.23",
                 // TODO: set fragments data here...
@@ -122,7 +124,7 @@ namespace Cadmus.__PROJECT__.Parts
         [Fact]
         public void Fragment_Has_Tag()
         {
-            TagAttribute attr = typeof(__NAME__Fragment).GetTypeInfo()
+            TagAttribute attr = typeof(__NAME__LayerFragment).GetTypeInfo()
                 .GetCustomAttribute<TagAttribute>();
             string typeId = attr != null ? attr.Tag : GetType().FullName;
             Assert.NotNull(typeId);
@@ -132,11 +134,11 @@ namespace Cadmus.__PROJECT__.Parts
         [Fact]
         public void Fragment_Is_Serializable()
         {
-            __NAME__Fragment fragment = GetFragment();
+            __NAME__LayerFragment fragment = GetFragment();
 
             string json = TestHelper.SerializeFragment(fragment);
-            __NAME__Fragment fragment2 =
-                TestHelper.DeserializeFragment<__NAME__Fragment>(json);
+            __NAME__LayerFragment fragment2 =
+                TestHelper.DeserializeFragment<__NAME__LayerFragment>(json);
 
             Assert.Equal(fragment.Location, fragment2.Location);
             // TODO: check fragments data here...
@@ -146,7 +148,7 @@ namespace Cadmus.__PROJECT__.Parts
         // [Fact]
         // public void GetDataPins_Tag_1()
         // {
-        //     __NAME__Fragment fragment = GetFragment();
+        //     __NAME__LayerFragment fragment = GetFragment();
 
         //     List<DataPin> pins = fragment.GetDataPins(null).ToList();
         // ...
