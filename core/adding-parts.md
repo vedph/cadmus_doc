@@ -45,9 +45,16 @@ public sealed class __NAME__Part : PartBase
     /// <returns>The pins.</returns>
     public override IEnumerable<DataPin> GetDataPins(IItem item)
     {
-        throw new NotImplementedException();
+        // TODO: build pins, eventually using DataPinBuilder like this:
+        //DataPinBuilder builder = new DataPinBuilder(
+        //    new StandardDataPinTextFilter());
 
-        // TODO: implement indexing logic...
+        //// tot-count
+        //builder.Set("tot", Entries?.Count ?? 0, false);
+
+        //return builder.Build(this);
+
+        // ...or just use a simpler logic, like:
         // sample:
         // return Tag != null
         //    ? new[]
@@ -55,6 +62,8 @@ public sealed class __NAME__Part : PartBase
         //        CreateDataPin("tag", Tag)
         //    }
         //    : Enumerable.Empty<DataPin>();
+
+        throw new NotImplementedException();
     }
 
     /// <summary>

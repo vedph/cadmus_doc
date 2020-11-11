@@ -36,7 +36,8 @@ Core data and business layers.
   - [core config](./core/core.config.md)
   - [dynamic lookup](./core/dynamic-lookup.md)
 - [backend packages](./core/packages.md)
-- [adding parts and fragments](./core/adding-parts.md)
+- [adding parts](./core/adding-parts.md)
+- [adding fragments](./core/adding-fragments.md)
 - [profiles](./core/profiles.md)
 - [seeding](./core/seeding.md)
 
