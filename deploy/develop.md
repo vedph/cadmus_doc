@@ -50,6 +50,6 @@ If you want to play in the frontend with different databases in the development 
 
 1. *import the Cadmus MongoDB database* (via a custom tool, a standard import from a dump, etc.).
 
-2. *index the imported database* at once using `CadmusTool` e.g. `CadmusTool index <DATABASENAME> <PROFILEFILEPATH>`. The database name is just the MongoDB database name (e.g. `cadmus`); the profile file path is the full path to the JSON Cadmus profile file used for the imported database. Indexing normally happens during editing, but here we're importing a whole database at once, so we can use this tool to create the full corresponding index.
+2. *index the imported database* at once using [cadmus-tool](https://github.com/vedph/cadmus_tool). The database name is just the MongoDB database name (e.g. `cadmus`); the profile file path is the full path to the JSON Cadmus profile file used for the imported database. Indexing normally happens during editing, but here we're importing a whole database at once, so we can use this tool to create the full corresponding index.
 
 3. in the *web frontend*, temporarily edit `env.js` by changing the database name as desired. You can then launch both the backend and the frontend without changing anything else. The database used in the frontend (together with other relevant parameters) is defined in this `env.js`, which can be modified after the build. By default, it is `cadmus` too. The `env.js` file can be used to compile once, and then build different Docker images or scripts, each using a different version of that file.

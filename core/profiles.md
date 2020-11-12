@@ -318,6 +318,6 @@ A corresponding thesaurus in the [profile](profiles.md), with ID `item-browsers@
 }
 ```
 
-Note that the thesaurus entry is required to configure the browser object instantiated by the factory, while the thesaurus entry is just a presentational feature, used to provide a list of browsers to a UI.
+Note that the `browsers` entry is required to configure the browser object instantiated by the factory, while the thesaurus entry is just a presentational feature, used to provide a list of browsers to a UI.
 
 For instance, when this thesaurus is found, the standard Cadmus web app provides an `Items` menu with a list of browsers derived from it, plus the link to the default list-based browser. When it is not found, the app just provides a single `Items` link which provides the default list-based browser.

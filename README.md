@@ -11,6 +11,30 @@ For a more theoric and non-technical introduction to the Cadmus system, please s
 
 Note: all the diagrams found in this documentation are made using [PlantUml](https://plantuml.com/). Some editors like [VSCode](https://code.visualstudio.com/) have extensions which directly support viewing them in a Markdown preview. See the [PlantUml web site](https://plantuml.com/) for more visualization options.
 
+## Projects Directory
+
+System projects:
+
+- [documentation](https://github.com/vedph/cadmus_doc) (this repository)
+- [backend core](https://github.com/vedph/cadmus_core)
+- [API libraries and basic API](https://github.com/vedph/cadmus_api)
+- [app libraries and basic app](https://github.com/vedph/cadmus_shell)
+- [CLI tool](https://github.com/vedph/cadmus_tool)
+
+Projects using Cadmus:
+
+- Cadmus MQDQ (parts and API are from the system projects):
+  - [app](https://github.com/vedph/cadmus_mqdq_app)
+- Cadmus Itinera
+  - [documentation](https://github.com/vedph/cadmus_itinera_doc)
+  - [parts](https://github.com/vedph/cadmus_itinera)
+  - [API](https://github.com/vedph/cadmus_itinera_api)
+  - [app](https://github.com/vedph/cadmus_itinera_app)
+- Cadmus TGR
+  - [parts](https://github.com/vedph/cadmus_tgr)
+  - API
+  - app
+
 ## Stack
 
 - [architecture overview](./architecture/overview.md)
