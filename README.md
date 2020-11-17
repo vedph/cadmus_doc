@@ -70,6 +70,7 @@ Core data and business layers.
 Web REST API.
 
 - [settings](./api/settings.md)
+- [creating](./api/creating.md)
 
 ## Web
 
