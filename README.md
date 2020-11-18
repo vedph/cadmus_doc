@@ -32,7 +32,7 @@ Projects using Cadmus:
   - [app](https://github.com/vedph/cadmus_itinera_app)
 - Cadmus TGR
   - [parts](https://github.com/vedph/cadmus_tgr)
-  - API
+  - [API](https://github.com/vedph/cadmus_tgr_api)
   - app
 
 ## Stack
@@ -76,7 +76,8 @@ Web REST API.
 
 Web frontend.
 
-- [architecture](./web/architecture.md): general monorepo architecture.
+- [creating](./web/creating.md): creating a Cadmus web app.
+- [architecture](./web/architecture.md): general architecture.
 - [routes](./web/routes.md): most relevant route templates.
 - [editor components](./web/editor-components.md): editor components.
 - [edit state](./web/edit-state.md): app's local edit state.
@@ -93,9 +94,3 @@ Web frontend.
 - [building Docker images](./deploy/docker-build.md)
 - [using Docker images](./deploy/docker-usage.md)
 - [importing MQDQ data](./deploy/mqdq.md)
-
-## Extending
-
-- [plugins overview](./plugins/overview.md)
-- [extending backend](./plugins/backend.md)
-- [extending frontend](./plugins/frontend.md)

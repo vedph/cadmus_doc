@@ -41,7 +41,156 @@ Usually you would not want to change sensitive data in this file, which is anywa
 
 8. copy `wwwroot` from CadmusApi, and customize its contents (the Cadmus profile, and if needed the messages template text).
 
-9. copy and customize classes from `Services` in CadmusApi, so that these include the assemblies with your required parts and fragments.
+9. copy and customize classes from `Services` in CadmusApi, so that these include the assemblies with your required parts and fragments. There are 2 required services:
+
+- an `IRepositoryProvider` implementation for the repository provider. Usually, all what you have to do is just using the template below to create the `AppRepositoryProvider`. In its constructor ensure to add references to all the assemblies with the parts and fragments you are going to use (eventually removing those you are not going to use):
+
+```cs
+using System;
+using System.Reflection;
+using Cadmus.Core;
+using Cadmus.Core.Config;
+using Cadmus.Core.Storage;
+using Cadmus.Mongo;
+using Cadmus.Parts.General;
+using Cadmus.Philology.Parts.Layers;
+using Microsoft.Extensions.Configuration;
+using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
+
+namespace Cadmus__PRJNAME__Api.Services
+{
+    /// <summary>
+    /// Application's repository provider.
+    /// </summary>
+    public sealed class AppRepositoryProvider : IRepositoryProvider
+    {
+        private readonly IConfiguration _configuration;
+        private readonly TagAttributeToTypeMap _map;
+        private readonly IPartTypeProvider _partTypeProvider;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AppRepositoryProvider"/> class.
+        /// </summary>
+        /// <param name="configuration">The configuration.</param>
+        /// <exception cref="ArgumentNullException">configuration</exception>
+        public AppRepositoryProvider(IConfiguration configuration)
+        {
+            _configuration = configuration ??
+                throw new ArgumentNullException(nameof(configuration));
+
+            _map = new TagAttributeToTypeMap();
+            _map.Add(new[]
+            {
+                // Cadmus.Parts
+                typeof(NotePart).GetTypeInfo().Assembly,
+                // Cadmus.Philology.Parts
+                typeof(ApparatusLayerFragment).GetTypeInfo().Assembly,
+                // TODO: add your additional parts here...
+            });
+
+            _partTypeProvider = new StandardPartTypeProvider(_map);
+        }
+
+        /// <summary>
+        /// Gets the part type provider.
+        /// </summary>
+        /// <returns>part type provider</returns>
+        public IPartTypeProvider GetPartTypeProvider()
+        {
+            return _partTypeProvider;
+        }
+
+        /// <summary>
+        /// Creates a Cadmus repository.
+        /// </summary>
+        /// <param name="database">The database name.</param>
+        /// <returns>repository</returns>
+        /// <exception cref="ArgumentNullException">null database</exception>
+        public ICadmusRepository CreateRepository(string database)
+        {
+            if (database == null)
+                throw new ArgumentNullException(nameof(database));
+
+            // create the repository (no need to use container here)
+            MongoCadmusRepository repository =
+                new MongoCadmusRepository(
+                    _partTypeProvider,
+                    new StandardItemSortKeyBuilder());
+
+            repository.Configure(new MongoCadmusRepositoryOptions
+            {
+                ConnectionString = string.Format(
+                    _configuration.GetConnectionString("Default"), database)
+            });
+
+            return repository;
+        }
+    }
+}
+```
+
+- an `IPartSeederFactoryProvider` implementation for the part seeder factory to be used with your components. Usually, you can just use the template below to build the `AppPartSeederFactoryProvider`. In its `GetFactory` method ensure to add references to all the assemblies with the parts and fragments you are going to use (eventually removing those you are not going to use):
+
+```cs
+using Cadmus.Core.Config;
+using Cadmus.Seed;
+using Cadmus.Seed.Parts.General;
+using Cadmus.Seed.Philology.Parts.Layers;
+using Fusi.Microsoft.Extensions.Configuration.InMemoryJson;
+using Microsoft.Extensions.Configuration;
+using SimpleInjector;
+using System;
+using System.Reflection;
+
+namespace Cadmus__PRJNAME__Api.Services
+{
+    /// <summary>
+    /// Application's part seeders factory provider.
+    /// </summary>
+    public sealed class AppPartSeederFactoryProvider : IPartSeederFactoryProvider
+    {
+        /// <summary>
+        /// Gets the part/fragment seeders factory.
+        /// </summary>
+        /// <param name="profile">The profile.</param>
+        /// <returns>Factory.</returns>
+        /// <exception cref="ArgumentNullException">profile</exception>
+        public PartSeederFactory GetFactory(string profile)
+        {
+            if (profile == null)
+                throw new ArgumentNullException(nameof(profile));
+
+            // build the tags to types map for parts/fragments
+            Assembly[] seedAssemblies = new[]
+            {
+                // Cadmus.Seed.Parts
+                typeof(NotePartSeeder).Assembly,
+                // Cadmus.Seed.Philology.Parts
+                typeof(ApparatusLayerFragmentSeeder).Assembly,
+                // TODO: add your parts here
+            };
+            TagAttributeToTypeMap map = new TagAttributeToTypeMap();
+            map.Add(seedAssemblies);
+
+            // build the container for seeders
+            Container container = new Container();
+            PartSeederFactory.ConfigureServices(
+                container,
+                new StandardPartTypeProvider(map),
+                seedAssemblies);
+
+            container.Verify();
+
+            // load seed configuration
+            IConfigurationBuilder builder = new ConfigurationBuilder()
+                .AddInMemoryJson(profile);
+            var configuration = builder.Build();
+
+            return new PartSeederFactory(container, configuration);
+        }
+    }
+}
+```
 
 10. in the project properties, set `swagger` as the value in `Launch browser`.
 
