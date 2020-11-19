@@ -1,6 +1,9 @@
 # Cadmus Conceptual Documentation
 
-- [Users help (incomplete)](./web/help/index.md)
+Quick start:
+
+- [setting up Docker](./deploy/docker-setup.md)
+- [using dockerized Cadmus](./deploy/docker-usage.md)
 
 Just like the Cadmus project itself, this documentation is work in progress. Its main purpose is highlighting some conceptual points standing behind the general architecture of the system.
 
@@ -33,7 +36,7 @@ Projects using Cadmus:
 - Cadmus TGR
   - [parts](https://github.com/vedph/cadmus_tgr)
   - [API](https://github.com/vedph/cadmus_tgr_api)
-  - app
+  - [app](https://github.com/vedph/cadmus_tgr_app)
 
 ## Stack
 
