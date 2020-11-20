@@ -11,7 +11,7 @@ In the `<partgroup>-ui` module:
 1. add the fragment _model_ (derived from `Fragment`), its type ID constant, and its JSON schema constant to `<fragment>.ts` (e.g. `comment-fragment.ts`). Remember to add the new file to the "barrel" `index.ts` in the module. You can use a template like this (replace `__NAME__` with your part's name, e.g. `Comment`, adjusting case where required):
 
 ```ts
-import { Fragment } from '@cadmus/core';
+import { Fragment } from '@myrmidon/cadmus-core';
 
 /**
  * The __NAME__ layer fragment server model.
@@ -25,7 +25,7 @@ export const __NAME___FRAGMENT_TYPEID = 'fr.it.vedph.__NAME__';
 export const __NAME___FRAGMENT_SCHEMA = {
   definitions: {},
   $schema: 'http://json-schema.org/draft-07/schema#',
-  $id: 'www.fusisoft.net/cadmus/fragments/general/' + __NAME___FRAGMENT_TYPEID + '.json',
+  $id: 'www.vedph.it/cadmus/fragments/general/' + __NAME___FRAGMENT_TYPEID + '.json',
   type: 'object',
   title: '__NAME__Fragment',
   // TODO: add which properties are required
