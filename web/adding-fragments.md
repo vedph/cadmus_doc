@@ -66,10 +66,11 @@ Sample code:
 
 ```ts
 import { Component, OnInit } from '@angular/core';
-import { CommentFragment } from '../comment-fragment';
-import { ModelEditorComponentBase, DialogService } from '@cadmus/ui';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
-import { ThesaurusEntry } from '@cadmus/core';
+import { ThesaurusEntry } from '@myrmidon/cadmus-core';
+import { AuthService } from '@myrmidon/cadmus-api';
+import { ModelEditorComponentBase, DialogService } from '@myrmidon/cadmus-ui';
+import { CommentFragment } from '../comment-fragment';
 
 /**
  * Comment fragment editor component.
@@ -83,7 +84,7 @@ import { ThesaurusEntry } from '@cadmus/core';
 export class CommentFragmentComponent
   extends ModelEditorComponentBase<CommentFragment>
   implements OnInit {
-  public fragment: CommentFragment;
+  public fragment: CommentFragment | undefined;
 
   public tag: FormControl;
   public tags: FormControl;
@@ -112,46 +113,45 @@ export class CommentFragmentComponent
     });
   }
 
-  ngOnInit() {
+  public ngOnInit(): void {
     this.initEditor();
   }
 
-  private updateForm(model: CommentFragment) {
+  private updateForm(model: __NAME__Fragment): void {
     if (!model) {
       this.form.reset();
       return;
     }
-    this.tag.setValue(model.tag);
-    this.tags.setValue(model.tag);
-    this.text.setValue(model.text);
+    // TODO set form controls from model, e.g.:
+    // this.tag.setValue(model.tag);
     this.form.markAsPristine();
   }
 
-  protected onModelSet(model: CommentFragment) {
+  protected onModelSet(model: __NAME__Fragment): void {
     this.fragment = model;
     this.updateForm(model);
   }
 
-  protected onThesauriSet() {
-    const key = 'comment-tags';
-    if (this.thesauri && this.thesauri[key]) {
-      this.tagEntries = this.thesauri[key].entries;
-    } else {
-      this.tagEntries = null;
-    }
+  protected onThesauriSet(): void {
+    // TODO: set thesaurus entries
+    // const key = 'comment-tags';
+    // if (this.thesauri && this.thesauri[key]) {
+    //   this.tagEntries = this.thesauri[key].entries;
+    // } else {
+    //   this.tagEntries = null;
+    // }
   }
 
-  protected getModelFromForm(): CommentFragment {
+  protected getModelFromForm(): __NAME__Fragment {
     let fr = this.getModelFromJson();
     if (!fr) {
       fr = {
         location: this.fragment ? this.fragment.location : null,
-        tag: null,
-        text: null
+        // TODO null properties
       };
     }
-    fr.tag = this.trimIfAny(this.tag.value);
-    fr.text = this.text.value? this.text.value.trim() : null;
+    // TODO: set fr properties from controls, e.g.:
+    // fr.tag = this.trimIfAny(this.tag.value);
     return fr;
   }
 }
