@@ -67,7 +67,7 @@ Sample code:
 ```ts
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
-import { ThesaurusEntry } from '@myrmidon/cadmus-core';
+import { Fragment, ThesaurusEntry } from '@myrmidon/cadmus-core';
 import { AuthService } from '@myrmidon/cadmus-api';
 import { ModelEditorComponentBase, DialogService } from '@myrmidon/cadmus-ui';
 import { CommentFragment } from '../comment-fragment';
@@ -84,7 +84,7 @@ import { CommentFragment } from '../comment-fragment';
 export class CommentFragmentComponent
   extends ModelEditorComponentBase<CommentFragment>
   implements OnInit {
-  public fragment: CommentFragment | undefined;
+  public fragment: Fragment | undefined;
 
   public tag: FormControl;
   public tags: FormControl;
@@ -146,7 +146,7 @@ export class CommentFragmentComponent
     let fr = this.getModelFromJson();
     if (!fr) {
       fr = {
-        location: this.fragment ? this.fragment.location : null,
+        location: this.fragment?.location ?? '',
         // TODO null properties
       };
     }
@@ -166,15 +166,15 @@ Sample HTML template:
       <div mat-card-avatar>
         <mat-icon>textsms</mat-icon>
       </div>
-      <mat-card-title>__NAME__ Fragment {{ fragment?.location }}</mat-card-title>
+      <mat-card-title
+        >LingTags Fragment {{ fragment?.location }}</mat-card-title
+      >
       <mat-card-subtitle>
         {{ fragment?.baseText }}
       </mat-card-subtitle>
     </mat-card-header>
 
-    <mat-card-content>
-      TODO: add controls
-    </mat-card-content>
+    <mat-card-content> TODO: add controls </mat-card-content>
 
     <mat-card-actions>
       <cadmus-close-save-buttons
