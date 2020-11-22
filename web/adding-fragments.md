@@ -341,17 +341,20 @@ export const PART_EDITOR_KEYS: PartEditorKeys = {
 
 ## Adding Fragment Feature to the PartGroup-Feature Library
 
-In a `<partgroup>-feature` module:
+In a `<partgroup>-pg` module:
 
-1. add a _fragment editor feature component_ named after the part (e.g. `ng g component comment-fragment-feature` for `CommentFragmentFeatureComponent` after `CommentFragment`), with routing. Ensure that this component is both under the module `declarations` and `exports`. Each editor has its component, and its state management artifacts under the same folder (store, query, and service). Add the corresponding route in the module, e.g.:
+1. add a _fragment editor feature component_ named after the part (e.g. `ng g component comment-fragment-feature` for `CommentFragmentFeatureComponent` after `CommentFragment`), with routing. Ensure that this component is both under the module `declarations` and in `public-api.ts`. Each editor has its component, and its state management artifacts under the same folder (store, query, and service). Add the corresponding route in the module file, under the `RouterModuleForChild` constant (which is among the `imports` of the module) e.g.:
 
 ```ts
-{
-  path: `fragment/:pid/${__NAME___FRAGMENT_TYPEID}/:loc`,
-  pathMatch: 'full',
-  component: __NAME__FragmentFeatureComponent,
-  canDeactivate: [PendingChangesGuard]
-}
+export const RouterModuleForChild = RouterModule.forChild([
+  // other routes...
+  {
+    path: `fragment/:pid/${__NAME___FRAGMENT_TYPEID}/:loc`,
+    pathMatch: 'full',
+    component: __NAME__FragmentFeatureComponent,
+    canDeactivate: [PendingChangesGuard]
+  }
+]);
 ```
 
 2. inside this new component's folder, add a new _store_ for your model, named `edit-<fragmentname>-fragment.store.ts`. Template:
@@ -363,8 +366,9 @@ import {
   EditFragmentState,
   EditFragmentStoreApi,
   editFragmentInitialState
-} from '@cadmus/features/edit-state';
-import { __NAME___FRAGMENT_TYPEID } from '@cadmus/parts/__PARTGROUP__/__PARTGROUP__-ui';
+} from '@myrmidon/cadmus-state';
+// change this import as required
+import { __NAME___FRAGMENT_TYPEID } from '@myrmidon/cadmus-tgr-part-gr-ui';
 
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: __NAME___FRAGMENT_TYPEID })
@@ -387,7 +391,7 @@ export class Edit__NAME__FragmentStore extends Store<EditFragmentState>
 
 ```ts
 import { Injectable } from '@angular/core';
-import { EditFragmentQueryBase } from '@cadmus/features/edit-state';
+import { EditFragmentQueryBase } from '@myrmidon/cadmus-state';
 import { Edit__NAME__FragmentStore } from './edit-__NAME__-fragment.store';
 
 @Injectable({ providedIn: 'root' })
@@ -404,8 +408,8 @@ export class Edit__NAME__FragmentQuery extends EditFragmentQueryBase {
 
 ```ts
 import { Injectable } from '@angular/core';
-import { ItemService, ThesaurusService } from '@cadmus/api';
-import { EditFragmentServiceBase } from '@cadmus/features/edit-state';
+import { ItemService, ThesaurusService } from '@myrmidon/cadmus-api';
+import { EditFragmentServiceBase } from '@myrmidon/cadmus-state';
 import { Edit__NAME__FragmentStore } from './edit-__NAME__-fragment.store';
 
 @Injectable({ providedIn: 'root' })
@@ -434,7 +438,8 @@ import {
   EditLayerPartQuery,
   EditLayerPartService,
   EditFragmentFeatureBase
-} from '@cadmus/features/edit-state';
+} from '@myrmidon/cadmus-state';
+import { LibraryRouteService } from '@myrmidon/cadmus-core';
 
 @Component({
   selector: 'cadmus-__NAME__-fragment-feature',
@@ -446,6 +451,7 @@ export class __NAME__FragmentFeatureComponent extends EditFragmentFeatureBase
   constructor(
     router: Router,
     route: ActivatedRoute,
+    snackbar: MatSnackBar,
     editFrQuery: Edit__NAME__FragmentQuery,
     editFrService: Edit__NAME__FragmentService,
     editItemQuery: EditItemQuery,
@@ -457,6 +463,7 @@ export class __NAME__FragmentFeatureComponent extends EditFragmentFeatureBase
     super(
       router,
       route,
+      snackbar,
       editFrQuery,
       editFrService,
       editItemQuery,
@@ -493,3 +500,19 @@ Define the corresponding HTML template like:
   (dirtyChange)="onDirtyChange($event)"
 ></cadmus-__NAME__-fragment>
 ```
+
+6. in your app's project `part-editor-keys.ts`, add the mapping for the fragment just created under the layer part key, like e.g.:
+
+```ts
+// layer parts
+[TOKEN_TEXT_LAYER_PART_TYPEID]: {
+  part: GENERAL,
+  fragments: {
+    [COMMENT_FRAGMENT_TYPEID]: GENERAL,
+    [APPARATUS_FRAGMENT_TYPEID]: PHILOLOGY,
+    [LING_TAGS_FRAGMENT_TYPEID]: TGR_GR,
+  },
+},
+```
+
+Here, the type ID of the fragment (from its model in the "ui" library) is mapped to the route prefix constant TGR_GR = `tgr-gr`, which is the root route to the "pg" library module for the app.
