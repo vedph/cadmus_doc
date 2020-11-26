@@ -17,7 +17,7 @@ As for the backend, based on the [cadmus_api](https://github.com/vedph/cadmus_ap
 - any other project can add its models by just adding new parts and fragments, packed into their libraries.
 - API services provide the essential backbone for authentication, messaging, and data seeding. These are packed in a single API services library.
 - the API packs all these pieces together, providing an API layer. In the case of the default API, this is a RESTful API layer. Each API gets packed into a Docker image, which is composed with all the other pieces to build a self-contained stack.
-- other APIs could be created in the same way. Currently, projects are limited and Cadmus is under active development, so the best choice is just adding other projects libraries to the same API package. In the future, we could easily create new, independent APIs with just the required dependencies, one for each project, with its Docker image.
+- other APIs can be [created](../api/creating.md) in the same way, each with its Docker image.
 
 All the backend code is .NET Core C#, packed into NuGet libraries. The API is an ASP.NET Core API web app.
 
@@ -27,7 +27,7 @@ The frontend part is based on the [cadmus_shell](https://github.com/vedph/cadmus
 
 ![frontend](../images/overview_front.png)
 
-The `cadmus_shell` repository provides a full working sample shell application, whose primary purpose is providing a stock web application and a development environment for the libraries. All the important code is distributed into a set of NPM libraries:
+The `cadmus_shell` repository provides a full working sample shell application, whose primary purpose is providing a stock web application and a development environment for the libraries. All the important code is distributed into a set of NPM libraries (all under the `@myrmidon` group: `@myrmidon/cadmus-core`, etc.):
 
 - core models and services.
 - API services talking to the API backend.
