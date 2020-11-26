@@ -111,14 +111,14 @@ Once you have created the workspace as explained above:
 "@myrmidon/cadmus-login": "^0.0.5",
 "@myrmidon/cadmus-material": "^0.0.4",
 "@myrmidon/cadmus-part-general-pg": "^0.0.5",
-"@myrmidon/cadmus-part-general-ui": "^0.0.5",
+"@myrmidon/cadmus-part-general-ui": "^0.0.10",
 "@myrmidon/cadmus-part-philology-pg": "^0.0.5",
 "@myrmidon/cadmus-part-philology-ui": "^0.0.5",
 "@myrmidon/cadmus-reset-password": "^0.0.5",
 "@myrmidon/cadmus-state": "^0.0.6",
 "@myrmidon/cadmus-thesaurus-editor": "^0.0.7",
 "@myrmidon/cadmus-thesaurus-list": "^0.0.5",
-"@myrmidon/cadmus-ui": "^0.0.8",
+"@myrmidon/cadmus-ui": "^0.0.14",
 "@myrmidon/cadmus-ui-pg": "^0.0.5",
 "@myrmidon/cadmus-user": "^0.0.5"
 ```
