@@ -34,6 +34,7 @@ Projects using Cadmus:
   - [API](https://github.com/vedph/cadmus_itinera_api)
   - [app](https://github.com/vedph/cadmus_itinera_app)
 - Cadmus TGR
+  - [documentation](https://github.com/vedph/cadmus_tgr_doc)
   - [parts](https://github.com/vedph/cadmus_tgr)
   - [API](https://github.com/vedph/cadmus_tgr_api)
   - [app](https://github.com/vedph/cadmus_tgr_app)
