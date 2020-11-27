@@ -41,22 +41,112 @@ Operations:
 
 ### Edit Part
 
-- store: `Edit<PartName>PartStore` extending `Store<EditPartState>`. The store ID is equal to the part type ID. The service `Edit<PartName>PartService` extends `EditPartServiceBase`; it uses an `ItemService` and a `ThesaurusService` to exchange data with the backend, and manages its `Edit<PartName>PartStore` store. The query `Edit<PartName>PartQuery` extends `EditPartQueryBase`, in turn extending `Query<EditPartState>`.
-- component: `<PartName>PartComponent`, `<PartName>PartFeatureComponent`.
+Editing a part implies a lot of different components, organized in a structure which is common to all the parts.
 
-Part editors are all found in lazily-loaded libraries, each at its own route like `/items/<id>/<part-group>/<part-typeid>/<part-id>?rid=<role-id>` (where `rid` is optional).
+This structure is fully wrapped in two libraries which provide part and fragment editors to the shell. The first library (known as ui-library) contains the core editor components; the second library (known as pg-library) depends on the first, and it is just a wrapper for the ui-library components, connecting them to the shell application.
 
-Each part editor is a dumb UI component extending `ModelEditorComponentBase<ModelType>`; it gets and emits the edited model serialized in a JSON string. So, its implementation consists of its own editing logic and UI, plus some plumbing for updating the UI from the model, getting the model from the UI, and getting thesauri when required.
-
-Each of these editor components is wrapped inside a part editor feature component, which extends `EditPartFeatureBase` and corresponds to a route in the application. Its UI contains only the current item bar at the top, and the dumb editor component.
-
-### Edit Fragment
-
-- store: `Edit<FragmentName>FragmentStore` extending `Store<EditFragmentState>`. `Edit<FragmentName>FragmentService` extends `EditFragmentServiceBase`. `Edit<FragmentName>FragmentQuery` extends `EditFragmentQueryBase`.
-- component: `<FragmentName>FragmentComponent` extending `ModelEditorComponentBase<ModelType>`, `<FragmentName>FragmentFeatureComponent` extending `EditFragmentFeatureBase`.
+Part editors are all found in lazily-loaded libraries, each at its own route like `/items/<id>/<part-group>/<part-typeid>/<part-id>?rid=<role-id>` (where `rid` is optional). These routes are provided by the pg-library.
 
 Fragment editors, like part editors, are all found in lazily loaded libraries, each at its own route like `/items/<id>/<part-group>/fragment/<part-id>/<fr-typeid>/<loc>?rid=<role-id>` (where `rid` is optional).
 
-Each fragment editor is a dumb UI component extending `ModelEditorComponentBase<ModelType>`; it gets and emits the edited model serialized in a JSON string. So, its implementation consists of its own editing logic and UI, plus some plumbing for updating the UI from the model, getting the model from the UI, and getting thesauri when required.
+#### Part Editor Component
 
-Each of these editor components is wrapped inside a fragment editor feature component, which extends `EditFragmentFeatureBase`, and corresponds to a route in the application. Its UI contains only the current item bar, the decorated base text, and the dumb editor component.
+At the base we have a *part editor component*, which is the UI in charge of editing the specific part's data model.
+
+By convention, a part editor UI is named like `<PartName>PartComponent`.
+
+This is a component with any UI, extending the base class `ModelEditorComponentBase<T>`. Even if deriving your component from this class is not a requirement, it's the suggested way of building editors, because it provides the wiring between the component UI and its common functions (like loading and saving model data, loading thesauri, and initialize common resources):
+
+- `initEditor` must be called in `ngOnInit`.
+- `onModelSet(model: T)` is handled to update the form from the received part.
+- `onThesauriSet()` is handled to get taxonomies from thesauri once the required thesauri have been loaded.
+- `getModelFromForm(): T` is called when the user wants to save the edited part. It does the inverse of `onModelSet`, building the part model from the form.
+
+The part editor exposes this interface (via its base class):
+
+- input:
+  - item ID
+  - role ID
+  - JSON code representing the part
+  - thesauri
+  - disabled
+- output:
+  - JSON code change
+  - editor close request
+  - dirty state change
+
+#### Part Feature Component
+
+This is the component of the pg-library, wrapping the corresponding `<PartName>EditorComponent`. In turn, it extends `EditPartFeatureBase`, which connects the wrapped component to an edit route.
+
+The base class extracts item ID, part ID (equal to `new` if the part is new), and role ID (equal to `default` for no specific role) of the edited part from the route which lead to itself.
+
+Also, the base class has these **dependencies**:
+
+- the Akita **part query** component of the part being edited.
+- the Akita **part service** component of the part being edited.
+- the Akita **item query** component of the item including the part being edited.
+- the Akita **item service** component of the item including the part being edited.
+
+The JSON code of the part being edited and its thesauri are exposed via two observables (`json$` and `thesauri$`). These are connected to the Akita part **query**. The part query is used to fetch the part (and its thesauri) from its store. Each part query extends `EditPartQueryBase`, and receives the Akita store for its part.
+
+In turn, the **store** implements the interface `EditPartStoreApi`, and extends Akita `Store<EditPartState>`. `EditPartState` represents the state of the part being edited, including:
+
+- the part
+- thesauri
+- dirty flag
+- saving flag
+- loading flag
+- eventual error message
+
+The base class implements `ComponentCanDeactivate` to allow using the `PendingChangesGuard`. To this end, it tracks the dirty state of the edited data coming from 2 different sources:
+
+- the wrapped editor state (from its "root" form).
+- the store edit state. This is set to dirty when a save attempt fails.
+
+Thus, at the end the user will be prompted when closing an editor either because he has changed data in it, or because he attempted a save without success.
+
+### Edit Fragment
+
+Editing fragments is a special case of part editing. In fact, when loading and saving data, it's the whole layer part which gets transferred. Yet, the part being edited is just a collection of fragments. Each fragment gets edited in its own UI, using the corresponding fragment editor.
+
+#### Fragment Editor Component
+
+A fragment is edited in the UI provided by the *fragment editor component*, conventionally named like `<FragmentName>FragmentComponent`.
+
+As seen above for the part, it extends the same `ModelEditorComponentBase<T>` class.
+
+#### Fragment Feature Component
+
+The fragment editor component is wrapped in an editor in the pg-library, named like `<FragmentName>FragmentFeatureComponent`.
+
+In turn, it extends `EditFragmentFeatureBase`, which connects the wrapped component to an edit route.
+
+The base class extracts from its route the item ID, part ID (equal to `new` if the part is new), role ID (equal to `default` for no specific role), of the edited part; and the fragment type ID, location and role ID.
+
+Also, the base class has these **dependencies**:
+
+- the Akita **fragment query** component of the fragment being edited.
+- the Akita **fragment service** component of the fragment being edited.
+- the Akita **item query** component of the item including the part being edited.
+- the Akita **item service** component of the item including the part being edited.
+- the Akita **layers query** component.
+- the Akita **layers service** component.
+
+The JSON code of the part being edited and its thesauri are exposed via two observables (`json$` and `thesauri$`); the base text of the fragment is exposed in another observable (`baseText$`). These are connected to the Akita fragment and layers **query**. The fragment query is used to fetch the fragment (and its thesauri) from its store. Each fragment query extends `EditFragmentQueryBase`, and receives the Akita store for its fragment.
+
+In turn, the **store** implements the interface `EditFragmentStoreApi`, and extends Akita `Store<EditFragmentState>`. `EditFragmentState` represents the state of the fragment being edited, including:
+
+- the fragment
+- thesauri
+- dirty flag
+- saving flag
+- loading flag
+- eventual error message
+
+The base class implements `ComponentCanDeactivate` to allow using the `PendingChangesGuard`. To this end, it tracks the dirty state of the edited data coming from 2 different sources:
+
+- the wrapped editor state (from its "root" form).
+- the store edit state. This is set to dirty when a save attempt fails.
+
+Thus, at the end the user will be prompted when closing an editor either because he has changed data in it, or because he attempted a save without success.
