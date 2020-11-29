@@ -67,11 +67,11 @@ The part editor exposes this interface (via its base class):
 - input:
   - item ID
   - role ID
-  - JSON code representing the part
+  - the part
   - thesauri
   - disabled
 - output:
-  - JSON code change
+  - part change
   - editor close request
   - dirty state change
 
@@ -88,7 +88,7 @@ Also, the base class has these **dependencies**:
 - the Akita **item query** component of the item including the part being edited.
 - the Akita **item service** component of the item including the part being edited.
 
-The JSON code of the part being edited and its thesauri are exposed via two observables (`json$` and `thesauri$`). These are connected to the Akita part **query**. The part query is used to fetch the part (and its thesauri) from its store. Each part query extends `EditPartQueryBase`, and receives the Akita store for its part.
+The part being edited and its thesauri are exposed via two observables (`part$` and `thesauri$`). These are connected to the Akita part **query**. The part query is used to fetch the part (and its thesauri) from its store. Each part query extends `EditPartQueryBase`, and receives the Akita store for its part.
 
 In turn, the **store** implements the interface `EditPartStoreApi`, and extends Akita `Store<EditPartState>`. `EditPartState` represents the state of the part being edited, including:
 
