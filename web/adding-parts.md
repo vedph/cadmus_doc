@@ -246,7 +246,7 @@ If you want to infer a schema in the [JSON schema tool](https://jsonschema.net/)
    2. eventually add _thesaurus_ entries properties for binding, populating them by overriding `onThesauriSet` (`protected onThesauriSet() {}`).
    3. implement `OnInit` calling `this.initEditor();` in it.
    4. (from _model to form_): implement `onModelSet` (`protected onModelSet(model: YourModel)`) by calling an `updateForm(model: YourModel)` which either resets the form if the model is falsy, or sets the various form's controls values according to the received model, finally marking the form as pristine.
-   5. (from _form to model_): override `getModelFromForm(): YourModel` to get the model from form controls by calling the base class `getModelFromJson`. If this returns null, create a new part object with default values (you just need to set `typeId` for the `Part`'s interface properties); then, fill the part object properties from the form's controls. This merges the inherited properties (from the initial JSON code, if any) with those edited.
+   5. (from _form to model_): override `getModelFromForm(): YourModel` to get the model from form controls.
    6. build your component's _template_.
 
 Template:
@@ -257,7 +257,7 @@ import { FormControl, FormBuilder, Validators } from '@angular/forms';
 
 import { ModelEditorComponentBase, DialogService } from '@myrmidon/cadmus-ui';
 import { AuthService } from '@myrmidon/cadmus-api';
-import { ThesaurusEntry } from '@myrmidon/cadmus-core';
+import { ThesaurusEntry, deepCopy } from '@myrmidon/cadmus-core';
 
 import { __PARTNAME__Part, __PARTNAME___PART_TYPEID } from '../YOURPARTFILE';
 
@@ -299,7 +299,7 @@ export class __PARTNAME__PartComponent
   }
 
   protected onModelSet(model: __PARTNAME__Part): void {
-    this.updateForm(model);
+    this.updateForm(deepCopy(model));
   }
 
   protected onThesauriSet(): void {
@@ -314,7 +314,7 @@ export class __PARTNAME__PartComponent
   }
 
   protected getModelFromForm(): __PARTNAME__Part {
-    let part = this.getModelFromJson();
+    let part = this.model;
     if (!part) {
       part = {
         itemId: this.itemId,
@@ -334,107 +334,7 @@ export class __PARTNAME__PartComponent
 }
 ```
 
-Sample code:
-
-```ts
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormBuilder, Validators } from '@angular/forms';
-
-import { ModelEditorComponentBase, DialogService } from '@myrmidon/cadmus-ui';
-import { AuthService } from '@myrmidon/cadmus-api';
-import { ThesaurusEntry } from '@myrmidon/cadmus-core';
-
-import { NotePart, NOTE_PART_TYPEID } from '../YOURPARTFILE';
-
-/**
- * Note part editor component.
- * Thesauri: "note-tags" (optional).
- */
-@Component({
-  selector: "cadmus-note-part",
-  templateUrl: "./note-part.component.html",
-  styleUrls: ["./note-part.component.css"],
-})
-export class NotePartComponent
-  extends ModelEditorComponentBase<NotePart>
-  implements OnInit {
-  public tag: FormControl;
-  public tags: FormControl;
-  public text: FormControl;
-
-  public tagEntries: ThesaurusEntry[];
-
-  public editorOptions = {
-    theme: "vs-light",
-    language: "markdown",
-    wordWrap: "on",
-    // https://github.com/atularen/ngx-monaco-editor/issues/19
-    automaticLayout: true,
-  };
-
-  constructor(authService: AuthService, formBuilder: FormBuilder) {
-    super(authService);
-    // form
-    this.tag = formBuilder.control(null, Validators.maxLength(100));
-    this.tags = formBuilder.control([]);
-    this.text = formBuilder.control(null, Validators.required);
-    this.form = formBuilder.group({
-      tag: this.tag,
-      tags: this.tags,
-      text: this.text,
-    });
-  }
-
-  public ngOnInit(): void {
-    this.initEditor();
-  }
-
-  private updateForm(model: NotePart): void {
-    if (!model) {
-      this.form.reset();
-      return;
-    }
-    this.tag.setValue(model.tag);
-    this.tags.setValue(model.tag);
-    this.text.setValue(model.text);
-    this.form.markAsPristine();
-  }
-
-  protected onModelSet(model: NotePart): void {
-    this.updateForm(model);
-  }
-
-  protected onThesauriSet(): void {
-    const key = "note-tags";
-    if (this.thesauri && this.thesauri[key]) {
-      this.tagEntries = this.thesauri[key].entries;
-    } else {
-      this.tagEntries = null;
-    }
-  }
-
-  protected getModelFromForm(): NotePart {
-    let part = this.getModelFromJson();
-    if (!part) {
-      part = {
-        itemId: this.itemId,
-        id: null,
-        typeId: NOTE_PART_TYPEID,
-        roleId: this.roleId,
-        timeCreated: new Date(),
-        creatorId: null,
-        timeModified: new Date(),
-        userId: null,
-        tag: null,
-        text: null,
-      };
-    }
-    part.tag = this.tagEntries ? this.tags.value : this.tag.value;
-    part.text = this.text.value ? this.text.value.trim() : null;
-    return part;
-  }
-}
-```
+HTML template:
 
 ```html
 <form [formGroup]="form" (submit)="save()">
@@ -509,32 +409,27 @@ export class Edit__NAME__PartStore
 }
 ```
 
-1. in the same folder, add a new **query** for your model, named `edit-<partname>-part.query.ts`. Template:
+4. in the same folder, add a new **query** for your model, named `edit-<partname>-part.query.ts`. Template:
 
 ```ts
 import { Injectable } from '@angular/core';
-
-import { UtilService } from '@myrmidon/cadmus-core';
 import { EditPartQueryBase } from '@myrmidon/cadmus-state';
-
 import { Edit__NAME__PartStore } from './edit-__NAME__-part.store';
 
 @Injectable({ providedIn: 'root' })
 export class Edit__NAME__PartQuery extends EditPartQueryBase {
-  constructor(store: Edit__NAME__PartStore, utilService: UtilService) {
-    super(store, utilService);
+  constructor(store: Edit__NAME__PartStore) {
+    super(store);
   }
 }
 ```
 
-4. in the same folder, add a new **service** for your model, named `edit-<partname>-part.service.ts`. Template:
+5. in the same folder, add a new **service** for your model, named `edit-<partname>-part.service.ts`. Template:
 
 ```ts
 import { Injectable } from '@angular/core';
-
 import { ItemService, ThesaurusService } from '@myrmidon/cadmus-api';
 import { EditPartServiceBase } from '@myrmidon/cadmus-state';
-
 import { Edit__NAME__PartStore } from './edit-__NAME__-part.store';
 
 @Injectable({ providedIn: 'root' })
@@ -550,7 +445,7 @@ export class Edit__NAME__PartService extends EditPartServiceBase {
 }
 ```
 
-5. implement the feature **editor component** by making it extend `EditPartFeatureBase`, like in this code template:
+6. implement the feature **editor component** by making it extend `EditPartFeatureBase`, like in this code template:
 
 ```ts
 import { Component, OnInit } from '@angular/core';
@@ -600,22 +495,22 @@ export class __NAME__PartFeatureComponent
 }
 ```
 
-Define the corresponding HTML template like:
+HTML template:
 
 ```html
 <cadmus-current-item-bar></cadmus-current-item-bar>
 <cadmus-__NAME__-part
   [itemId]="itemId"
   [roleId]="roleId"
-  [json]="json$ | async"
-  (jsonChange)="save($event)"
+  [model]="part$ | async"
+  (modelChange)="save($event)"
   [thesauri]="thesauri$ | async"
   (editorClose)="close()"
   (dirtyChange)="onDirtyChange($event)"
 ></cadmus-__NAME__-part>
 ```
 
-6. in your app's project `part-editor-keys.ts`, add the mapping for the part just created, like e.g.:
+7. in your app's project `part-editor-keys.ts`, add the mapping for the part just created, like e.g.:
 
 ```ts
   // itinera parts

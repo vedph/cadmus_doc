@@ -4,7 +4,7 @@
 
 Same as [parts](adding-parts.md).
 
-## Adding Fragment to the PartGroup-UI Library
+## Adding Fragment to the UI Library
 
 In the `<partgroup>-ui` module:
 
@@ -58,58 +58,47 @@ If you want to infer a schema in the [JSON schema tool](https://jsonschema.net/)
    1. in the _constructor_, instantiate its "root" form group (named `form`), filling it with the required controls.
    2. eventually add _thesaurus_ entries properties for binding, populating them by overriding `onThesauriSet` (`protected onThesauriSet() {}`).
    3. implement `OnInit` calling `this.initEditor();` in it.
-   4. (from _model to form_): implement `onModelSet` (`protected onModelSet(model: YourModel)`) by calling an `updateForm(model: YourModel)` which either resets the form if the model is falsy, or sets the various form's controls values according to the received model, finally marking the form as pristine. Also, if you are keeping a property for the fragment's model, set it here.
-   5. (from _form to model_): override `getModelFromForm(): YourModel` to get the model from form controls by calling the base class `getModelFromJson`. If this returns null, create a new fragment object with default values; then, fill its properties from the form's controls. This merges the inherited properties (from JSON code) with those edited.
+   4. (from _model to form_): implement `onModelSet` (`protected onModelSet(model: YourModel)`) by calling an `updateForm(model: YourModel)` which either resets the form if the model is falsy, or sets the various form's controls values according to the received model, finally marking the form as pristine.
+   5. (from _form to model_): override `getModelFromForm(): YourModel` to get the model from form controls.
    6. build your component's _template_.
 
-Sample code:
+Code template:
 
 ```ts
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
-import { Fragment, ThesaurusEntry } from '@myrmidon/cadmus-core';
+import { Fragment, ThesaurusEntry, deepCopy } from '@myrmidon/cadmus-core';
 import { AuthService } from '@myrmidon/cadmus-api';
 import { ModelEditorComponentBase, DialogService } from '@myrmidon/cadmus-ui';
-import { CommentFragment } from '../comment-fragment';
+import { __NAME__Fragment } from '../__NAME__-fragment';
 
 /**
- * Comment fragment editor component.
- * Thesauri: "comment-tags" when you want to use a closed set of tags.
+ * __NAME__ fragment editor component.
+ * Thesauri: TODO...
  */
 @Component({
-  selector: 'cadmus-comment-fragment',
-  templateUrl: './comment-fragment.component.html',
-  styleUrls: ['./comment-fragment.component.css']
+  selector: 'cadmus-__NAME__-fragment',
+  templateUrl: './__NAME__-fragment.component.html',
+  styleUrls: ['./__NAME__-fragment.component.css']
 })
-export class CommentFragmentComponent
-  extends ModelEditorComponentBase<CommentFragment>
+export class __NAME__FragmentComponent
+  extends ModelEditorComponentBase<__NAME__Fragment>
   implements OnInit {
-  public fragment: Fragment | undefined;
-
   public tag: FormControl;
   public tags: FormControl;
   public text: FormControl;
 
-  public tagEntries: ThesaurusEntry[];
-
-  public editorOptions = {
-    theme: 'vs-light',
-    language: 'markdown',
-    wordWrap: 'on',
-    // https://github.com/atularen/ngx-monaco-editor/issues/19
-    automaticLayout: true
-  };
+  // TODO: add tag entries if required, e.g.:
+  // public tagEntries: ThesaurusEntry[];
 
   constructor(authService: AuthService, formBuilder: FormBuilder) {
     super(authService);
     // form
-    this.tag = formBuilder.control(null, Validators.maxLength(100));
-    this.tags = formBuilder.control([]);
-    this.text = formBuilder.control(null, Validators.required);
+    // TODO: add your controls, e.g.:
+    // this.tag = formBuilder.control(null, Validators.maxLength(100));
     this.form = formBuilder.group({
-      tag: this.tag,
-      tags: this.tags,
-      text: this.text
+      // TODO: add controls to group, e.g.:
+      // tag: this.tag,
     });
   }
 
@@ -122,14 +111,13 @@ export class CommentFragmentComponent
       this.form.reset();
       return;
     }
-    // TODO set form controls from model, e.g.:
+    // TODO: set form controls from model, e.g.:
     // this.tag.setValue(model.tag);
     this.form.markAsPristine();
   }
 
   protected onModelSet(model: __NAME__Fragment): void {
-    this.fragment = model;
-    this.updateForm(model);
+    this.updateForm(deepCopy(model));
   }
 
   protected onThesauriSet(): void {
@@ -143,16 +131,10 @@ export class CommentFragmentComponent
   }
 
   protected getModelFromForm(): __NAME__Fragment {
-    let fr = this.getModelFromJson();
-    if (!fr) {
-      fr = {
-        location: this.fragment?.location ?? '',
-        // TODO null properties
-      };
-    }
-    // TODO: set fr properties from controls, e.g.:
-    // fr.tag = this.trimIfAny(this.tag.value);
-    return fr;
+    return {
+      location: this.model?.location ?? '',
+      // TODO: set fr properties from form's controls
+    };
   }
 }
 ```
@@ -167,10 +149,10 @@ Sample HTML template:
         <mat-icon>textsms</mat-icon>
       </div>
       <mat-card-title
-        >LingTags Fragment {{ fragment?.location }}</mat-card-title
+        >LingTags Fragment {{ model?.location }}</mat-card-title
       >
       <mat-card-subtitle>
-        {{ fragment?.baseText }}
+        {{ model?.baseText }}
       </mat-card-subtitle>
     </mat-card-header>
 
@@ -189,157 +171,7 @@ Sample HTML template:
 
 Remember to add the component to its module's `declarations` and `exports`.
 
-3. add a _fragment editor demo dumb component_ named after the part (e.g. `ng g component comment-fragment-demo` for `CommentFragmentDemoComponent` after `CommentFragment`). This will essentially be a wrapper of two distinct controls: the fragment's editor component, and a `JsonEditorResourcesComponent`. These components are mutually connected, so that you can edit the JSON code for the part (and eventually for its thesauri sets) and set the visual editor to it, or vice-versa. Remember to include this component both in the `declarations` and `exports` of its module.
-
-Code template (replace `__NAME__` with your model name, adjusting case as required):
-
-```ts
-import { Component, OnInit, Input } from '@angular/core';
-import { JsonSchemaService, ThesauriSet } from '@cadmus/core';
-import { __NAME___FRAGMENT_TYPEID, __NAME___FRAGMENT_SCHEMA } from '../__NAME__-fragment';
-
-@Component({
-  selector: 'cadmus-__NAME__-fragment-demo',
-  templateUrl: './__NAME__-fragment-demo.component.html',
-  styleUrls: ['./__NAME__-fragment-demo.component.css']
-})
-export class __NAME__FragmentDemoComponent implements OnInit {
-  private _thesauriJson: string;
-
-  public currentTabIndex: number;
-  public schemaName = __NAME___FRAGMENT_TYPEID;
-  public modelJson: string;
-  public thesauri: ThesauriSet | null;
-
-  @Input()
-  public get thesauriJson(): string {
-    return this._thesauriJson;
-  }
-  public set thesauriJson(value: string) {
-    if (this._thesauriJson === value) {
-      return;
-    }
-    this._thesauriJson = value;
-    if (value) {
-      this.thesauri = JSON.parse(value);
-    } else {
-      this.thesauri = null;
-    }
-  }
-
-  constructor(schemaService: JsonSchemaService) {
-    this.currentTabIndex = 0;
-    schemaService.addSchema(__NAME___FRAGMENT_TYPEID, __NAME___FRAGMENT_SCHEMA);
-  }
-
-  ngOnInit() {}
-
-  public onCodeSaved() {
-    this.currentTabIndex = 1;
-  }
-
-  public onEditorSaved() {
-    this.currentTabIndex = 0;
-  }
-}
-```
-
-HTML template:
-
-```html
-<mat-card>
-  <mat-card-header>
-    <mat-card-title>
-      <h2>__NAME__ Fragment Editor Demo</h2>
-    </mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
-    <!-- note 2-way databinding for selectedIndex: it's a bug in Angular, need it -->
-    <mat-tab-group [(selectedIndex)]="currentTabIndex">
-      <mat-tab>
-        <ng-template mat-tab-label>
-          <mat-icon class="tab-icon">code</mat-icon>
-          Code
-        </ng-template>
-        <cadmus-json-editor-resources
-          title="__NAME__"
-          [schemaName]="schemaName"
-          [(modelJson)]="modelJson"
-          [(thesauriJson)]="thesauriJson"
-          (modelJsonChange)="onCodeSaved()"
-          (thesauriJsonChange)="onCodeSaved()"
-        ></cadmus-json-editor-resources>
-      </mat-tab>
-      <mat-tab>
-        <ng-template mat-tab-label>
-          <mat-icon class="tab-icon">dashboard</mat-icon>
-          Editor
-        </ng-template>
-        <cadmus-__NAME__-fragment
-          [(json)]="modelJson"
-          [thesauri]="thesauri"
-          (jsonChange)="onEditorSaved()"
-          (editorClose)="onEditorSaved()"
-        ></cadmus-__NAME__-fragment>
-      </mat-tab>
-    </mat-tab-group>
-  </mat-card-content>
-</mat-card>
-```
-
-## Adding Fragment Demo Feature to the App
-
-1. add a demo page feature in the cadmus app, under its `demo` folder, creating a `feature-<fragmentname>-fragment-demo` (or `...-fragment-demo`) component (e.g. `ng g component feature-comment-fragment-demo -s -t`).
-
-The code template is minimal (including also the HTML template and no CSS; replace `__NAME__` with your model name; you can use `ng g component ... -s -t` to inline the styles and HTML template, [more here](https://github.com/angular/angular-cli/wiki/generate-component)):
-
-```ts
-import { Component } from '@angular/core';
-
-@Component({
-  selector: 'cadmus-feature-__NAME__-fragment-demo',
-  template: `
-    <cadmus-__NAME__-fragment-demo></cadmus-__NAME__-fragment-demo>
-  `,
-  styles: []
-})
-export class Feature__NAME__FragmentDemoComponent {}
-```
-
-2. in its module (`app.module.ts`), add the corresponding route:
-
-```ts
-{
-  path: 'demo/__NAME__-fragment',
-  component: Feature__NAME__FragmentDemoComponent,
-  pathMatch: 'full'
-},
-```
-
-3. in its `app.component.html`, add a new entry to the demo menu:
-
-```html
-<a mat-menu-item routerLink="/demo/__NAME__-fragment">__NAME__ fragment</a>
-```
-
-4. in `part-editor-keys.ts`, add the mapping between the fragment and its group ID, e.g.:
-
-```ts
-export const PART_EDITOR_KEYS: PartEditorKeys = {
-  // ...
-  [TOKEN_TEXT_LAYER_PART_TYPEID]: {
-    part: GENERAL,
-    fragments: {
-      [COMMENT_FRAGMENT_TYPEID]: GENERAL,
-      [APPARATUS_FRAGMENT_TYPEID]: PHILOLOGY,
-      [ORTHOGRAPHY_FRAGMENT_TYPEID]: PHILOLOGY,
-      [WITNESSES_FRAGMENT_TYPEID]: PHILOLOGY
-    }
-  }
-};
-```
-
-## Adding Fragment Feature to the PartGroup-Feature Library
+## Adding Fragment to the PG Library
 
 In a `<partgroup>-pg` module:
 
@@ -357,7 +189,7 @@ export const RouterModuleForChild = RouterModule.forChild([
 ]);
 ```
 
-2. inside this new component's folder, add a new _store_ for your model, named `edit-<fragmentname>-fragment.store.ts`. Template:
+2. inside this new component's folder, add a new **store** for your model, named `edit-<fragmentname>-fragment.store.ts`. Template:
 
 ```ts
 import { Injectable } from '@angular/core';
@@ -387,7 +219,7 @@ export class Edit__NAME__FragmentStore extends Store<EditFragmentState>
 }
 ```
 
-3. in the same folder, add a new _query_ for your model, named `edit-<fragmentname>-fragment.query.ts`. Template:
+3. in the same folder, add a new **query** for your model, named `edit-<fragmentname>-fragment.query.ts`. Template:
 
 ```ts
 import { Injectable } from '@angular/core';
@@ -404,7 +236,7 @@ export class Edit__NAME__FragmentQuery extends EditFragmentQueryBase {
 }
 ```
 
-4. in the same folder, add a new _service_ for your model, named `edit-<fragmentname>-fragment.service.ts`. Template:
+4. in the same folder, add a new **service** for your model, named `edit-<fragmentname>-fragment.service.ts`. Template:
 
 ```ts
 import { Injectable } from '@angular/core';
@@ -493,8 +325,8 @@ Define the corresponding HTML template like:
   ></cadmus-decorated-token-text>
 </div>
 <cadmus-__NAME__-fragment
-  [json]="json$ | async"
-  (jsonChange)="save($event)"
+  [model]="fragment$ | async"
+  (modelChange)="save($event)"
   [thesauri]="thesauri$ | async"
   (editorClose)="close()"
   (dirtyChange)="onDirtyChange($event)"

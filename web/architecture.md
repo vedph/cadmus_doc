@@ -133,7 +133,7 @@ Also, the base class has these **dependencies**:
 - the Akita **layers query** component.
 - the Akita **layers service** component.
 
-The JSON code of the part being edited and its thesauri are exposed via two observables (`json$` and `thesauri$`); the base text of the fragment is exposed in another observable (`baseText$`). These are connected to the Akita fragment and layers **query**. The fragment query is used to fetch the fragment (and its thesauri) from its store. Each fragment query extends `EditFragmentQueryBase`, and receives the Akita store for its fragment.
+The JSON code of the part being edited and its thesauri are exposed via two observables (`fragment$` and `thesauri$`); the base text of the fragment is exposed in another observable (`baseText$`). These are connected to the Akita fragment and layers **query**. The fragment query is used to fetch the fragment (and its thesauri) from its store. Each fragment query extends `EditFragmentQueryBase`, and receives the Akita store for its fragment.
 
 In turn, the **store** implements the interface `EditFragmentStoreApi`, and extends Akita `Store<EditFragmentState>`. `EditFragmentState` represents the state of the fragment being edited, including:
 
