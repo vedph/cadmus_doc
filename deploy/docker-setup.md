@@ -76,6 +76,7 @@ Useful apps links for Ubuntu:
 - [Studio 3T](https://studio3t.com/download/): download TAR.GZ, then extract and run `sudo sh extractedfilename.sh`.
 - [MongoDB Compass](https://www.mongodb.com/download-center?jmp=nav#compass)
 - [MySql Workbench](https://dev.mysql.com/downloads/workbench/): download DEB and install. Root password is `mysql`.
+- [DBeaver](https://dbeaver.io/download/): download DEB and install.
 - [VSCode](https://code.visualstudio.com/download)
 - [NodeJS](https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-16-04):
 
