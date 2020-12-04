@@ -354,6 +354,61 @@ namespace Cadmus.Seed.Parts.General
 }
 ```
 
+## Adding Part Seeders Test
+
+```cs
+using Cadmus.Core;
+using Fusi.Tools.Config;
+using System;
+using System.Reflection;
+using Xunit;
+
+namespace Cadmus.Seed.YOURNAMESPACE
+{
+    public sealed class __NAME__PartSeederTest
+    {
+        private static readonly PartSeederFactory _factory;
+        private static readonly SeedOptions _seedOptions;
+        private static readonly IItem _item;
+
+        static __NAME__PartSeederTest()
+        {
+            _factory = TestHelper.GetFactory();
+            _seedOptions = _factory.GetSeedOptions();
+            _item = _factory.GetItemSeeder().GetItem(1, "facet");
+        }
+
+        [Fact]
+        public void TypeHasTagAttribute()
+        {
+            Type t = typeof(__NAME__PartSeeder);
+            TagAttribute attr = t.GetTypeInfo().GetCustomAttribute<TagAttribute>();
+            Assert.NotNull(attr);
+            Assert.Equal("seed.it.vedph.itinera.__NAME__", attr.Tag);
+        }
+
+        [Fact]
+        public void Seed_Ok()
+        {
+            __NAME__PartSeeder seeder = new __NAME__PartSeeder();
+            seeder.SetSeedOptions(_seedOptions);
+
+            IPart part = seeder.GetPart(_item, null, _factory);
+
+            Assert.NotNull(part);
+
+            __NAME__Part p = part as __NAME__Part;
+            Assert.NotNull(p);
+
+            TestHelper.AssertPartMetadata(p);
+
+            // TODO: assert properties like:
+            // Assert.NotEmpty(p.Works);
+        }
+    }
+}
+```
+
 ## Adding Fragment Seeders
 
 1. if not already present, create a project to host the seeders, adding to its dependencies the corresponding part/fragment project.
