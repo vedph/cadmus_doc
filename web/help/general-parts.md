@@ -40,7 +40,7 @@ As for any part editor, the general part editors share a common UI at their top 
 
 ## Bibliography
 
-- ID: `net.fusisoft.bibliography`
+- ID: `it.vedph.bibliography`
 - thesauri: `languages` (required), `bibliography-types`, `bibliography-author-roles`.
 - pins:
   - for each entry (omitting duplicates): 1 `biblio.type`=entry type ID, 1-N `biblio.author`=author last name (filtered), 1 `biblio.title`=title (filtered), 0-1 `biblio.container`=container name (filtered), 0-N `biblio.keyword`=keyword. Filtering implies preserving only letters, digits, whitespaces (normalized), and apostrophe. Letters are all lowercase and without any diacritics.
@@ -98,7 +98,7 @@ To add a keyword, select its language and type it, then click the plus button. Y
 
 ## Categories
 
-- ID: `net.fusisoft.categories`
+- ID: `it.vedph.categories`
 - thesauri: `categories` (required)
 - pins:
   - for each category: `name`=category, `value`=category ID, sorted by value.
@@ -143,7 +143,7 @@ Note that the categories part should include at least 1 category. You will not b
 
 ## Hierarchy
 
-- ID: `net.fusisoft.hierarchy`
+- ID: `it.vedph.hierarchy`
 - thesauri:
 - pins:
   - `y`=Y value.
@@ -154,7 +154,7 @@ This part defines a hierarchy among some items, by connecting a parent item to a
 
 ## Historical Date
 
-- ID: `net.fusisoft.historical-date`
+- ID: `it.vedph.historical-date`
 - thesauri: none
 - pins:
   - `date-value`: date sort value.
@@ -189,9 +189,13 @@ As a sample, consider this datation from SEG 46,1531: `367/366 B.C.? - ca. 150 A
 
 ### Historical Date Editor
 
-![Historical Date Part Editor](./images/parts/historical-date01-tips.png)
+![Historical Date Part Editor](./images/parts/historical-date01.png)
 
-The editor allows entering dates either visually through controls, and textually, by just typing the text representing the date. In its initial state, the editor just shows the date in its textual form. This includes one or two points, separated by `--`, each with this syntax:
+The editor allows entering dates either visually through controls, and textually, by just typing the text representing the date.
+
+Also, you can add any number of short document references at the bottom, related to the datation entered.
+
+In its initial state, the editor just shows the date in its textual form. This includes one or two points, separated by `--`, each with this syntax:
 
 - the value can be prefixed with `c.` = about.
 - the value uses digits or Roman numerals for centuries. When using digits and you want to represent a 2-years span, add the second year (eventually also abbreviated) after a slash (e.g. `25/4 BC`).
@@ -202,15 +206,13 @@ For instance, `c.123 AD -- III AD` is a range composed by two points (A and B).
 
 Here you just type a date and press Enter, or click the corresponding button at the edge of the text box.
 
-If you expand the visual editor, you will be able to edit each point visually. At the top of the visual editor you can switch between single-point and two-points (interval) date. According to this selection, you are presented with one or two tabs for points A and B.
-
-![Historical Date Part Editor - Visual](./images/parts/historical-date02-tips.png)
+If you expand the visual editor, you will be able to edit each point visually. Whenever you type in the textual editor, the visual editor is updated accordingly. At the bottom of the visual editor you can switch between single-point and two-points (interval) date. According to this selection, you are presented with one or two tabs for points A and B.
 
 To visually edit a point, just fill the controls as required and when done click the round save button (to discard changes, click the red X button). Whenever you save changes here, the textual representation of the point gets automatically updated.
 
 ## Index Keywords
 
-- ID: `net.fusisoft.index-keywords`
+- ID: `it.vedph.index-keywords`
 - thesauri: `languages` (optional), `keyword-indexes` (optional)
 - pins:
   - for each keyword: name=`keyword.<indexId>.<language>` (`indexId` may be empty), value=keyword value; sorted by index ID, language, and value.
@@ -245,7 +247,7 @@ You can either save the changes with the round checkmark button, or discard them
 
 ## Keywords
 
-- ID: `net.fusisoft.keywords`
+- ID: `it.vedph.keywords`
 - thesaurus: languages (required).
 - pins:
   - for each keyword: name=`keyword.<language>`, value=keyword value; sorted by language and value.
@@ -267,7 +269,7 @@ To add a new keyword, in the top area of the editor select a language and type t
 
 ## Note
 
-- ID: `net.fusisoft.note`
+- ID: `it.vedph.note`
 - thesauri: `note-tags` (optional, when using a closing set of tags)
 - has text: yes
 - pins:
@@ -291,7 +293,7 @@ You are required to enter some text for the note. Otherwise, just delete the who
 
 ## Tiled Text
 
-- ID: `net.fusisoft.tiled-text`
+- ID: `it.vedph.tiled-text`
 - role ID: `base-text`
 - thesauri: none.
 - has text: yes.
@@ -337,7 +339,7 @@ Once you are done, click the `save data` button to save the metadata, or the red
 
 ## Token Text
 
-- ID: `net.fusisoft.token-text`
+- ID: `it.vedph.token-text`
 - role ID: `base-text`
 - thesauri: none.
 - has text: yes.
@@ -362,7 +364,7 @@ The optional citation can be entered in the small text box at the top.
 
 ## Token Text Layer
 
-- ID: `net.fusisoft.token-text-layer`
+- ID: `it.vedph.token-text-layer`
 - role ID: the fragment ID (always starting with `fr.`)
 
 Any token-based text layer part uses the same editor to manage fragments and their link to the base text; then, a specialized editor is used when editing or adding fragments.
@@ -389,7 +391,7 @@ For each fragment, the tool lists:
 
 ## Tiled Text Layer
 
-- ID: `net.fusisoft.tiled-text-layer`
+- ID: `it.vedph.tiled-text-layer`
 - role ID: the fragment ID (always starting with `fr.`)
 
 Any tiles-based text layer part uses the same editor to manage fragments and their link to the base text; then, a specialized editor is used when editing or adding fragments.
@@ -400,7 +402,7 @@ The editing experience here is similar to that of the token-based text layer, wi
 
 ### Comment
 
-- ID: `fr.net.fusisoft.comment`
+- ID: `fr.it.vedph.comment`
 - thesauri: `comment-tags` (optional, when using a closed tags set)
 - pins:
   - `fr.tag`=tag (optional).

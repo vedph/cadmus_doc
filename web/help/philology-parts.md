@@ -27,7 +27,7 @@ As for any part editor, the general part editors share a common UI at their top 
 
 ### Apparatus
 
-- ID: `fr.net.fusisoft.apparatus`
+- ID: `fr.it.vedph.apparatus`
 - thesauri: `apparatus-tags`, `apparatus-witnesses`, `apparatus-authors` (all optional)
 - pins: for every distinct variant, witness, or author:
   - `fr.variant`=variant (in its normalized form if stored, else just the variant).
@@ -49,8 +49,8 @@ Each apparatus fragment has these properties:
   - `tag`: an optional arbitrary string representing a categorization of some sort for that fragment, e.g. "margin", "interlinear", etc. It overrides the fragment's `tag`.
   - `normValue`: an optional normalized form derived from `value`. Normalization details are up to each single project, and the model makes no assumptions about it.
   - `note`: an optional annotation. When `type` is _note_, `value` has no meaning, and this property contains the note's text. Otherwise, this can be an additional note, side to side with the variant's value.
-  - `authors`: optional array of annotated authors. Each has a `value` and an optional `note`.
-  - `witnesses`: optional array of annotated witnesses, as above.
+  - `witnesses`: optional array of annotated witnesses. Each has a `value` (e.g. `O`) and an optional note (e.g. `manus altera`).
+  - `authors`: optional array of annotated authors. Each has a `value` (e.g. `Verg.` or `Wilamowitz`) and optional `tag` (e.g. `ancient` or `modern`), `location` (e.g. `Kleine Schriften p.12` or `Aen. 1.23`), and `note` (e.g. `exempli gratia`).
   - `isAccepted`: boolean, true if the variant represents the accepted text (=lemma).
   - `groupId`: an optional arbitrary ID to be used for grouping fragments in the layer together.
 
@@ -68,7 +68,7 @@ Also, the whole fragment can receive a tag, which can be typed or selected in th
 
 Each entry is edited in the entry editor:
 
-![Apparatus Fragment Editor - Entry](./images/parts/fr-apparatus02-tips.png)
+![Apparatus Fragment Editor - Entry](./images/parts/fr-apparatus02.png)
 
 You can select the entry type, and fill its controls as needed. Witnesses and authors appear below, with their lists in two expandable regions, each having its title and count.
 
@@ -78,7 +78,7 @@ Once done, you can either save the entry with the round checkmark button, or dis
 
 ### Chronology
 
-- ID: `fr.net.fusisoft.chronology`
+- ID: `fr.it.vedph.chronology`
 - thesauri: `chronology-tags` (to use a closed set of tags)
 - pins:
   - `fr.date-value`: date sort value.
@@ -98,7 +98,7 @@ The editor couples essential data about the event (a classification tag and a la
 
 ### Ligature
 
-- ID: `fr.net.fusisoft.ligature`
+- ID: `fr.it.vedph.ligature`
 - pins:
   - `fr.ligature`=ligature type letter.
 
@@ -108,7 +108,7 @@ TODO:
 
 ### Metrics
 
-- ID: `fr.net.fusisoft.metrics`
+- ID: `fr.it.vedph.metrics`
 - pins:
   - `fr.metre`=metre, suffixed with * when imperfect.
 
@@ -123,7 +123,7 @@ Metrics layer fragment, used to mark the text as part of a metrical verse.
 
 ### Orthography
 
-- ID: `fr.net.fusisoft.orthography`
+- ID: `fr.it.vedph.orthography`
 - pins: if operations have tags, the operations with tags are grouped by them, and a pin is returned for each group, with its name equal to `fr.msp` + the grouped operations tag, and its value equal to the count of such operations. These pins are sorted by their name. Also, if item is received and it has a base text part and an orthography layer part, two additional pins are returned: `fr.orthography-txt` with the original orthography got from the base text, and `fr.orthography-std` with the Standard orthography from this fragment.
 
 #### Orthography Model
@@ -204,7 +204,7 @@ If you prefer to visually edit an operation, rather than using this syntax, you 
 
 ### Quotations
 
-- ID: `fr.net.fusisoft.quotations`
+- ID: `fr.it.vedph.quotations`
 - thesauri: `quotation-works` (optional), `quotation-tags` (optional). The quotation works thesaurus is assumed to provide both author IDs and work IDs; in the latter type, the author and work ID are separated by a dot. For instance, `verg`=`Vergilius` for the author, and `verg.ecl`=`eclogae`. The editor extracts authors and works from the thesaurus and displays them in separated controls.
 - pins: for each entry (omitting duplicates):
   - `fr.author`: author (filtered)
@@ -243,7 +243,7 @@ The author and work are selected from closed lists when the corresponding thesau
 
 ### Witnesses
 
-- ID: `fr.net.fusisoft.witnesses`
+- ID: `fr.it.vedph.witnesses`
 
 Witnesses layer fragment. This collects 1 or more witnesses which represent the source for the base text. Each witness has an ID which uniquely identifies the source (e.g. `Fest.` for *Festus grammaticus*), a citation (e.g. `p.236`), a Markdown text, and an optional short note.
 
