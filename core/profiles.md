@@ -19,7 +19,7 @@ A facet is a collection of part definitions, which list all the parts an item ha
 These restrictions apply to facets:
 
 - a facet must include at least 1 part definition.
-- when a facet contains text layers, it *must* contain 1 (and only 1) part definition representing the "base text". This is a logical requirement, as you must have some base text to link metatextual data to. This part definition must have the reserved role ID `base-text`.
+- when a facet contains text layers, it _must_ contain 1 (and only 1) part definition representing the "base text". This is a logical requirement, as you must have some base text to link metatextual data to. This part definition must have the reserved role ID `base-text`.
 
 Given the open nature of this data architecture, the notion of facet is essentially a frontend concept, designed with practical purposes. No facet-specific constraint is enforced at the backend level, as by design an item could include any type of part.
 
@@ -168,7 +168,8 @@ Cadmus provides a generic solution to these scenarios in the form of **thesauri*
 
 Each thesaurus has these properties in the profile:
 
-- `id`: an arbitrary string used to identify the thesaurus. It must contain only letters `a`-`z` or `A`-`Z`, digits (`0`-`9`), underscores (`_`), dashes (`-`) and dots (`.`). The ID must be suffixed by its language code, preceded by `@`. The language code can be either ISO639-2 or ISO639-3, as needed. If no code is specified, Cadmus will still try to find another thesaurus with the same ID and any of these language codes (in that order): `eng`, `en`, or none at all (which anyway should not be the case). This is useful when you do not have a complete localization, so that when asking e.g. for the Italian version of a language you can fallback to the English one if the Italian language is not available.
+- `id`: an arbitrary string used to identify the thesaurus. It must contain only letters `a`-`z` or `A`-`Z`, digits (`0`-`9`), underscores (`_`), dashes (`-`) and dots (`.`). The ID _must_ be suffixed by its language code, preceded by `@`. The language code can be either ISO639-2 or ISO639-3, as needed. If no code is specified, Cadmus will still try to find another thesaurus with the same ID and any of these language codes (in that order): `eng`, `en`, or none at all (which anyway should not be the case). This is useful when you do not have a complete localization, so that when asking e.g. for the Italian version of a language you can fallback to the English one if the Italian language is not available.
+
 - `entries`: an array of entries, each having an `id` and a `value` (in the language specified for its thesaurus). The `id` is an arbitrary string, with the same constraints illustrated above for the thesaurus ID.
 
 A **thesaurus entry** (`ThesaurusEntry`) is thus a generic id/value pair. You can use dots to represent a hierarchical structure for the entries; for instance, a hierarchy like this:
@@ -230,7 +231,11 @@ Here is a profile sample for thesauri, representing a set of language names, loc
 ]
 ```
 
-Note that currently the web UI frontend implements a convention by which if a thesaurus with id `model-types@en` exists, it will be used to map raw part type IDs like `it.vedph.note` to user-friendly names like `note`. If such thesaurus does not exist, or is not complete, no error will occur; rather, the raw type IDs will be used instead of the corresponding user-friendly names.
+### Thesaurus for Friendly Component Names
+
+The web UI frontend implements a convention by which if a thesaurus with id `model-types@en` exists, it will be used to map raw part type IDs, like `it.vedph.note`, to user-friendly names like `note`.
+
+If such thesaurus does not exist, or is not complete, no error will occur; rather, the raw type IDs will be used instead of the corresponding user-friendly names.
 
 ### Thesauri Aliases
 
@@ -244,8 +249,8 @@ For instance, say you want to retrieve the `languages@en` thesaurus using two di
 
 ```json
 {
-    "id": "ui-languages@en",
-    "targetId": "languages@en"
+  "id": "ui-languages@en",
+  "targetId": "languages@en"
 }
 ```
 
@@ -255,7 +260,7 @@ This way, the languages thesaurus would be retrieved whatever ID you use: `langu
 
 In the editor architecture, thesauri are loaded when the part or fragment editor loads.
 
-Each editor provides its own list of thesauri IDs it requires. For instance, the keywords part editor requires a thesaurus listing all the languages used for them. The ID requested for this thesaurus is a string, usually without the language suffix, e.g. `languages`.
+Each editor provides its own list of thesauri IDs it requires. For instance, the keywords part editor requires a thesaurus listing all the languages used for them. The ID requested for this thesaurus is a string, without the language suffix, e.g. `languages`.
 
 When the editor loads, it passes its requested IDs to the base editor class (here BEC for short), which in turn passes them to the service in charge of loading the edited data in the corresponding editor state.
 
@@ -263,22 +268,29 @@ This service loads its data together with the requested thesauri, by calling the
 
 The backend adopts a fallback mechanism for languages; if the specified language is not found, or no language is specified, it falls back to the default language (`eng` or `en`).
 
-Also, as we have seen above it is possible to define alias IDs for thesauri, so that we can eventually target the same thesaurus, whatever the IDs requested by different editors. For instance, say there are two editors requesting languages thesaurus, developed independently. One of them requests the ID `languages`; another requests the ID `keyword-languages`; yet, we want to use the same list of language for both. Rather than duplicating it, we just provide an alias for one of the two IDs, pointing to the other one. So, the requests of each editor will be satisfied, without having to modify their code, or to produce redundancy in the thesauri set.
+Also, as we have seen above, it is possible to define [alias IDs](#thesauri-aliases) for thesauri, so that we can eventually target the same thesaurus, whatever the IDs requested by different editors. For instance, say there are two editors requesting languages thesaurus, developed independently. One of them requests the ID `languages`; another requests the ID `keyword-languages`; yet, we want to use the same list of language for both. Rather than duplicating it, we just provide an alias for one of the two IDs, pointing to the other one. So, the requests of each editor will be satisfied, without having to modify their code, or to produce redundancy in the thesauri set.
 
-Until here, all the scenarios we have illustrated work with *statically* defined thesauri IDs; we can fallback with the language, or use aliases; but editors requests are totally defined at design time.
+Until here, all the scenarios we have illustrated work with _statically_ defined thesauri IDs; we can fallback with the language, or use aliases; but editors requests are totally defined at design time.
 
-In some cases, it may happen that editors require to define their requested IDs *dynamically*, at runtime. For instance, this happens for the apparatus fragment editor, which requires 2 dynamically defined IDs: the witnesses thesaurus and the authors thesaurus are different for each work being handled.
+In some cases, it may happen that editors require to define their requested IDs _dynamically_, at runtime. For instance, this happens for the apparatus fragment editor, which requires 2 dynamically defined IDs: the witnesses thesaurus and the authors thesaurus are different for each work being handled.
 
-The backend stores each of these thesauri with an ID which differs only for their "scope", i.e. the ID portion starting with the last dot: for instance, we might have these IDs for two different works:
+The backend stores each of these thesauri with an ID which differs only for their "scope", i.e. the portion of the ID starting with the last dot: for instance, we might have these IDs for two different works:
 
-- `apparatus-witnesses.verg-eclo@en`: apparatus witnesses for Vergilius *Eclogae*.
-- `apparatus-witnesses.verg-aen@en`: apparatus witnesses for Vergilius *Aeneis*.
+- `apparatus-witnesses.verg-eclo@en`: apparatus witnesses for Vergilius _Eclogae_.
+- `apparatus-witnesses.verg-aen@en`: apparatus witnesses for Vergilius _Aeneis_.
 
-In the frontend, at design time the fragment editor can just request an ID like `apparatus-witnesses`; it cannot know which is the work the fragment belongs to. So, how can we get to the actual IDs listed above for Vergilius? To this end, the BEC leverages a generic mechanism based on the part's *thesaurus scope*. This is an optional property which defines the scope of the thesaurus IDs for those editors requiring runtime data.
+In the frontend, at _design_ time the fragment editor can just request an ID like `apparatus-witnesses`; it cannot know which is the work the fragment belongs to.
 
-If now the apparatus layer part referring to Vergilius *Eclogae* has its thesaurus scope defined, here as `verg-eclo`, this triggers a generic frontend mechanism which overrides the apparatus fragment editor requests. This just requests `apparatus-witnesses`; but once the mechanism finds out that its container part has a thesaurus ID scope, the ID is overridden as `apparatus-witnesses.verg-eclo`. Thus, the backend receives this ID request and satisfies it by retrieving the correct thesaurus.
+So, how can we get to the actual IDs listed above for Vergilius? To this end, the BEC leverages a generic mechanism based on the part's _thesaurus scope_. This is an optional property of every part, which for that specific part defines the scope of the thesaurus IDs for those editors requiring runtime data.
 
-Finally, some of the IDs requested by the editor might require not to be overridden by the scope. For instance, the fragment editor requests a third thesaurus, the `apparatus-tags`, a list shared among the apparatuses of all the works. As such, we must not override it as `apparatus-tags.verg-eclo`, which would not be found, because the database just has a single thesaurus with ID `apparatus-tags`. In this case, the fragment editor notifies the mechanism that it should not override this ID by prefixing it with an exclamation mark.
+So, for instance, we can set the thesaurus scope of the apparatus layer part referring to Vergilius _Eclogae_ as `verg-eclo` (any arbitrary string will do, as far as it has a corresponding entry in the thesauri profile; here we use as a convention the author's and work's abbreviations).
+
+This property, when set, triggers a generic mechanism in the frontend, which overrides the apparatus fragment editor requests:
+
+1. the apparatus fragment editor by design just requests `apparatus-witnesses`;
+2. the frontend mechanism finds out that the part being edited has a thesaurus ID scope property set. Thus, it overrides this ID as `apparatus-witnesses.verg-eclo`: the scope is appended to the original ID. This way, the backend receives this ID request, and satisfies it by retrieving the correct, specialized thesaurus.
+
+Finally, some of the IDs requested by the editor might require not to be overridden by the scope. For instance, the fragment editor requests a third thesaurus, the `apparatus-tags`, a list shared among the apparatuses of all the works. As such, we must not override it as `apparatus-tags.verg-eclo`, which would not be found, because the database just has a single thesaurus with ID `apparatus-tags`. In this case, the fragment editor at design time notifies the mechanism that it should not override this ID by prefixing it with an exclamation mark.
 
 To sum up, the fragment editor at design time requests 3 IDs:
 
@@ -286,7 +298,7 @@ To sum up, the fragment editor at design time requests 3 IDs:
 - `apparatus-witnesses`: apparatus witnesses.
 - `apparatus-authors`: apparatus authors.
 
-This is all what the editor needs to know. It is up to the generic mechanism from which the editor is derived to lookup the corresponding part, and apply overrides when it finds that it has a thesaurus scope.
+This is all what the editor needs to know. It is up to the generic mechanism from which the editor is derived to lookup the corresponding part, and apply overrides when it finds that the part has a thesaurus scope property.
 
 ## Browsers
 
