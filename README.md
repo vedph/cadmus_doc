@@ -16,6 +16,10 @@ Note: all the diagrams found in this documentation are made using [PlantUml](htt
 
 ## Projects Directory
 
+The picture below shows the main software packages of the projects currently based on Cadmus. The packages with the yellow diamond have a corresponding Docker image.
+
+![projects](./images/packages.png)
+
 System projects:
 
 - [documentation](https://github.com/vedph/cadmus_doc) (this repository)
