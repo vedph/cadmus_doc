@@ -103,7 +103,36 @@ As you can see, every module imported in the "ui" library is listed here among t
 },
 ```
 
-Note that you must not explicitly import the target module into your app module, as this is lazily loaded.
+Note that you must *not* explicitly import the target module into your app module, as this is lazily loaded.
+
+Also, you should come with this kind of template when using the router module in a library:
+
+```ts
+// https://github.com/ng-packagr/ng-packagr/issues/778
+export const RouterModuleForChild = RouterModule.forChild([
+  {
+    path: `${MSUNITS_PART_TYPEID}/:pid`,
+    pathMatch: 'full',
+    component: MsUnitsPartFeatureComponent,
+    canDeactivate: [PendingChangesGuard],
+  },
+  // ...
+]);
+
+@NgModule({
+  declarations: [
+    // ...
+  ],
+  imports: [
+    // ...
+    RouterModuleForChild,
+  ],
+  exports: [
+    // ...
+  ],
+})
+export class CadmusTgrPartMsPgModule {}
+```
 
 3. edit your "ui" library `package.json` to add **peer dependencies**, like in this sample:
 
