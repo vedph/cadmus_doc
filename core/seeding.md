@@ -326,8 +326,9 @@ namespace Cadmus.Seed.Parts.General
         {
             if (item == null)
                 throw new ArgumentNullException(nameof(item));
-            if (factory == null)
-                throw new ArgumentNullException(nameof(factory));
+            // for layer parts only:
+            // if (factory == null)
+            //    throw new ArgumentNullException(nameof(factory));
 
             // TODO: add more options validation check; if invalid, ret null
             if (_options == null)
