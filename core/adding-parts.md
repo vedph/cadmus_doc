@@ -274,7 +274,6 @@ public sealed class __NAME__PartTest
             RoleId = "some-role",
             CreatorId = "zeus",
             UserId = "another",
-            // TODO: set parts data here...
         };
     }
 
@@ -364,7 +363,6 @@ public sealed class __NAME__PartTest
             RoleId = "some-role",
             CreatorId = "zeus",
             UserId = "another",
-            // TODO: set parts data here...
         };
     }
 
@@ -384,7 +382,7 @@ public sealed class __NAME__PartTest
         Assert.Equal(part.CreatorId, part2.CreatorId);
         Assert.Equal(part.UserId, part2.UserId);
 
-        Assert.Equal(2, part.Entries.Count);
+        Assert.Equal(part.Entries.Count, part2.Entries.Count);
     }
 
     [Fact]
@@ -548,7 +546,7 @@ public sealed class __NAME__PartTest
         Assert.Equal(part.CreatorId, part2.CreatorId);
         Assert.Equal(part.UserId, part2.UserId);
 
-        Assert.Equal(2, part.Entries.Count);
+        Assert.Equal(part.Entries.Count, part2.Entries.Count);
         // TODO: details
     }
 
