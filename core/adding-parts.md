@@ -249,6 +249,10 @@ public sealed class __NAME__Part : PartBase
 This template takes advantage of the part's seeder. If you are not using a seeder, refer to the [next section](#part-test-template---no-seeder).
 
 ```cs
+using System;
+using Xunit;
+using Cadmus.Core;
+
 public sealed class __NAME__PartTest
 {
     private static __NAME__Part GetPart()
@@ -434,6 +438,10 @@ public sealed class __NAME__PartTest
 The part being usually a DTO object, its logic is found only in indexing. Thus, the tests must ensure that the object is serializable, and that the pins are created as expected. In the following template replace `__NAME__` with your part's name, minus the `Part` suffix.
 
 ```cs
+using System;
+using Xunit;
+using Cadmus.Core;
+
 public sealed class __NAME__PartTest
 {
     private static __NAME__Part GetPart()
@@ -473,7 +481,7 @@ public sealed class __NAME__PartTest
     //     __NAME__Part part = GetPart();
     //     part.Tag = null;
 
-    //     Assert.Empty(part.GetDataPins());
+    //     Assert.Empty(part.GetDataPins(null));
     // }
 
     // [Fact]
@@ -504,8 +512,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
-
-// ...
 
 public sealed class __NAME__PartTest
 {
@@ -647,7 +653,7 @@ public sealed class __NAME__LayerFragmentTest
     //     CommentLayerFragment fr = GetFragment();
     //     fr.Tag = null;
 
-    //     Assert.Empty(fr.GetDataPins());
+    //     Assert.Empty(fr.GetDataPins(null));
     // }
 
     // [Fact]
@@ -655,7 +661,7 @@ public sealed class __NAME__LayerFragmentTest
     // {
     //     CommentLayerFragment fr = GetFragment();
 
-    //     List<DataPin> pins = fr.GetDataPins().ToList();
+    //     List<DataPin> pins = fr.GetDataPins(null).ToList();
 
     //     Assert.Single(pins);
     //     DataPin pin = pins[0];
