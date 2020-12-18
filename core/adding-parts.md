@@ -1,5 +1,23 @@
 # Adding Parts
 
+<!-- TOC -->
+
+- [Adding Parts](#adding-parts)
+  - [Parts](#parts)
+    - [Procedure](#procedure)
+    - [Part Templates](#part-templates)
+      - [Simple Part](#simple-part)
+      - [List Part](#list-part)
+    - [Test Templates](#test-templates)
+      - [Part Test - Seeder](#part-test---seeder)
+      - [List Part Test - Seeder](#list-part-test---seeder)
+      - [No Seeder Simple Part Test](#no-seeder-simple-part-test)
+      - [No Seeder List Part Test Template](#no-seeder-list-part-test-template)
+  - [Layer Parts](#layer-parts)
+    - [Layer Fragment Test Template](#layer-fragment-test-template)
+
+<!-- /TOC -->
+
 For seeder templates see [seeding](seeding.md).
 
 Server-side parts in the editor are essentially used for indexing. Anyway, their model and logic can be used by any other 3rd party processor for its own purposes.
@@ -8,17 +26,30 @@ Server-side parts in the editor are essentially used for indexing. Anyway, their
 
 Guidelines for **implementing a part**:
 
-- *derive* from `PartBase`, even if this is not strictly a requirement, but rather a commodity. The part class must anyway implement the `IPart` interface.
+- _derive_ from `PartBase`, even if this is not strictly a requirement, but rather a commodity. The part class must anyway implement the `IPart` interface.
 
-- *decorate* the class with a `TagAttribute` providing the part's type ID.
+- _decorate_ the class with a `TagAttribute` providing the part's type ID.
 
-- *do not add any logic* to the part. The part is just a POCO object modeling the data it represents, and should have no logic. The only piece of logic required is the method returning the part's data pins, which is just a form of reflecting on the part's data themselves, e.g. for indexing.
+- _do not add any logic_ to the part. The part is just a POCO object modeling the data it represents, and should have no logic. The only piece of logic required is the method returning the part's data pins, which is just a form of reflecting on the part's data themselves, e.g. for indexing.
 
-- if creating a part representing a *base text* for text layers, implement the `IHasText` interface by providing a `GetText()` method which, whatever the part's model, produces a single string representing its whole text. The same interface should be implemented whenever your part has some rather long piece of free, unstructured text you might want to be included in processes like full-text indexing. Also, set the role ID to `base-text` (defined in `PartBase.BASE_TEXT_ROLE_ID`).
+- if creating a part representing a _base text_ for text layers, implement the `IHasText` interface by providing a `GetText()` method which, whatever the part's model, produces a single string representing its whole text. The same interface should be implemented whenever your part has some rather long piece of free, unstructured text you might want to be included in processes like full-text indexing. Also, set the role ID to `base-text` (defined in `PartBase.BASE_TEXT_ROLE_ID`).
 
 - consider that the part will be subject to automatic serialization and deserialization. As the part is just a POCO object, this should not pose any issue.
 
-**Part template** sample (in the following template replace `__NAME__` with your part's name, minus the `Part` suffix):
+### Procedure
+
+The typical procedure when adding a new part is:
+
+1. create the part class.
+2. create the part seeder class.
+3. create the part seeder test.
+4. create the part test (using both the part under test and its part seeder).
+
+### Part Templates
+
+#### Simple Part
+
+In the following template replace `__NAME__` with your part's name, minus the `Part` suffix:
 
 ```cs
 using System;
@@ -31,9 +62,9 @@ using Fusi.Tools.Config;
 
 /// <summary>
 /// TODO: add summary
-/// <para>Tag: <c>it.vedph.__NAME__</c>.</para>
+/// <para>Tag: <c>it.vedph.__PRJ__.__NAME__</c>.</para>
 /// </summary>
-[Tag("it.vedph.__NAME__")]
+[Tag("it.vedph.__PRJ__.__NAME__")]
 public sealed class __NAME__Part : PartBase
 {
     // TODO: add your properties here...
@@ -103,6 +134,8 @@ public sealed class __NAME__Part : PartBase
 }
 ```
 
+#### List Part
+
 As this is a typical scenario, here is a variant for those parts which essentially just include a list of objects (of type `__ENTRY__`):
 
 ```cs
@@ -116,9 +149,9 @@ using Fusi.Tools.Config;
 
 /// <summary>
 /// TODO: add summary
-/// <para>Tag: <c>it.vedph.__NAME__</c>.</para>
+/// <para>Tag: <c>it.vedph.__PRJ__.__NAME__</c>.</para>
 /// </summary>
-[Tag("it.vedph.__NAME__")]
+[Tag("it.vedph.__PRJ__.__NAME__")]
 public sealed class __NAME__Part : PartBase
 {
     /// <summary>
@@ -172,10 +205,9 @@ public sealed class __NAME__Part : PartBase
         return new List<DataPinDefinition>(new[]
         {
             // TODO: add pins definitions...
-            // sample:
-            // new DataPinDefinition(DataPinValueType.Integer,
-            //    "tot-count",
-            //    "The total count of entries.")
+            new DataPinDefinition(DataPinValueType.Integer,
+               "tot-count",
+               "The total count of entries.")
         });
     }
 
@@ -210,7 +242,198 @@ public sealed class __NAME__Part : PartBase
 }
 ```
 
-**Test template** sample: the part being usually a DTO object, its logic is found only in indexing. Thus, the tests must ensure that the object is serializable, and that the pins are created as expected. In the following template replace `__NAME__` with your part's name, minus the `Part` suffix.
+### Test Templates
+
+#### Part Test - Seeder
+
+This template takes advantage of the part's seeder. If you are not using a seeder, refer to the [next section](#part-test-template---no-seeder).
+
+```cs
+public sealed class __NAME__PartTest
+{
+    private static __NAME__Part GetPart()
+    {
+        __NAME__PartSeeder seeder = new __NAME__PartSeeder();
+        IItem item = new Item
+        {
+            FacetId = "default",
+            CreatorId = "zeus",
+            UserId = "zeus",
+            Description = "Test item",
+            Title = "Test Item",
+            SortKey = ""
+        };
+        return (__NAME__Part)seeder.GetPart(item, null, null);
+    }
+
+    private static __NAME__Part GetEmptyPart()
+    {
+        return new __NAME__Part
+        {
+            ItemId = Guid.NewGuid().ToString(),
+            RoleId = "some-role",
+            CreatorId = "zeus",
+            UserId = "another",
+            // TODO: set parts data here...
+        };
+    }
+
+    [Fact]
+    public void Part_Is_Serializable()
+    {
+        __NAME__Part part = GetPart();
+
+        string json = TestHelper.SerializePart(part);
+        __NAME__Part part2 = TestHelper.DeserializePart<__NAME__Part>(json);
+
+        Assert.Equal(part.Id, part2.Id);
+        Assert.Equal(part.TypeId, part2.TypeId);
+        Assert.Equal(part.ItemId, part2.ItemId);
+        Assert.Equal(part.RoleId, part2.RoleId);
+        Assert.Equal(part.CreatorId, part2.CreatorId);
+        Assert.Equal(part.UserId, part2.UserId);
+        // TODO: check parts data here...
+    }
+
+    // TODO: check pins here, e.g. for the NotePart we get a single pin
+    // when the tag is set, with name=tag and value=tag value:
+    // [Fact]
+    // public void GetDataPins_NoTag_Empty()
+    // {
+    //     __NAME__Part part = GetEmptyPart();
+    //     part.Tag = null;
+
+    //     Assert.Empty(part.GetDataPins());
+    // }
+
+    // [Fact]
+    // public void GetDataPins_Tag_1()
+    // {
+    //     __NAME__Part part = GetEmptyPart();
+    //     TODO: set only the properties required for pins
+    //     in a predictable way so we can test them
+
+    //     List<DataPin> pins = part.GetDataPins(null).ToList();
+    //     Assert.Single(pins);
+
+    //     DataPin pin = pins[0];
+    //     Assert.Equal(part.ItemId, pin.ItemId);
+    //     Assert.Equal(part.Id, pin.PartId);
+    //     Assert.Equal(part.RoleId, pin.RoleId);
+    //     Assert.Equal("tag", pin.Name);
+    //     Assert.Equal("some-tag", pin.Value);
+    // }
+}
+```
+
+#### List Part Test - Seeder
+
+The corresponding test for the list-only part scenario:
+
+```cs
+using Cadmus.Core;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Xunit;
+
+// ...
+
+public sealed class __NAME__PartTest
+{
+    private static __NAME__Part GetPart()
+    {
+        __NAME__PartSeeder seeder = new __NAME__PartSeeder();
+        IItem item = new Item
+        {
+            FacetId = "default",
+            CreatorId = "zeus",
+            UserId = "zeus",
+            Description = "Test item",
+            Title = "Test Item",
+            SortKey = ""
+        };
+        return (__NAME__Part)seeder.GetPart(item, null, null);
+    }
+
+    private static __NAME__Part GetEmptyPart()
+    {
+        return new __NAME__Part
+        {
+            ItemId = Guid.NewGuid().ToString(),
+            RoleId = "some-role",
+            CreatorId = "zeus",
+            UserId = "another",
+            // TODO: set parts data here...
+        };
+    }
+
+    [Fact]
+    public void Part_Is_Serializable()
+    {
+        __NAME__Part part = GetPart();
+
+        string json = TestHelper.SerializePart(part);
+        __NAME__Part part2 =
+            TestHelper.DeserializePart<__NAME__Part>(json);
+
+        Assert.Equal(part.Id, part2.Id);
+        Assert.Equal(part.TypeId, part2.TypeId);
+        Assert.Equal(part.ItemId, part2.ItemId);
+        Assert.Equal(part.RoleId, part2.RoleId);
+        Assert.Equal(part.CreatorId, part2.CreatorId);
+        Assert.Equal(part.UserId, part2.UserId);
+
+        Assert.Equal(2, part.Entries.Count);
+    }
+
+    [Fact]
+    public void GetDataPins_NoEntries_Ok()
+    {
+        __NAME__Part part = GetPart();
+        part.Entries.Clear();
+
+        List<DataPin> pins = part.GetDataPins(null).ToList();
+
+        Assert.Single(pins);
+        DataPin pin = pins[0];
+        Assert.Equal("tot-count", pin.Name);
+        TestHelper.AssertPinIds(part, pin);
+        Assert.Equal("0", pin.Value);
+    }
+
+    [Fact]
+    public void GetDataPins_Entries_Ok()
+    {
+        __NAME__Part part = GetEmptyPart();
+
+        for (int n = 1; n <= 3; n++)
+        {
+            // TODO add entry to part setting its pin-related
+            // properties in a predictable way, so we can test them
+        }
+
+        List<DataPin> pins = part.GetDataPins(null).ToList();
+
+        Assert.Equal(5, pins.Count);
+
+        DataPin pin = pins.Find(p => p.Name == "tot-count");
+        Assert.NotNull(pin);
+        TestHelper.AssertPinIds(part, pin);
+        Assert.Equal("3", pin.Value);
+
+        // TODO: assert counts and values e.g.:
+        // pin = pins.Find(p => p.Name == "pos-bottom-count");
+        // Assert.NotNull(pin);
+        // TestHelper.AssertPinIds(part, pin);
+        // Assert.Equal("2", pin.Value);
+    }
+}
+```
+
+#### No Seeder Simple Part Test
+
+The part being usually a DTO object, its logic is found only in indexing. Thus, the tests must ensure that the object is serializable, and that the pins are created as expected. In the following template replace `__NAME__` with your part's name, minus the `Part` suffix.
 
 ```cs
 public sealed class __NAME__PartTest
@@ -272,6 +495,8 @@ public sealed class __NAME__PartTest
     // }
 }
 ```
+
+#### No Seeder List Part Test Template
 
 The corresponding test for the list-only part scenario:
 
@@ -368,13 +593,15 @@ public sealed class __NAME__PartTest
 
 For layer parts, the same guidelines already listed for the other parts are applicable, with the following additions:
 
-- create a `...LayerFragment` class representing the fragment for the layer part. This is the true data model for the metatextual data represented by the layer. The class must implement `ITextLayerFragment`. Do not add any other property to the class; *by design, the only property of a layer part is its collection of fragments*.
+- create a `...LayerFragment` class representing the fragment for the layer part. This is the true data model for the metatextual data represented by the layer. The class must implement `ITextLayerFragment`. Do not add any other property to the class; _by design, the only property of a layer part is its collection of fragments_.
 
-- give the fragment a type ID (via the usual `TagAttribute`), which *must* begin with the prefix `fr.` (=`PartBase.FR_PREFIX`; note the trailing dot).
+- give the fragment a type ID (via the usual `TagAttribute`), which _must_ begin with the prefix `fr.` (=`PartBase.FR_PREFIX`; note the trailing dot).
 
 - if adding pins in the fragment, just provide the pin's name and value; the other properties will be supplied by the container part. By convention, you should prefix your pin name with the `fr.` prefix (defined in `PartBase.FR_PREFIX`).
 
 Anyway, adding a new layer part would be rarely required, as there is just a generic (parameterized) layer part provided for this: one part, many fragments. You rather have to provide fragments and their tests.
+
+### Layer Fragment Test Template
 
 **Fragment test template** sample:
 
