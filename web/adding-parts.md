@@ -359,6 +359,281 @@ HTML template:
 
 3. ensure the component has been added to its module's `declarations` and `exports`, and to the `public-api.ts` barrel file.
 
+### List Part Template
+
+As this is a frequent case, here is a start template for parts consisting only in a list of objects:
+
+```ts
+import { Component, OnInit } from '@angular/core';
+import { FormControl, FormBuilder, Validators } from '@angular/forms';
+
+import { ModelEditorComponentBase, DialogService } from '@myrmidon/cadmus-ui';
+import { AuthService } from '@myrmidon/cadmus-api';
+import { ThesaurusEntry, deepCopy } from '@myrmidon/cadmus-core';
+import { __MODEL__, __MODEL__sPart, __MODEL__S_PART_TYPEID } from '../__MODEL__-part';
+import { take } from 'rxjs/operators';
+
+/**
+ * __MODEL__sPart editor component.
+ * Thesauri: TODO.
+ */
+@Component({
+  selector: 'tgr-__MODEL__s-part',
+  templateUrl: './__MODEL__s-part.component.html',
+  styleUrls: ['./__MODEL__s-part.component.css'],
+})
+export class __MODEL__sPartComponent
+  extends ModelEditorComponentBase<__MODEL__sPart>
+  implements OnInit {
+  private _editedIndex: number;
+
+  public tabIndex: number;
+  public edited__NAME__: __MODEL__ | undefined;
+
+  // TODO: thesaurus entries
+  // public tagEntries: ThesaurusEntry[] | undefined;
+
+  public entries: FormControl;
+
+  constructor(authService: AuthService,
+    formBuilder: FormBuilder,
+    private _dialogService: DialogService,
+    private _locService: MsLocationService) {
+    super(authService);
+    this._editedIndex = -1;
+    this.tabIndex = 0;
+    // form
+    this.entries = formBuilder.control([], Validators.required);
+    this.form = formBuilder.group({
+      entries: this.entries,
+    });
+  }
+
+  public ngOnInit(): void {
+    this.initEditor();
+  }
+
+  private updateForm(model: __MODEL__sPart): void {
+    if (!model) {
+      this.form.reset();
+      return;
+    }
+    this.entries.setValue(model.entries || []);
+    this.form.markAsPristine();
+  }
+
+  protected onModelSet(model: __MODEL__sPart): void {
+    this.updateForm(deepCopy(model));
+  }
+
+  protected onThesauriSet(): void {
+    // TODO: thesauri e.g.:
+    // let key = 'ms-materials';
+    // if (this.thesauri && this.thesauri[key]) {
+    //   this.matEntries = this.thesauri[key].entries;
+    // } else {
+    //   this.matEntries = undefined;
+    // }
+  }
+
+  protected getModelFromForm(): __MODEL__sPart {
+    let part = this.model;
+    if (!part) {
+      part = {
+        itemId: this.itemId,
+        id: '',
+        typeId: __MODEL__S_PART_TYPEID,
+        roleId: this.roleId,
+        timeCreated: new Date(),
+        creatorId: '',
+        timeModified: new Date(),
+        userId: '',
+        entries: [],
+      };
+    }
+    part.entries = this.entries.value || [];
+    return part;
+  }
+
+  public add__NAME__(): void {
+    const unit: __MODEL__ = {
+      start: { n: 0 },
+      end: { n: 0 },
+      material: null,
+      sheetCount: 0,
+      guardSheetCount: 0,
+    };
+    this.entries.setValue([...this.entries.value, unit]);
+    this.edit__NAME__(this.entries.value.length - 1);
+  }
+
+  public edit__NAME__(index: number): void {
+    if (index < 0) {
+      this._editedIndex = -1;
+      this.tabIndex = 0;
+      this.edited__NAME__ = undefined;
+    } else {
+      this._editedIndex = index;
+      this.edited__NAME__ = this.entries.value[index];
+      setTimeout(() => {
+        this.tabIndex = 1;
+      }, 300);
+    }
+  }
+
+  public on__NAME__Save(unit: __MODEL__): void {
+    this.entries.setValue(
+      this.entries.value.map((u: __MODEL__, i: number) =>
+        i === this._editedIndex ? unit : u
+      )
+    );
+    this.edit__NAME__(-1);
+  }
+
+  public on__NAME__Close(): void {
+    this.edit__NAME__(-1);
+  }
+
+  public delete__NAME__(index: number): void {
+    this._dialogService
+      .confirm('Confirmation', 'Delete unit?')
+      .pipe(take(1))
+      .subscribe((yes) => {
+        if (yes) {
+          const entries = [...this.entries.value];
+          entries.splice(index, 1);
+          this.entries.setValue(entries);
+        }
+      });
+  }
+
+  public move__NAME__Up(index: number): void {
+    if (index < 1) {
+      return;
+    }
+    const unit = this.entries.value[index];
+    const entries = [...this.entries.value];
+    entries.splice(index, 1);
+    entries.splice(index - 1, 0, unit);
+    this.entries.setValue(entries);
+  }
+
+  public move__NAME__Down(index: number): void {
+    if (index + 1 >= this.entries.value.length) {
+      return;
+    }
+    const unit = this.entries.value[index];
+    const entries = [...this.entries.value];
+    entries.splice(index, 1);
+    entries.splice(index + 1, 0, unit);
+    this.entries.setValue(entries);
+  }
+}
+```
+
+HTML:
+
+```html
+<form [formGroup]="form" (submit)="save()">
+  <mat-card>
+    <mat-card-header>
+      <div mat-card-avatar>
+        <mat-icon>picture_in_picture</mat-icon>
+      </div>
+      <mat-card-title>__NAME__s Part</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-tab-group [(selectedIndex)]="tabIndex">
+        <mat-tab label="__NAME__s">
+          <div>
+            <button
+              type="button"
+              mat-icon-button
+              color="primary"
+              (click)="add__NAME__()"
+            >
+              <mat-icon>add_circle</mat-icon> add __NAME__
+            </button>
+          </div>
+          <table *ngIf="__NAME__s?.value?.length">
+            <thead>
+              <tr>
+                <th></th>
+                TODO: add model properties
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="
+                  let entry of entries?.value;
+                  let i = index;
+                  let first = first;
+                  let last = last
+                "
+              >
+                <td>
+                  <button
+                    type="button"
+                    mat-icon-button
+                    color="primary"
+                    matTooltip="Edit this __NAME__"
+                    (click)="edit__NAME__(i)"
+                  >
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button
+                    type="button"
+                    mat-icon-button
+                    matTooltip="Move this __NAME__ up"
+                    [disabled]="first"
+                    (click)="move__NAME__Up(i)"
+                  >
+                    <mat-icon>arrow_upward</mat-icon>
+                  </button>
+                  <button
+                    type="button"
+                    mat-icon-button
+                    matTooltip="Move this __NAME__ down"
+                    [disabled]="last"
+                    (click)="move__NAME__Down(i)"
+                  >
+                    <mat-icon>arrow_downward</mat-icon>
+                  </button>
+                  <button
+                    type="button"
+                    mat-icon-button
+                    color="warn"
+                    matTooltip="Delete this __NAME__"
+                    (click)="delete__NAME__(i)"
+                  >
+                    <mat-icon>remove_circle</mat-icon>
+                  </button>
+                </td>
+                TODO: properties
+              </tr>
+            </tbody>
+          </table>
+        </mat-tab>
+
+        <mat-tab label="unit" *ngIf="edited__NAME__">
+          TODO: editor control with:
+          [model]="edited__NAME__"
+          (modelChange)="on__NAME__Save($event)"
+          (editorClose)="on__NAME__Close()"
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card-content>
+    <mat-card-actions>
+      <cadmus-close-save-buttons
+        [form]="form"
+        [noSave]="userLevel < 2"
+        (closeRequest)="close()"
+      ></cadmus-close-save-buttons>
+    </mat-card-actions>
+  </mat-card>
+</form>
+```
+
 ## Adding a Part to the PG Library
 
 Each part editor has its component, and its state management artifacts under the same folder (store, query, and service).
