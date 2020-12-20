@@ -412,8 +412,7 @@ export class __MODEL__sPartComponent
   constructor(
     authService: AuthService,
     formBuilder: FormBuilder,
-    private _dialogService: DialogService,
-    private _locService: MsLocationService
+    private _dialogService: DialogService
   ) {
     super(authService);
     this._editedIndex = -1;
