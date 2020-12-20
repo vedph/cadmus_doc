@@ -1,5 +1,16 @@
 # Adding Parts
 
+<!-- TOC -->
+
+- [Adding Parts](#adding-parts)
+  - [Adding UI Library](#adding-ui-library)
+  - [Adding PG Library](#adding-pg-library)
+  - [Adding a Part to the UI Library](#adding-a-part-to-the-ui-library)
+    - [List Part Template](#list-part-template)
+  - [Adding a Part to the PG Library](#adding-a-part-to-the-pg-library)
+
+<!-- /TOC -->
+
 When adding parts, you can choose to add them to an existing library, or to a new one. In the latter case, first add the UI and PG libraries as specified below. Please notice that the following naming is just a suggested convention.
 
 These new procedures were defined for the Angular-libraries based Cadmus frontend ([Cadmus shell](https://github.com/vedph/cadmus_shell)). The [old procedures](adding-parts-old.md) still include instructions about building demo components, which are less useful at this stage of development.
@@ -103,7 +114,7 @@ As you can see, every module imported in the "ui" library is listed here among t
 },
 ```
 
-Note that you must *not* explicitly import the target module into your app module, as this is lazily loaded.
+Note that you must _not_ explicitly import the target module into your app module, as this is lazily loaded.
 
 3. edit your "ui" library `package.json` to add **peer dependencies**, like in this sample:
 
@@ -152,7 +163,7 @@ Note that you must *not* explicitly import the target module into your app modul
 1. add the **part model** (derived from `Part`), its type ID constant, and its JSON schema constant to `<part>.ts` (e.g. `note-part.ts`). Remember to add the new file to the exports of the "barrel" `public-api.ts` file in the module. You can use a template like this (replace `__PROJECT__` with the project's name, e.g. `itinera`; and `__NAME__` with your part's name, without the `Part` suffix; e.g. `Note`, adjusting case where required):
 
 ```ts
-import { Part } from '@myrmidon/cadmus-core';
+import { Part } from "@myrmidon/cadmus-core";
 
 /**
  * The __NAME__ part model.
@@ -164,60 +175,60 @@ export interface __NAME__Part extends Part {
 /**
  * The type ID used to identify the __NAME__Part type.
  */
-export const __NAME___PART_TYPEID = 'it.vedph.__PROJECT__.__NAME__';
+export const __NAME___PART_TYPEID = "it.vedph.__PROJECT__.__NAME__";
 
 /**
  * JSON schema for the __NAME__ part. This is used in the editor demo.
  * You can use the JSON schema tool at https://jsonschema.net/.
  */
 export const __NAME___PART_SCHEMA = {
-  $schema: 'http://json-schema.org/draft-07/schema#',
+  $schema: "http://json-schema.org/draft-07/schema#",
   $id:
-    'www.vedph.it/cadmus/parts/__PROJECT__/__LIB__' +
+    "www.vedph.it/cadmus/parts/__PROJECT__/__LIB__/" +
     __NAME___PART_TYPEID +
-    '.json',
-  type: 'object',
-  title: '__NAME__Part',
+    ".json",
+  type: "object",
+  title: "__NAME__Part",
   required: [
-    'id',
-    'itemId',
-    'typeId',
-    'timeCreated',
-    'creatorId',
-    'timeModified',
-    'userId',
+    "id",
+    "itemId",
+    "typeId",
+    "timeCreated",
+    "creatorId",
+    "timeModified",
+    "userId",
     // TODO: add other required properties here...
   ],
   properties: {
     timeCreated: {
-      type: 'string',
-      pattern: '^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d+Z$',
+      type: "string",
+      pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d+Z$",
     },
     creatorId: {
-      type: 'string',
+      type: "string",
     },
     timeModified: {
-      type: 'string',
-      pattern: '^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d+Z$',
+      type: "string",
+      pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d+Z$",
     },
     userId: {
-      type: 'string',
+      type: "string",
     },
     id: {
-      type: 'string',
-      pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$',
+      type: "string",
+      pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
     },
     itemId: {
-      type: 'string',
-      pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$',
+      type: "string",
+      pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
     },
     typeId: {
-      type: 'string',
-      pattern: '^[a-z][-0-9a-z._]*$',
+      type: "string",
+      pattern: "^[a-z][-0-9a-z._]*$",
     },
     roleId: {
-      type: ['string', 'null'],
-      pattern: '^([a-z][-0-9a-z._]*)?$',
+      type: ["string", "null"],
+      pattern: "^([a-z][-0-9a-z._]*)?$",
     },
 
     // TODO: add properties and fill the "required" array as needed
@@ -252,14 +263,14 @@ If you want to infer a schema in the [JSON schema tool](https://jsonschema.net/)
 Template:
 
 ```ts
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormBuilder, Validators } from '@angular/forms';
+import { Component, OnInit } from "@angular/core";
+import { FormControl, FormBuilder, Validators } from "@angular/forms";
 
-import { ModelEditorComponentBase, DialogService } from '@myrmidon/cadmus-ui';
-import { AuthService } from '@myrmidon/cadmus-api';
-import { ThesaurusEntry, deepCopy } from '@myrmidon/cadmus-core';
+import { ModelEditorComponentBase, DialogService } from "@myrmidon/cadmus-ui";
+import { AuthService } from "@myrmidon/cadmus-api";
+import { ThesaurusEntry, deepCopy } from "@myrmidon/cadmus-core";
 
-import { __PARTNAME__Part, __PARTNAME___PART_TYPEID } from '../YOURPARTFILE';
+import { __PARTNAME__Part, __PARTNAME___PART_TYPEID } from "../YOURPARTFILE";
 
 /**
  * __PARTNAME__ editor component.
@@ -273,7 +284,6 @@ import { __PARTNAME__Part, __PARTNAME___PART_TYPEID } from '../YOURPARTFILE';
 export class __PARTNAME__PartComponent
   extends ModelEditorComponentBase<__PARTNAME__Part>
   implements OnInit {
-
   // TODO form controls (form: FormGroup is inherited)
 
   // TODO thesauri entries, e.g.:
@@ -364,23 +374,27 @@ HTML template:
 As this is a frequent case, here is a start template for parts consisting only in a list of objects:
 
 ```ts
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormBuilder, Validators } from '@angular/forms';
+import { Component, OnInit } from "@angular/core";
+import { FormControl, FormBuilder, Validators } from "@angular/forms";
 
-import { ModelEditorComponentBase, DialogService } from '@myrmidon/cadmus-ui';
-import { AuthService } from '@myrmidon/cadmus-api';
-import { ThesaurusEntry, deepCopy } from '@myrmidon/cadmus-core';
-import { __MODEL__, __MODEL__sPart, __MODEL__S_PART_TYPEID } from '../__MODEL__-part';
-import { take } from 'rxjs/operators';
+import { ModelEditorComponentBase, DialogService } from "@myrmidon/cadmus-ui";
+import { AuthService } from "@myrmidon/cadmus-api";
+import { ThesaurusEntry, deepCopy } from "@myrmidon/cadmus-core";
+import {
+  __MODEL__,
+  __MODEL__sPart,
+  __MODEL__S_PART_TYPEID,
+} from "../__MODEL__-part";
+import { take } from "rxjs/operators";
 
 /**
  * __MODEL__sPart editor component.
  * Thesauri: TODO.
  */
 @Component({
-  selector: 'tgr-__MODEL__s-part',
-  templateUrl: './__MODEL__s-part.component.html',
-  styleUrls: ['./__MODEL__s-part.component.css'],
+  selector: "tgr-__MODEL__s-part",
+  templateUrl: "./__MODEL__s-part.component.html",
+  styleUrls: ["./__MODEL__s-part.component.css"],
 })
 export class __MODEL__sPartComponent
   extends ModelEditorComponentBase<__MODEL__sPart>
@@ -395,10 +409,12 @@ export class __MODEL__sPartComponent
 
   public entries: FormControl;
 
-  constructor(authService: AuthService,
+  constructor(
+    authService: AuthService,
     formBuilder: FormBuilder,
     private _dialogService: DialogService,
-    private _locService: MsLocationService) {
+    private _locService: MsLocationService
+  ) {
     super(authService);
     this._editedIndex = -1;
     this.tabIndex = 0;
@@ -441,13 +457,13 @@ export class __MODEL__sPartComponent
     if (!part) {
       part = {
         itemId: this.itemId,
-        id: '',
+        id: "",
         typeId: __MODEL__S_PART_TYPEID,
         roleId: this.roleId,
         timeCreated: new Date(),
-        creatorId: '',
+        creatorId: "",
         timeModified: new Date(),
-        userId: '',
+        userId: "",
         entries: [],
       };
     }
@@ -496,7 +512,7 @@ export class __MODEL__sPartComponent
 
   public delete__NAME__(index: number): void {
     this._dialogService
-      .confirm('Confirmation', 'Delete unit?')
+      .confirm("Confirmation", "Delete unit?")
       .pipe(take(1))
       .subscribe((yes) => {
         if (yes) {
@@ -616,8 +632,7 @@ HTML:
         </mat-tab>
 
         <mat-tab label="unit" *ngIf="edited__NAME__">
-          TODO: editor control with:
-          [model]="edited__NAME__"
+          TODO: editor control with: [model]="edited__NAME__"
           (modelChange)="on__NAME__Save($event)"
           (editorClose)="on__NAME__Close()"
         </mat-tab>
@@ -658,7 +673,7 @@ Note that you should end with this kind of code when using the router module in 
 export const RouterModuleForChild = RouterModule.forChild([
   {
     path: `${MSUNITS_PART_TYPEID}/:pid`,
-    pathMatch: 'full',
+    pathMatch: "full",
     component: MsUnitsPartFeatureComponent,
     canDeactivate: [PendingChangesGuard],
   },
@@ -683,14 +698,14 @@ export class CadmusTgrPartMsPgModule {}
 3. inside this new component's folder, add a new **store** for your model, named `edit-<partname>-part.store.ts`. Template:
 
 ```ts
-import { Injectable } from '@angular/core';
-import { StoreConfig, Store } from '@datorama/akita';
+import { Injectable } from "@angular/core";
+import { StoreConfig, Store } from "@datorama/akita";
 
 import {
   EditPartState,
   EditPartStoreApi,
   editPartInitialState,
-} from '@myrmidon/cadmus-state';
+} from "@myrmidon/cadmus-state";
 
 // TODO: add import from your UI library
 // import { __NAME___PART_TYPEID } from '@myrmidon/cadmus-itinera-part-lt-ui';
@@ -716,11 +731,11 @@ export class Edit__NAME__PartStore
 4. in the same folder, add a new **query** for your model, named `edit-<partname>-part.query.ts`. Template:
 
 ```ts
-import { Injectable } from '@angular/core';
-import { EditPartQueryBase } from '@myrmidon/cadmus-state';
-import { Edit__NAME__PartStore } from './edit-__NAME__-part.store';
+import { Injectable } from "@angular/core";
+import { EditPartQueryBase } from "@myrmidon/cadmus-state";
+import { Edit__NAME__PartStore } from "./edit-__NAME__-part.store";
 
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class Edit__NAME__PartQuery extends EditPartQueryBase {
   constructor(store: Edit__NAME__PartStore) {
     super(store);
@@ -731,12 +746,12 @@ export class Edit__NAME__PartQuery extends EditPartQueryBase {
 5. in the same folder, add a new **service** for your model, named `edit-<partname>-part.service.ts`. Template:
 
 ```ts
-import { Injectable } from '@angular/core';
-import { ItemService, ThesaurusService } from '@myrmidon/cadmus-api';
-import { EditPartServiceBase } from '@myrmidon/cadmus-state';
-import { Edit__NAME__PartStore } from './edit-__NAME__-part.store';
+import { Injectable } from "@angular/core";
+import { ItemService, ThesaurusService } from "@myrmidon/cadmus-api";
+import { EditPartServiceBase } from "@myrmidon/cadmus-state";
+import { Edit__NAME__PartStore } from "./edit-__NAME__-part.store";
 
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class Edit__NAME__PartService extends EditPartServiceBase {
   constructor(
     editPartStore: Edit__NAME__PartStore,
@@ -752,16 +767,20 @@ export class Edit__NAME__PartService extends EditPartServiceBase {
 6. implement the feature **editor component** by making it extend `EditPartFeatureBase`, like in this code template:
 
 ```ts
-import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Component, OnInit } from "@angular/core";
+import { Router, ActivatedRoute } from "@angular/router";
+import { Observable } from "rxjs";
 
-import { ThesauriSet } from '@myrmidon/cadmus-core';
-import { MatSnackBar } from '@myrmidon/cadmus-material';
-import { EditItemQuery, EditItemService, EditPartFeatureBase } from '@myrmidon/cadmus-state';
+import { ThesauriSet } from "@myrmidon/cadmus-core";
+import { MatSnackBar } from "@myrmidon/cadmus-material";
+import {
+  EditItemQuery,
+  EditItemService,
+  EditPartFeatureBase,
+} from "@myrmidon/cadmus-state";
 
-import { Edit__NAME__PartService } from './edit-__NAME__-part.service';
-import { Edit__NAME__PartQuery } from './edit-__NAME__-part.query';
+import { Edit__NAME__PartService } from "./edit-__NAME__-part.service";
+import { Edit__NAME__PartQuery } from "./edit-__NAME__-part.query";
 
 @Component({
   selector: "cadmus-__NAME__-part-feature",
@@ -794,7 +813,7 @@ export class __NAME__PartFeatureComponent
   public ngOnInit(): void {
     // TODO: select your thesauri if required, e.g.:
     // this.initEditor(['note-tags']);
-    this.initEditor(['your', 'thesauri', 'ids', 'here']);
+    this.initEditor(["your", "thesauri", "ids", "here"]);
   }
 }
 ```
