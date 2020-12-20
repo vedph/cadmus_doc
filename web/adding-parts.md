@@ -472,15 +472,11 @@ export class __MODEL__sPartComponent
 
   public add__NAME__(): void {
     const unit: __MODEL__ = {
-      start: { n: 0 },
-      end: { n: 0 },
-      material: null,
-      sheetCount: 0,
-      guardSheetCount: 0,
+      // TODO set parts
     };
     this.entries.setValue([...this.entries.value, unit]);
     this.edit__NAME__(this.entries.value.length - 1);
-  }
+ }
 
   public edit__NAME__(index: number): void {
     if (index < 0) {
@@ -496,10 +492,10 @@ export class __MODEL__sPartComponent
     }
   }
 
-  public on__NAME__Save(unit: __MODEL__): void {
+  public on__NAME__Save(entry: __MODEL__): void {
     this.entries.setValue(
-      this.entries.value.map((u: __MODEL__, i: number) =>
-        i === this._editedIndex ? unit : u
+      this.entries.value.map((e: __MODEL__, i: number) =>
+        i === this._editedIndex ? entry : e
       )
     );
     this.edit__NAME__(-1);
@@ -511,7 +507,7 @@ export class __MODEL__sPartComponent
 
   public delete__NAME__(index: number): void {
     this._dialogService
-      .confirm("Confirmation", "Delete unit?")
+      .confirm("Confirmation", "Delete entry?")
       .pipe(take(1))
       .subscribe((yes) => {
         if (yes) {
@@ -526,10 +522,10 @@ export class __MODEL__sPartComponent
     if (index < 1) {
       return;
     }
-    const unit = this.entries.value[index];
+    const entry = this.entries.value[index];
     const entries = [...this.entries.value];
     entries.splice(index, 1);
-    entries.splice(index - 1, 0, unit);
+    entries.splice(index - 1, 0, entry);
     this.entries.setValue(entries);
   }
 
@@ -537,10 +533,10 @@ export class __MODEL__sPartComponent
     if (index + 1 >= this.entries.value.length) {
       return;
     }
-    const unit = this.entries.value[index];
+    const entry = this.entries.value[index];
     const entries = [...this.entries.value];
     entries.splice(index, 1);
-    entries.splice(index + 1, 0, unit);
+    entries.splice(index + 1, 0, entry);
     this.entries.setValue(entries);
   }
 }
