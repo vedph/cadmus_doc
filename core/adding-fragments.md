@@ -7,6 +7,7 @@ For seeder templates see [seeding](seeding.md).
 ```cs
 using System;
 using System.Collections.Generic;
+using System.Text;
 using Fusi.Tools.Config;
 using Cadmus.Core.Layers;
 using Cadmus.Core;
@@ -32,6 +33,8 @@ namespace Cadmus.__PROJECT__.Parts
         /// </remarks>
         public string Location { get; set; }
 
+        // TODO: add properties
+
         /// <summary>
         /// Get all the key=value pairs exposed by the implementor.
         /// </summary>
@@ -45,8 +48,8 @@ namespace Cadmus.__PROJECT__.Parts
             //DataPinBuilder builder = new DataPinBuilder(
             //    new StandardDataPinTextFilter());
 
-            //// tot-count
-            //builder.Set("tot", Entries?.Count ?? 0, false);
+            //// fr-tot-count
+            //builder.Set(PartBase.FR_PREFIX + "tot", Entries?.Count ?? 0, false);
 
             //return builder.Build(null);
 
