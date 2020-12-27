@@ -1,6 +1,19 @@
 # Adding Fragments
 
-For seeder templates see [seeding](seeding.md).
+<!-- TOC -->
+
+- [Adding Fragments](#adding-fragments)
+  - [Fragment Template](#fragment-template)
+  - [Test Template](#test-template)
+
+<!-- /TOC -->
+
+For seeder templates see [seeding](seeding.md). The typical procedure is:
+
+1. add fragment
+2. add seeder
+3. add seeder test
+4. add fragment test
 
 ## Fragment Template
 
