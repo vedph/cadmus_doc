@@ -103,19 +103,29 @@ namespace Cadmus.__PROJECT__.Parts
 ## Test Template
 
 ```cs
-using System.Collections.Generic;
+using Cadmus.Core;
+using Cadmus.Seed.Tgr.Parts.Grammar;
+using Cadmus.Tgr.Parts.Grammar;
+using Fusi.Tools.Config;
+using System;
 using System.Linq;
+using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 using Xunit;
-using Cadmus.Core;
-using Cadmus.Core.Layers;
-using Fusi.Tools.Config;
 
 namespace Cadmus.__PROJECT__.Parts
 {
     public sealed class __NAME__LayerFragmentTest
     {
         private static __NAME__LayerFragment GetFragment()
+        {
+            var seeder = new __NAME__LayerFragmentSeeder();
+            return (__NAME__LayerFragment)
+                seeder.GetFragment(null, "1.2", "exemplum fictum");
+        }
+
+        private static __NAME__LayerFragment GetEmptyFragment()
         {
             return new __NAME__LayerFragment
             {
@@ -147,15 +157,23 @@ namespace Cadmus.__PROJECT__.Parts
             // TODO: check fragments data here...
         }
 
-        // TODO: add GetDataPins tests
-        // [Fact]
-        // public void GetDataPins_Tag_1()
-        // {
-        //     __NAME__LayerFragment fragment = GetFragment();
+        [Fact]
+        public void GetDataPins_Tag_1()
+        {
+            __NAME__LayerFragment fragment = GetEmptyFragment();
+            List<DataPin> pins = fragment.GetDataPins(null).ToList();
 
-        //     List<DataPin> pins = fragment.GetDataPins(null).ToList();
-        // ...
-        // }
+        	// TODO assert pins: e.g.
+	        // fr-tot-count
+            // DataPin pin = pins.Find(p => p.Name == PartBase.FR_PREFIX + "tot-count");
+            // Assert.NotNull(pin);
+            // Assert.Equal("3", pin.Value);
+
+            // fr-tag
+            // pin = pins.Find(p => p.Name == PartBase.FR_PREFIX + "tag"
+            //    && p.Value == "odd");
+            // Assert.NotNull(pin);
+        }
     }
 }
 ```
