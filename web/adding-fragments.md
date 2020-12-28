@@ -1,5 +1,15 @@
 # Adding Fragments
 
+<!-- TOC -->
+
+- [Adding Fragments](#adding-fragments)
+  - [Adding a Parts/Fragments Libraries](#adding-a-partsfragments-libraries)
+  - [Adding Fragment to the UI Library](#adding-fragment-to-the-ui-library)
+    - [Fragment with List](#fragment-with-list)
+  - [Adding Fragment to the PG Library](#adding-fragment-to-the-pg-library)
+
+<!-- /TOC -->
+
 ## Adding a Parts/Fragments Libraries
 
 Same as [parts](adding-parts.md).
@@ -11,7 +21,7 @@ In the `<partgroup>-ui` module:
 1. add the fragment _model_ (derived from `Fragment`), its type ID constant, and its JSON schema constant to `<fragment>.ts` (e.g. `comment-fragment.ts`). Remember to add the new file to the "barrel" `index.ts` in the module. You can use a template like this (replace `__NAME__` with your part's name, e.g. `Comment`, adjusting case where required):
 
 ```ts
-import { Fragment } from '@myrmidon/cadmus-core';
+import { Fragment } from "@myrmidon/cadmus-core";
 
 /**
  * The __NAME__ layer fragment server model.
@@ -20,27 +30,30 @@ export interface __NAME__Fragment extends Fragment {
   // TODO: add properties
 }
 
-export const __NAME___FRAGMENT_TYPEID = 'fr.it.vedph.__NAME__';
+export const __NAME___FRAGMENT_TYPEID = "fr.it.vedph.__NAME__";
 
 export const __NAME___FRAGMENT_SCHEMA = {
   definitions: {},
-  $schema: 'http://json-schema.org/draft-07/schema#',
-  $id: 'www.vedph.it/cadmus/fragments/general/' + __NAME___FRAGMENT_TYPEID + '.json',
-  type: 'object',
-  title: '__NAME__Fragment',
+  $schema: "http://json-schema.org/draft-07/schema#",
+  $id:
+    "www.vedph.it/cadmus/fragments/general/" +
+    __NAME___FRAGMENT_TYPEID +
+    ".json",
+  type: "object",
+  title: "__NAME__Fragment",
   // TODO: add which properties are required
-  required: ['location'],
+  required: ["location"],
   properties: {
     location: {
-      $id: '#/properties/location',
-      type: 'string'
+      $id: "#/properties/location",
+      type: "string",
     },
     baseText: {
-      $id: '#/properties/baseText',
-      type: 'string'
+      $id: "#/properties/baseText",
+      type: "string",
     },
     // TODO: add properties
-  }
+  },
 };
 ```
 
@@ -65,21 +78,21 @@ If you want to infer a schema in the [JSON schema tool](https://jsonschema.net/)
 Code template:
 
 ```ts
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
-import { Fragment, ThesaurusEntry, deepCopy } from '@myrmidon/cadmus-core';
-import { AuthService } from '@myrmidon/cadmus-api';
-import { ModelEditorComponentBase, DialogService } from '@myrmidon/cadmus-ui';
-import { __NAME__Fragment } from '../__NAME__-fragment';
+import { Component, OnInit } from "@angular/core";
+import { FormBuilder, FormControl, Validators } from "@angular/forms";
+import { Fragment, ThesaurusEntry, deepCopy } from "@myrmidon/cadmus-core";
+import { AuthService } from "@myrmidon/cadmus-api";
+import { ModelEditorComponentBase, DialogService } from "@myrmidon/cadmus-ui";
+import { __NAME__Fragment } from "../__NAME__-fragment";
 
 /**
  * __NAME__ fragment editor component.
  * Thesauri: TODO...
  */
 @Component({
-  selector: 'cadmus-__NAME__-fragment',
-  templateUrl: './__NAME__-fragment.component.html',
-  styleUrls: ['./__NAME__-fragment.component.css']
+  selector: "cadmus-__NAME__-fragment",
+  templateUrl: "./__NAME__-fragment.component.html",
+  styleUrls: ["./__NAME__-fragment.component.css"],
 })
 export class __NAME__FragmentComponent
   extends ModelEditorComponentBase<__NAME__Fragment>
@@ -132,7 +145,7 @@ export class __NAME__FragmentComponent
 
   protected getModelFromForm(): __NAME__Fragment {
     return {
-      location: this.model?.location ?? '',
+      location: this.model?.location ?? "",
       // TODO: set fr properties from form's controls
     };
   }
@@ -148,12 +161,8 @@ Sample HTML template:
       <div mat-card-avatar>
         <mat-icon>textsms</mat-icon>
       </div>
-      <mat-card-title
-        >LingTags Fragment {{ model?.location }}</mat-card-title
-      >
-      <mat-card-subtitle>
-        {{ model?.baseText }}
-      </mat-card-subtitle>
+      <mat-card-title>LingTags Fragment {{ model?.location }}</mat-card-title>
+      <mat-card-subtitle> {{ model?.baseText }} </mat-card-subtitle>
     </mat-card-header>
 
     <mat-card-content> TODO: add controls </mat-card-content>
@@ -171,6 +180,260 @@ Sample HTML template:
 
 Remember to add the component to its module's `declarations` and `exports`.
 
+### Fragment with List
+
+```ts
+import { Component, OnInit } from "@angular/core";
+import { FormBuilder, FormControl, Validators } from "@angular/forms";
+import { AuthService } from "@myrmidon/cadmus-api";
+import { deepCopy } from "@myrmidon/cadmus-core";
+import { DialogService, ModelEditorComponentBase } from "@myrmidon/cadmus-ui";
+import { take } from "rxjs/operators";
+
+@Component({
+  selector: "__PRJ__-__NAME__-fragment",
+  templateUrl: "./__NAME__-fragment.component.html",
+  styleUrls: ["./__NAME__-fragment.component.css"],
+})
+export class __NAME__FragmentComponent
+  extends ModelEditorComponentBase<__NAME__Fragment>
+  implements OnInit {
+  private _editedIndex: number;
+
+  public tabIndex: number;
+  public editedEntry: __MODEL__ | undefined;
+
+  // TODO: thesaurus entries
+  // public tagEntries: ThesaurusEntry[] | undefined;
+
+  public entries: FormControl;
+
+  constructor(
+    authService: AuthService,
+    formBuilder: FormBuilder,
+    private _dialogService: DialogService
+  ) {
+    super(authService);
+    this._editedIndex = -1;
+    this.tabIndex = 0;
+    // form
+    this.entries = formBuilder.control([], Validators.required);
+    this.form = formBuilder.group({
+      entries: this.entries,
+    });
+  }
+
+  public ngOnInit(): void {
+    this.initEditor();
+  }
+
+  private updateForm(model: __NAME__Fragment): void {
+    if (!model) {
+      this.form.reset();
+      return;
+    }
+    this.entries.setValue(model.entries || []);
+    this.form.markAsPristine();
+  }
+
+  protected onModelSet(model: __NAME__Fragment): void {
+    this.updateForm(deepCopy(model));
+  }
+
+  protected onThesauriSet(): void {
+    // TODO: thesauri e.g.:
+    // let key = 'ms-materials';
+    // if (this.thesauri && this.thesauri[key]) {
+    //   this.matEntries = this.thesauri[key].entries;
+    // } else {
+    //   this.matEntries = undefined;
+    // }
+  }
+
+  protected getModelFromForm(): __NAME__Fragment {
+    return {
+      location: this.model?.location ?? "",
+      entries: this.entries.value?.length ? this.entries.value : undefined,
+    };
+  }
+
+  public addEntry(): void {
+    const entry: __MODEL__ = {
+      // TODO set parts
+    };
+    this.entries.setValue([...this.entries.value, entry]);
+    this.editEntry(this.entries.value.length - 1);
+  }
+
+  public editEntry(index: number): void {
+    if (index < 0) {
+      this._editedIndex = -1;
+      this.tabIndex = 0;
+      this.editedEntry = undefined;
+    } else {
+      this._editedIndex = index;
+      this.editedEntry = this.entries.value[index];
+      setTimeout(() => {
+        this.tabIndex = 1;
+      }, 300);
+    }
+  }
+
+  public onEntrySave(entry: __MODEL__): void {
+    this.entries.setValue(
+      this.entries.value.map((e: __MODEL__, i: number) =>
+        i === this._editedIndex ? entry : e
+      )
+    );
+    this.editEntry(-1);
+  }
+
+  public onEntryClose(): void {
+    this.editEntry(-1);
+  }
+
+  public deleteEntry(index: number): void {
+    this._dialogService
+      .confirm("Confirmation", "Delete entry?")
+      .pipe(take(1))
+      .subscribe((yes) => {
+        if (yes) {
+          const entries = [...this.entries.value];
+          entries.splice(index, 1);
+          this.entries.setValue(entries);
+        }
+      });
+  }
+
+  public moveEntryUp(index: number): void {
+    if (index < 1) {
+      return;
+    }
+    const entry = this.entries.value[index];
+    const entries = [...this.entries.value];
+    entries.splice(index, 1);
+    entries.splice(index - 1, 0, entry);
+    this.entries.setValue(entries);
+  }
+
+  public moveEntryDown(index: number): void {
+    if (index + 1 >= this.entries.value.length) {
+      return;
+    }
+    const entry = this.entries.value[index];
+    const entries = [...this.entries.value];
+    entries.splice(index, 1);
+    entries.splice(index + 1, 0, entry);
+    this.entries.setValue(entries);
+  }
+}
+```
+
+HTML template:
+
+```html
+<form [formGroup]="form" (submit)="save()">
+  <mat-card>
+    <mat-card-header>
+      <div mat-card-avatar>
+        <mat-icon>textsms</mat-icon>
+      </div>
+      <mat-card-title>__NAME__ Fragment {{ model?.location }}</mat-card-title>
+      <mat-card-subtitle> {{ model?.baseText }} </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <mat-tab-group [(selectedIndex)]="tabIndex">
+        <mat-tab label="__NAME__s">
+          <div>
+            <button
+              type="button"
+              mat-icon-button
+              color="primary"
+              (click)="add__NAME__()"
+            >
+              <mat-icon>add_circle</mat-icon> add __NAME__
+            </button>
+          </div>
+          <table *ngIf="__NAME__s?.value?.length">
+            <thead>
+              <tr>
+                <th></th>
+                TODO: add model properties
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="
+                  let entry of entries?.value;
+                  let i = index;
+                  let first = first;
+                  let last = last
+                "
+              >
+                <td>
+                  <button
+                    type="button"
+                    mat-icon-button
+                    color="primary"
+                    matTooltip="Edit this __NAME__"
+                    (click)="edit__NAME__(i)"
+                  >
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button
+                    type="button"
+                    mat-icon-button
+                    matTooltip="Move this __NAME__ up"
+                    [disabled]="first"
+                    (click)="move__NAME__Up(i)"
+                  >
+                    <mat-icon>arrow_upward</mat-icon>
+                  </button>
+                  <button
+                    type="button"
+                    mat-icon-button
+                    matTooltip="Move this __NAME__ down"
+                    [disabled]="last"
+                    (click)="move__NAME__Down(i)"
+                  >
+                    <mat-icon>arrow_downward</mat-icon>
+                  </button>
+                  <button
+                    type="button"
+                    mat-icon-button
+                    color="warn"
+                    matTooltip="Delete this __NAME__"
+                    (click)="delete__NAME__(i)"
+                  >
+                    <mat-icon>remove_circle</mat-icon>
+                  </button>
+                </td>
+                TODO: properties
+              </tr>
+            </tbody>
+          </table>
+        </mat-tab>
+
+        <mat-tab label="unit" *ngIf="edited__NAME__">
+          TODO: editor control with: [model]="edited__NAME__"
+          (modelChange)="on__NAME__Save($event)"
+          (editorClose)="on__NAME__Close()"
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <cadmus-close-save-buttons
+        [form]="form"
+        [noSave]="userLevel < 2"
+        (closeRequest)="close()"
+      ></cadmus-close-save-buttons>
+    </mat-card-actions>
+  </mat-card>
+</form>
+```
+
 ## Adding Fragment to the PG Library
 
 In a `<partgroup>-pg` module:
@@ -182,29 +445,30 @@ export const RouterModuleForChild = RouterModule.forChild([
   // other routes...
   {
     path: `fragment/:pid/${__NAME___FRAGMENT_TYPEID}/:loc`,
-    pathMatch: 'full',
+    pathMatch: "full",
     component: __NAME__FragmentFeatureComponent,
-    canDeactivate: [PendingChangesGuard]
-  }
+    canDeactivate: [PendingChangesGuard],
+  },
 ]);
 ```
 
 2. inside this new component's folder, add a new **store** for your model, named `edit-<fragmentname>-fragment.store.ts`. Template:
 
 ```ts
-import { Injectable } from '@angular/core';
-import { StoreConfig, Store } from '@datorama/akita';
+import { Injectable } from "@angular/core";
+import { StoreConfig, Store } from "@datorama/akita";
 import {
   EditFragmentState,
   EditFragmentStoreApi,
-  editFragmentInitialState
-} from '@myrmidon/cadmus-state';
+  editFragmentInitialState,
+} from "@myrmidon/cadmus-state";
 // change this import as required
-import { __NAME___FRAGMENT_TYPEID } from '@myrmidon/cadmus-tgr-part-gr-ui';
+import { __NAME___FRAGMENT_TYPEID } from "@myrmidon/cadmus-tgr-part-gr-ui";
 
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 @StoreConfig({ name: __NAME___FRAGMENT_TYPEID })
-export class Edit__NAME__FragmentStore extends Store<EditFragmentState>
+export class Edit__NAME__FragmentStore
+  extends Store<EditFragmentState>
   implements EditFragmentStoreApi {
   constructor() {
     super(editFragmentInitialState);
@@ -222,15 +486,13 @@ export class Edit__NAME__FragmentStore extends Store<EditFragmentState>
 3. in the same folder, add a new **query** for your model, named `edit-<fragmentname>-fragment.query.ts`. Template:
 
 ```ts
-import { Injectable } from '@angular/core';
-import { EditFragmentQueryBase } from '@myrmidon/cadmus-state';
-import { Edit__NAME__FragmentStore } from './edit-__NAME__-fragment.store';
+import { Injectable } from "@angular/core";
+import { EditFragmentQueryBase } from "@myrmidon/cadmus-state";
+import { Edit__NAME__FragmentStore } from "./edit-__NAME__-fragment.store";
 
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class Edit__NAME__FragmentQuery extends EditFragmentQueryBase {
-  constructor(
-    protected store: Edit__NAME__FragmentStore
-  ) {
+  constructor(protected store: Edit__NAME__FragmentStore) {
     super(store);
   }
 }
@@ -239,12 +501,12 @@ export class Edit__NAME__FragmentQuery extends EditFragmentQueryBase {
 4. in the same folder, add a new **service** for your model, named `edit-<fragmentname>-fragment.service.ts`. Template:
 
 ```ts
-import { Injectable } from '@angular/core';
-import { ItemService, ThesaurusService } from '@myrmidon/cadmus-api';
-import { EditFragmentServiceBase } from '@myrmidon/cadmus-state';
-import { Edit__NAME__FragmentStore } from './edit-__NAME__-fragment.store';
+import { Injectable } from "@angular/core";
+import { ItemService, ThesaurusService } from "@myrmidon/cadmus-api";
+import { EditFragmentServiceBase } from "@myrmidon/cadmus-state";
+import { Edit__NAME__FragmentStore } from "./edit-__NAME__-fragment.store";
 
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class Edit__NAME__FragmentService extends EditFragmentServiceBase {
   constructor(
     editPartStore: Edit__NAME__FragmentStore,
@@ -260,25 +522,26 @@ export class Edit__NAME__FragmentService extends EditFragmentServiceBase {
 5. implement the feature editor component by making it extend `EditFragmentFeatureBase`, like in this code template:
 
 ```ts
-import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { Edit__NAME__FragmentQuery } from './edit-__NAME__-fragment.query';
-import { Edit__NAME__FragmentService } from './edit-__NAME__-fragment.service';
+import { Component, OnInit } from "@angular/core";
+import { Router, ActivatedRoute } from "@angular/router";
+import { Edit__NAME__FragmentQuery } from "./edit-__NAME__-fragment.query";
+import { Edit__NAME__FragmentService } from "./edit-__NAME__-fragment.service";
 import {
   EditItemQuery,
   EditItemService,
   EditLayerPartQuery,
   EditLayerPartService,
-  EditFragmentFeatureBase
-} from '@myrmidon/cadmus-state';
-import { LibraryRouteService } from '@myrmidon/cadmus-core';
+  EditFragmentFeatureBase,
+} from "@myrmidon/cadmus-state";
+import { LibraryRouteService } from "@myrmidon/cadmus-core";
 
 @Component({
-  selector: 'cadmus-__NAME__-fragment-feature',
-  templateUrl: './__NAME__-fragment-feature.component.html',
-  styleUrls: ['./__NAME__-fragment-feature.component.css']
+  selector: "cadmus-__NAME__-fragment-feature",
+  templateUrl: "./__NAME__-fragment-feature.component.html",
+  styleUrls: ["./__NAME__-fragment-feature.component.css"],
 })
-export class __NAME__FragmentFeatureComponent extends EditFragmentFeatureBase
+export class __NAME__FragmentFeatureComponent
+  extends EditFragmentFeatureBase
   implements OnInit {
   constructor(
     router: Router,
@@ -309,7 +572,7 @@ export class __NAME__FragmentFeatureComponent extends EditFragmentFeatureBase
   ngOnInit() {
     // TODO: add the required thesauri IDs in the initEditor call,
     // like 'comment-tags' in this sample
-    this.initEditor(['comment-tags']);
+    this.initEditor(["comment-tags"]);
   }
 }
 ```
