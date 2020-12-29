@@ -112,7 +112,7 @@ A JSON template for the seeder configuration follows:
       "typeId": "it.vedph.categories",
       "name": "categories",
       "description": "Item's categories.",
-      "required": true,
+      "isRequired": true,
       "colorKey": "98F8F8",
       "groupKey": "general",
       "sortKey": "categories"
@@ -121,7 +121,7 @@ A JSON template for the seeder configuration follows:
       "typeId": "it.vedph.historical-date",
       "name": "date",
       "description": "Historical date.",
-      "required": false,
+      "isRequired": false,
       "colorKey": "F898F8",
       "groupKey": "general",
       "sortKey": "date"

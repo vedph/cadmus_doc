@@ -1,5 +1,18 @@
 # Cadmus Profiles
 
+<!-- TOC -->
+
+- [Cadmus Profiles](#cadmus-profiles)
+  - [Facets](#facets)
+  - [Flags](#flags)
+  - [Thesauri](#thesauri)
+    - [Thesaurus for Friendly Component Names](#thesaurus-for-friendly-component-names)
+    - [Thesauri Aliases](#thesauri-aliases)
+    - [Thesaurus Scope in Parts](#thesaurus-scope-in-parts)
+  - [Browsers](#browsers)
+
+<!-- /TOC -->
+
 A Cadmus profile is a JSON document used to define items facets, parts, flags, and taxonomies (thesauri).
 
 When the backend API starts, the profile is used to seed a not-existing database. The location of this profile is read from the environment variable named `SEED__PROFILESOURCE` (Linux; `SEED:PROFILESOURCE` in Windows).
@@ -31,7 +44,7 @@ Each part definition has these properties:
 - `roleId`: an optional role ID (an arbitrary string) assigned to the part. This is used when the part's type occurs more than once in the facet, with different roles (which systematically happens for layer parts).
 - `name`: a human-friendly name assigned to the part.
 - `description`: a short description for the part in the context of its facet.
-- `required`: `true` if the part is required.
+- `isRequired`: `true` if the part is required.
 - `colorKey`: an RRGGBB color key optionally used in a frontend to visually mark the part.
 - `groupKey`: a human-friendly short group name the part belongs to. This can be used in a frontend to present parts grouped in a logical manner.
 - `sortKey`: the sort key for the part inside its group. This can be used in a frontend to sort the parts of each group when presenting them.
@@ -43,95 +56,95 @@ As for `roleId`, the following reserved values have a special meaning:
 The following code is a facet sample:
 
 ```json
-  "facets": [
-    {
-      "id": "default",
-      "label": "default",
-      "description": "The default facet",
-      "colorKey": "86ACEB",
-      "partDefinitions": [
-        {
-          "typeId": "it.vedph.categories",
-          "name": "categories",
-          "description": "Item's categories.",
-          "required": true,
-          "colorKey": "98F8F8",
-          "groupKey": "general",
-          "sortKey": "categories"
-        },
-        {
-          "typeId": "it.vedph.historical-date",
-          "name": "date",
-          "description": "Historical date.",
-          "required": false,
-          "colorKey": "F898F8",
-          "groupKey": "general",
-          "sortKey": "date"
-        },
-        {
-          "typeId": "it.vedph.keywords",
-          "name": "keywords",
-          "description": "Item's keywords.",
-          "colorKey": "90C0F8",
-          "groupKey": "general",
-          "sortKey": "keywords"
-        },
-        {
-          "typeId": "it.vedph.note",
-          "name": "note",
-          "description": "A free text note about the document.",
-          "colorKey": "B0A0F8",
-          "groupKey": "general",
-          "sortKey": "note"
-        },
-        {
-          "typeId": "it.vedph.token-text",
-          "roleId": "base-text",
-          "name": "text",
-          "description": "Item's token-based text.",
-          "colorKey": "31AB54",
-          "groupKey": "text",
-          "sortKey": "text"
-        },
-        {
-          "typeId": "it.vedph.token-text-layer",
-          "roleId": "fr.it.vedph.comment",
-          "name": "comments",
-          "description": "Comments on text.",
-          "colorKey": "F8D040",
-          "groupKey": "text",
-          "sortKey": "text-comments"
-        },
-        {
-          "typeId": "it.vedph.token-text-layer",
-          "roleId": "fr.it.vedph.apparatus",
-          "name": "apparatus",
-          "description": "Critical apparatus.",
-          "colorKey": "D4E0A4",
-          "groupKey": "text",
-          "sortKey": "text-apparatus"
-        },
-        {
-          "typeId": "it.vedph.token-text-layer",
-          "roleId": "fr.it.vedph.orthography",
-          "name": "orthography",
-          "description": "Standard orthography.",
-          "colorKey": "E0D4A4",
-          "groupKey": "text",
-          "sortKey": "text-apparatus"
-        },
-        {
-          "typeId": "it.vedph.token-text-layer",
-          "roleId": "fr.it.vedph.witnesses",
-          "name": "witnesses",
-          "description": "Witnesses list.",
-          "colorKey": "A4E0D4",
-          "groupKey": "text",
-          "sortKey": "text-apparatus"
-        }
-      ]
-    }
-  ]
+"facets": [
+  {
+    "id": "default",
+    "label": "default",
+    "description": "The default facet",
+    "colorKey": "86ACEB",
+    "partDefinitions": [
+      {
+        "typeId": "it.vedph.categories",
+        "name": "categories",
+        "description": "Item's categories.",
+        "isRequired": true,
+        "colorKey": "98F8F8",
+        "groupKey": "general",
+        "sortKey": "categories"
+      },
+      {
+        "typeId": "it.vedph.historical-date",
+        "name": "date",
+        "description": "Historical date.",
+        "isRequired": false,
+        "colorKey": "F898F8",
+        "groupKey": "general",
+        "sortKey": "date"
+      },
+      {
+        "typeId": "it.vedph.keywords",
+        "name": "keywords",
+        "description": "Item's keywords.",
+        "colorKey": "90C0F8",
+        "groupKey": "general",
+        "sortKey": "keywords"
+      },
+      {
+        "typeId": "it.vedph.note",
+        "name": "note",
+        "description": "A free text note about the document.",
+        "colorKey": "B0A0F8",
+        "groupKey": "general",
+        "sortKey": "note"
+      },
+      {
+        "typeId": "it.vedph.token-text",
+        "roleId": "base-text",
+        "name": "text",
+        "description": "Item's token-based text.",
+        "colorKey": "31AB54",
+        "groupKey": "text",
+        "sortKey": "text"
+      },
+      {
+        "typeId": "it.vedph.token-text-layer",
+        "roleId": "fr.it.vedph.comment",
+        "name": "comments",
+        "description": "Comments on text.",
+        "colorKey": "F8D040",
+        "groupKey": "text",
+        "sortKey": "text-comments"
+      },
+      {
+        "typeId": "it.vedph.token-text-layer",
+        "roleId": "fr.it.vedph.apparatus",
+        "name": "apparatus",
+        "description": "Critical apparatus.",
+        "colorKey": "D4E0A4",
+        "groupKey": "text",
+        "sortKey": "text-apparatus"
+      },
+      {
+        "typeId": "it.vedph.token-text-layer",
+        "roleId": "fr.it.vedph.orthography",
+        "name": "orthography",
+        "description": "Standard orthography.",
+        "colorKey": "E0D4A4",
+        "groupKey": "text",
+        "sortKey": "text-apparatus"
+      },
+      {
+        "typeId": "it.vedph.token-text-layer",
+        "roleId": "fr.it.vedph.witnesses",
+        "name": "witnesses",
+        "description": "Witnesses list.",
+        "colorKey": "A4E0D4",
+        "groupKey": "text",
+        "sortKey": "text-apparatus"
+      }
+    ]
+  }
+]
 ```
 
 ## Flags
@@ -148,14 +161,14 @@ Their meaning is defined in the profile, under the `flags` property, having:
 Sample:
 
 ```json
-  "flags": [
-    {
-      "id": 1,
-      "label": "to revise",
-      "description": "The item must be revised.",
-      "colorKey": "F08080"
-    }
-  ]
+"flags": [
+  {
+    "id": 1,
+    "label": "to revise",
+    "description": "The item must be revised.",
+    "colorKey": "F08080"
+  }
+]
 ```
 
 ## Thesauri
