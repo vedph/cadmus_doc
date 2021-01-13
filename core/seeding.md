@@ -385,7 +385,7 @@ namespace Cadmus.Seed.YOURNAMESPACE
             Type t = typeof(__NAME__PartSeeder);
             TagAttribute attr = t.GetTypeInfo().GetCustomAttribute<TagAttribute>();
             Assert.NotNull(attr);
-            Assert.Equal("seed.it.vedph.itinera.__NAME__", attr.Tag);
+            Assert.Equal("seed.it.vedph.__PRJNAME__.__NAME__", attr.Tag);
         }
 
         [Fact]
