@@ -11,13 +11,40 @@ Using settings, you can control:
 - message building and mailing;
 - data indexing.
 
+## Connection Strings
+
+In Cadmus API settings all the connection strings are rather connection string templates, where the "base" database name is replaced by the `{0}` placeholder.
+
+The "base" database name is the name of the Cadmus data database, which is defined in the settings.
+
+For instance, the `Serilog` connection string template is `mongodb://localhost:27017/{0}-log`. Given a "base" database name of `cadmus-tgr`, the resulting connection string would be `mongodb://localhost:27017/cadmus-tgr-log`.
+
+This is done to allow the same server hosting multiple Cadmus Docker containers, while preserving security requirements. For obvious security reasons, we cannot store sensitive data like connection strings in the API source code settings.
+
+Such sensitive settings entries are effectively found in `appsettings.json`; but they are just development-time defaults, which are overridden in the Docker container host via environment variables. For instance, the `Serilog:ConnectionString` setting in `appsettings.json` is overridden by the environment variable `SERILOG__CONNECTIONSTRING` set in the Docker compose script running in the host.
+
+Now, when the same host is running several Cadmus-based containers, each container should use its own databases and connection strings. Thus, for instance the TGR Cadmus container has these 4 databases:
+
+- MongoDB data: `cadmus-tgr`
+- MongoDB authentication: `cadmus-tgr-auth`
+- MongoDB log: `cadmus-tgr-log`
+- MySql index: `cadmus-tgr`
+
+In `appsettings.json` the corresponding settings are:
+
+- "base" database name (`DatabaseNames:Data`) = `cadmus-tgr`.
+- authentication database name (`DatabaseNames:Auth`) = `cadmus-tgr-auth`. Note that the authentication database name is independent from the "base" database name, as we might have situations where the authentication database is shared across several projects.
+- MongoDB connection string template (`ConnectionStrings:Default`). This gets combined with either the "base" database name or the authentication database name.
+- MySql connection string template (`ConnectionStrings:Index`). This gets combined with the "base" database name.
+- Serilog connection string template (`Serilog:ConnectionString`). This gets combined with the "base" database name + the `-log` suffix specified in the connection string template.
+
 ## Cadmus-Specific Sections
 
-All these sections are located at the root level of the configuration hierarchy, i.e. in JSON they are direct children of the root object:
+All these sections are located at the root level of the configuration hierarchy, i.e. in JSON they are direct children of the root object.
 
 - `ConnectionStrings`: object where each key is the name of a connection string:
   - `Default`: it rather is a connection string template, pointing to the MongoDB server. The database name is a placeholder represented by `{0}` in that string, and will be set at runtime.
-  - `Index`: the connection string template for a RDBMS database for the Cadmus index. Currently this is a MySql database. The database name is a placeholder represented by `{0}` in that string, and will be set at runtime.
+  - `Index`: the connection string template for a MySql database for the Cadmus index. The database name is a placeholder represented by `{0}` in that string, and will be set at runtime.
 - `DatabaseNames`: the names of the two main Cadmus databases to be used by the API:
   - `Data`: the name of the Cadmus data database.
   - `Auth`: the name of the Cadmus authentication and authorization database.
