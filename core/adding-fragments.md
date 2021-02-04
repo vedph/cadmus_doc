@@ -1,14 +1,13 @@
 # Adding Fragments
 
-<!-- TOC -->
-
 - [Adding Fragments](#adding-fragments)
   - [Fragment Template](#fragment-template)
+  - [Fragment Seeder Templates](#fragment-seeder-templates)
+    - [Fragment Seeder Template](#fragment-seeder-template)
+    - [Fragment Seeder Test Template](#fragment-seeder-test-template)
   - [Test Template](#test-template)
 
-<!-- /TOC -->
-
-For seeder templates see [seeding](seeding.md). The typical procedure is:
+The typical procedure is:
 
 1. add fragment
 2. add seeder
@@ -113,6 +112,238 @@ namespace Cadmus.__PROJECT__.Parts
 }
 ```
 
+## Fragment Seeder Templates
+
+### Fragment Seeder Template
+
+Add a `<NAME>LayerFragmentSeeder.cs` for the seeder, using this template (replace `__NAME__` with the fragment name, using the proper case, and adjust the namespace):
+
+```cs
+using Bogus;
+using Cadmus.Core;
+using Cadmus.Core.Layers;
+using Fusi.Tools.Config;
+using System;
+
+namespace Cadmus.Seed.Parts.Layers
+{
+    /// <summary>
+    /// Seeder for <see cref="__NAME__LayerFragment"/>'s.
+    /// Tag: <c>seed.fr.it.vedph.__NAME__</c>.
+    /// </summary>
+    /// <seealso cref="FragmentSeederBase" />
+    /// <seealso cref="IConfigurable{__NAME__LayerFragmentSeederOptions}" />
+    [Tag("seed.fr.it.vedph.__NAME__")]
+    public sealed class __NAME__LayerFragmentSeeder : FragmentSeederBase,
+        IConfigurable<__NAME__LayerFragmentSeederOptions>
+    {
+        private __NAME__LayerFragmentSeederOptions _options;
+
+        /// <summary>
+        /// Gets the type of the fragment.
+        /// </summary>
+        /// <returns>Type.</returns>
+        public override Type GetFragmentType() => typeof(__NAME__LayerFragment);
+
+        /// <summary>
+        /// Configures the object with the specified options.
+        /// </summary>
+        /// <param name="options">The options.</param>
+        public void Configure(__NAME__LayerFragmentSeederOptions options)
+        {
+            _options = options;
+        }
+
+        /// <summary>
+        /// Creates and seeds a new part.
+        /// </summary>
+        /// <param name="item">The item this part should belong to.</param>
+        /// <param name="location">The location.</param>
+        /// <param name="baseText">The base text.</param>
+        /// <returns>A new fragment.</returns>
+        /// <exception cref="ArgumentNullException">item or location or
+        /// baseText</exception>
+        public override ITextLayerFragment GetFragment(
+            IItem item, string location, string baseText)
+        {
+            if (item == null)
+                throw new ArgumentNullException(nameof(item));
+            if (location == null)
+                throw new ArgumentNullException(nameof(location));
+            if (baseText == null)
+                throw new ArgumentNullException(nameof(baseText));
+
+            // TODO: use faker to create fragment object, like:
+            // return new Faker<__NAME__LayerFragment>()
+            //     .RuleFor(fr => fr.Location, location)
+            //     .RuleFor(fr => fr.Text, f => f.Lorem.Sentences())
+            //     .RuleFor(fr => fr.Tag,
+            //         f => _options.Tags?.Length > 0
+            //         ? f.PickRandom(_options.Tags) : null)
+            //     .Generate();
+        }
+    }
+
+    /// <summary>
+    /// Options for <see cref="__NAME__LayerFragmentSeeder"/>.
+    /// </summary>
+    public sealed class __NAME__LayerFragmentSeederOptions
+    {
+        // TODO: set options
+    }
+}
+```
+
+### Fragment Seeder Test Template
+
+```cs
+using Cadmus.Core;
+using Cadmus.Core.Layers;
+using Fusi.Tools.Config;
+using System;
+using System.Reflection;
+using Xunit;
+
+namespace Cadmus.Seed.YourNamespace
+{
+    public sealed class __NAME__LayerFragmentSeederTest
+    {
+        private static readonly PartSeederFactory _factory;
+        private static readonly SeedOptions _seedOptions;
+        private static readonly IItem _item;
+
+        static __NAME__LayerFragmentSeederTest()
+        {
+            _factory = TestHelper.GetFactory();
+            _seedOptions = _factory.GetSeedOptions();
+            _item = _factory.GetItemSeeder().GetItem(1, "facet");
+        }
+
+        [Fact]
+        public void TypeHasTagAttribute()
+        {
+            Type t = typeof(__NAME__LayerFragmentSeeder);
+            TagAttribute attr = t.GetTypeInfo().GetCustomAttribute<TagAttribute>();
+            Assert.NotNull(attr);
+            Assert.Equal("seed.fr.it.vedph.__NAME__", attr.Tag);
+        }
+
+        [Fact]
+        public void GetFragmentType_Ok()
+        {
+            __NAME__LayerFragmentSeeder seeder = new __NAME__LayerFragmentSeeder();
+            Assert.Equal(typeof(__NAME__LayerFragment), seeder.GetFragmentType());
+        }
+
+        [Fact]
+        public void Seed_WithOptions_Ok()
+        {
+            __NAME__LayerFragmentSeeder seeder = new __NAME__LayerFragmentSeeder();
+            seeder.SetSeedOptions(_seedOptions);
+            seeder.Configure(new __NAME__LayerFragmentSeederOptions
+            {
+                // TODO: your seeder options properties here...
+                // e.g.:
+                // Tags = new[]
+                // {
+                //     "battle",
+                //     "priesthood",
+                //     "consulship"
+                // }
+            });
+
+            ITextLayerFragment fragment = seeder.GetFragment(_item, "1.1", "alpha");
+
+            Assert.NotNull(fragment);
+
+            __NAME__LayerFragment fr = fragment as __NAME__LayerFragment;
+            Assert.NotNull(fr);
+
+            Assert.Equal("1.1", fr.Location);
+            // TODO other assertions...
+        }
+    }
+}
+```
+
+TestHelper sample: this implies you have a sample seed configuration with `facets` and `seed` sections under assets (see e.g. [here](https://github.com/vedph/cadmus_core/blob/master/Cadmus.Seed.Philology.Parts.Test/Assets/SeedConfig.json)).
+
+```cs
+using Cadmus.Core;
+using Cadmus.Core.Config;
+using Cadmus.Philology.Parts.Layers;
+using Cadmus.Seed.Parts.General;
+using Cadmus.Seed.Philology.Parts.Layers;
+using Fusi.Microsoft.Extensions.Configuration.InMemoryJson;
+using Microsoft.Extensions.Configuration;
+using SimpleInjector;
+using System;
+using System.IO;
+using System.Reflection;
+using System.Text;
+using Xunit;
+
+namespace Cadmus.Seed.Parts.Test
+{
+    static internal class TestHelper
+    {
+        static public string LoadResourceText(string name)
+        {
+            if (name == null) throw new ArgumentNullException(nameof(name));
+
+            using (StreamReader reader = new StreamReader(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                    $"Cadmus.Seed.Philology.Parts.Test.Assets.{name}"),
+                Encoding.UTF8))
+            {
+                return reader.ReadToEnd();
+            }
+        }
+
+        static public PartSeederFactory GetFactory()
+        {
+            // map
+            TagAttributeToTypeMap map = new TagAttributeToTypeMap();
+            map.Add(new[]
+            {
+                // Cadmus.Core
+                typeof(StandardItemSortKeyBuilder).Assembly,
+                // Cadmus.Philology.Parts
+                typeof(ApparatusLayerFragment).Assembly
+            });
+
+            // container
+            Container container = new Container();
+            PartSeederFactory.ConfigureServices(
+                container,
+                new StandardPartTypeProvider(map),
+                new[]
+                {
+                    // Cadmus.Seed.Parts
+                    typeof(NotePartSeeder).Assembly,
+                    // Cadmus.Seed.Philology.Parts
+                    typeof(ApparatusLayerFragmentSeeder).Assembly
+                });
+
+            // config
+            IConfigurationBuilder builder = new ConfigurationBuilder()
+                .AddInMemoryJson(LoadResourceText("SeedConfig.json"));
+            var configuration = builder.Build();
+
+            return new PartSeederFactory(container, configuration);
+        }
+
+        static public void AssertPartMetadata(IPart part)
+        {
+            Assert.NotNull(part.Id);
+            Assert.NotNull(part.ItemId);
+            Assert.NotNull(part.UserId);
+            Assert.NotNull(part.CreatorId);
+        }
+    }
+}
+```
+
 ## Test Template
 
 ```cs
@@ -176,8 +407,8 @@ namespace Cadmus.__PROJECT__.Parts
             __NAME__LayerFragment fragment = GetEmptyFragment();
             List<DataPin> pins = fragment.GetDataPins(null).ToList();
 
-        	// TODO assert pins: e.g.
-	        // fr-tot-count
+            // TODO assert pins: e.g.
+            // fr-tot-count
             // DataPin pin = pins.Find(p => p.Name == PartBase.FR_PREFIX + "tot-count");
             // Assert.NotNull(pin);
             // Assert.Equal("3", pin.Value);
