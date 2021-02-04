@@ -1,4 +1,9 @@
-# Guide - Creating a Cadmus Project
+# Developer's Guide - Creating a Cadmus Project
+
+Quick links:
+
+- [backend: adding parts](./adding-parts.md)
+- [backend: adding fragments](./adding-fragments.md)
 
 Creating a full Cadmus project with its backend and frontend layers happens in 3 steps:
 
