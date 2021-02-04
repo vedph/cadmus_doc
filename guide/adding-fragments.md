@@ -24,14 +24,14 @@ using Fusi.Tools.Config;
 using Cadmus.Core.Layers;
 using Cadmus.Core;
 
-namespace Cadmus.__PROJECT__.Parts
+namespace Cadmus.__PRJ__.Parts
 {
     /// <summary>
     /// TODO fragment.
-    /// Tag: <c>fr.it.vedph.__PROJECT__.__NAME__</c>.
+    /// Tag: <c>fr.it.vedph.__PRJ__.__NAME__</c>.
     /// </summary>
     /// <seealso cref="ITextLayerFragment" />
-    [Tag("fr.it.vedph.__PROJECT__.__NAME__")]
+    [Tag("fr.it.vedph.__PRJ__.__NAME__")]
     public sealed class __NAME__LayerFragment : ITextLayerFragment
     {
         /// <summary>
@@ -129,11 +129,11 @@ namespace Cadmus.Seed.Parts.Layers
 {
     /// <summary>
     /// Seeder for <see cref="__NAME__LayerFragment"/>'s.
-    /// Tag: <c>seed.fr.it.vedph.__NAME__</c>.
+    /// Tag: <c>seed.fr.it.vedph.__PRJ__.__NAME__</c>.
     /// </summary>
     /// <seealso cref="FragmentSeederBase" />
     /// <seealso cref="IConfigurable{__NAME__LayerFragmentSeederOptions}" />
-    [Tag("seed.fr.it.vedph.__NAME__")]
+    [Tag("seed.fr.it.vedph.__PRJ__.__NAME__")]
     public sealed class __NAME__LayerFragmentSeeder : FragmentSeederBase,
         IConfigurable<__NAME__LayerFragmentSeederOptions>
     {
@@ -204,64 +204,63 @@ using System;
 using System.Reflection;
 using Xunit;
 
-namespace Cadmus.Seed.YourNamespace
+// ...
+
+public sealed class __NAME__LayerFragmentSeederTest
 {
-    public sealed class __NAME__LayerFragmentSeederTest
+    private static readonly PartSeederFactory _factory;
+    private static readonly SeedOptions _seedOptions;
+    private static readonly IItem _item;
+
+    static __NAME__LayerFragmentSeederTest()
     {
-        private static readonly PartSeederFactory _factory;
-        private static readonly SeedOptions _seedOptions;
-        private static readonly IItem _item;
+        _factory = TestHelper.GetFactory();
+        _seedOptions = _factory.GetSeedOptions();
+        _item = _factory.GetItemSeeder().GetItem(1, "facet");
+    }
 
-        static __NAME__LayerFragmentSeederTest()
+    [Fact]
+    public void TypeHasTagAttribute()
+    {
+        Type t = typeof(__NAME__LayerFragmentSeeder);
+        TagAttribute attr = t.GetTypeInfo().GetCustomAttribute<TagAttribute>();
+        Assert.NotNull(attr);
+        Assert.Equal("seed.fr.it.vedph.__PRJ__.__NAME__", attr.Tag);
+    }
+
+    [Fact]
+    public void GetFragmentType_Ok()
+    {
+        __NAME__LayerFragmentSeeder seeder = new __NAME__LayerFragmentSeeder();
+        Assert.Equal(typeof(__NAME__LayerFragment), seeder.GetFragmentType());
+    }
+
+    [Fact]
+    public void Seed_WithOptions_Ok()
+    {
+        __NAME__LayerFragmentSeeder seeder = new __NAME__LayerFragmentSeeder();
+        seeder.SetSeedOptions(_seedOptions);
+        seeder.Configure(new __NAME__LayerFragmentSeederOptions
         {
-            _factory = TestHelper.GetFactory();
-            _seedOptions = _factory.GetSeedOptions();
-            _item = _factory.GetItemSeeder().GetItem(1, "facet");
-        }
+            // TODO: your seeder options properties here...
+            // e.g.:
+            // Tags = new[]
+            // {
+            //     "battle",
+            //     "priesthood",
+            //     "consulship"
+            // }
+        });
 
-        [Fact]
-        public void TypeHasTagAttribute()
-        {
-            Type t = typeof(__NAME__LayerFragmentSeeder);
-            TagAttribute attr = t.GetTypeInfo().GetCustomAttribute<TagAttribute>();
-            Assert.NotNull(attr);
-            Assert.Equal("seed.fr.it.vedph.__NAME__", attr.Tag);
-        }
+        ITextLayerFragment fragment = seeder.GetFragment(_item, "1.1", "alpha");
 
-        [Fact]
-        public void GetFragmentType_Ok()
-        {
-            __NAME__LayerFragmentSeeder seeder = new __NAME__LayerFragmentSeeder();
-            Assert.Equal(typeof(__NAME__LayerFragment), seeder.GetFragmentType());
-        }
+        Assert.NotNull(fragment);
 
-        [Fact]
-        public void Seed_WithOptions_Ok()
-        {
-            __NAME__LayerFragmentSeeder seeder = new __NAME__LayerFragmentSeeder();
-            seeder.SetSeedOptions(_seedOptions);
-            seeder.Configure(new __NAME__LayerFragmentSeederOptions
-            {
-                // TODO: your seeder options properties here...
-                // e.g.:
-                // Tags = new[]
-                // {
-                //     "battle",
-                //     "priesthood",
-                //     "consulship"
-                // }
-            });
+        __NAME__LayerFragment fr = fragment as __NAME__LayerFragment;
+        Assert.NotNull(fr);
 
-            ITextLayerFragment fragment = seeder.GetFragment(_item, "1.1", "alpha");
-
-            Assert.NotNull(fragment);
-
-            __NAME__LayerFragment fr = fragment as __NAME__LayerFragment;
-            Assert.NotNull(fr);
-
-            Assert.Equal("1.1", fr.Location);
-            // TODO other assertions...
-        }
+        Assert.Equal("1.1", fr.Location);
+        // TODO other assertions...
     }
 }
 ```
@@ -358,7 +357,7 @@ using System.Reflection;
 using System.Text;
 using Xunit;
 
-namespace Cadmus.__PROJECT__.Parts
+namespace Cadmus.__PRJ__.Parts
 {
     public sealed class __NAME__LayerFragmentTest
     {
@@ -431,7 +430,7 @@ using System;
 using System.Text.Json;
 using Xunit;
 
-namespace Cadmus.__PROJECT__.Parts.Test
+namespace Cadmus.__PRJ__.Parts.Test
 {
     internal sealed class TestHelper
     {
