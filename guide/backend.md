@@ -50,7 +50,15 @@ Your solution should now look like this (here `<PRJ>` is `Pura`):
 
 You can now add as many parts and fragments as required to the `Cadmus.<PRJ>.Parts` project.
 
-This essentially means adding a plain C# class for each part or fragment, representing its data model. Please refer to these pages for details:
+1. add a reference to the Cadmus core components to this project. This can be done in the VS UI, by adding a new NuGet package named `Cadmus.Core`, or by editing the `csproj` project XML file, and adding this line under an `<ItemGroup>` element (replace the version number with the latest available version):
+
+```xml
+<PackageReference Include="Cadmus.Core" Version="2.3.5" />
+```
+
+Should you need existing components to build your own (e.g. to extend or integrate them), add their packages in the imports too.
+
+2. add a plain C# class for each part or fragment, representing its data model. Please refer to these pages for details:
 
 - [adding parts](../core/adding-parts.md)
 - [adding fragments](../core/adding-fragments.md)
