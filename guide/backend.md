@@ -8,6 +8,7 @@
   - [Adding Tests for Parts or Fragments](#adding-tests-for-parts-or-fragments)
   - [Adding Tests for Part or Fragment Seeders](#adding-tests-for-part-or-fragment-seeders)
   - [Adding Services](#adding-services)
+  - [Publishing Packages](#publishing-packages)
 
 The backend is a set of C# libraries, built with VS. This step is required only if you have new data models (parts or fragments) specific to your project.
 
@@ -44,7 +45,20 @@ Your solution should now look like this (here `<PRJ>` is `Pura`):
 
 ![adding new project](./img/a04_solution.png)
 
-7. for both the test projects created above (5-6), add a reference to their test target library. This can be done by right clicking the `Dependencies` node under the test project, selecting `Add Project Reference` from the popup menu, and checking the target project in the list which appears. Finally close the dialog with `OK`.
+7. add references across projects in the solution, according to this schema:
+
+- Cadmus.PRJ.Parts.Test depends on:
+  - Cadmus.PRJ.Parts
+  - Cadmus.Seed.PRJ.Parts
+- Cadmus.PRJ.Services depends on:
+  - Cadmus.PRJ.Parts
+  - Cadmus.Seed.PRJ.Parts
+- Cadmus.Seed.PRJ.Parts depends on:
+  - Cadmus.PRJ.Parts
+- Cadmus.Seed.PRJ.Parts.Test depends on:
+  - Cadmus.Seed.PRJ.Parts
+
+Adding a project reference can be done by right clicking the `Dependencies` node under the test project, selecting `Add Project Reference` from the popup menu, and checking the target project in the list which appears. Finally close the dialog with `OK`.
 
 ![adding new project](./img/a05_project-deps.png)
 
@@ -53,12 +67,10 @@ Your solution should now look like this (here `<PRJ>` is `Pura`):
 Alternatively, just edit the `csproj` XML file and add a line in an `ItemGroup` element like in this sample (replace the path with the correct one):
 
 ```xml
-<ProjectReference Include="..\Cadmus.Pura.Parts\Cadmus.Pura.Parts.csproj" />
+<ItemGroup>
+  <ProjectReference Include="..\Cadmus.Pura.Parts\Cadmus.Pura.Parts.csproj" />
+</ItemGroup>
 ```
-
-8. add a project reference targeting the `Cadmus.Seed.<PRJ>.Parts` project to the `Cadmus.<PRJ>.Parts.Test` project, if (as suggested) you are going to leverage the part/fragment seeders to implement the part/fragment tests. This is more efficient, as a seeder can create a mock part/fragment ready for testing.
-
-9. as your seeders need to know about the parts/fragments they are creating, add a project reference targeting the `Cadmus.PRJ.Parts` project to the `Cadmus.Seed.PRJ.Parts` project.
 
 ## Adding Parts or Fragments
 
@@ -67,7 +79,9 @@ You can now add as many parts and fragments as required to the `Cadmus.<PRJ>.Par
 1. add a reference to the Cadmus core components to this project. This can be done in the VS UI, by adding a new NuGet package named `Cadmus.Core`, or by editing the `csproj` project XML file, and adding this line under an `<ItemGroup>` element (replace the version number with the latest available version):
 
 ```xml
-<PackageReference Include="Cadmus.Core" Version="2.3.5" />
+<ItemGroup>
+  <PackageReference Include="Cadmus.Core" Version="2.3.5" />
+</ItemGroup>
 ```
 
 Should you need existing components to build your own (e.g. to extend or integrate them), add their packages in the imports too.
@@ -84,9 +98,11 @@ For each part or fragment you should provide a corresponding mock data seeder to
 1. add a reference to the Cadmus core seed components to this project, as explained above. Also, a reference to the `Bogus` package is useful to leverage the power of this library rather than creating mock data from scratch. The package references are listed below (replace the version number with the latest available version):
 
 ```xml
-<PackageReference Include="Bogus" Version="32.1.1" />
-<PackageReference Include="Cadmus.Core" Version="2.3.5" />
-<PackageReference Include="Cadmus.Seed" Version="1.1.7" />
+<ItemGroup>
+  <PackageReference Include="Bogus" Version="32.1.1" />
+  <PackageReference Include="Cadmus.Core" Version="2.3.5" />
+  <PackageReference Include="Cadmus.Seed" Version="1.1.7" />
+</ItemGroup>
 ```
 
 2. add a plain C# class for each part or fragment seeder. Please refer to these pages for details:
@@ -111,14 +127,16 @@ Please refer to this set of [templates](../core/adding-parts.md#adding-tests-for
 1. add these packages to the services project (updating version numbers as required):
 
 ```xml
-<PackageReference Include="Cadmus.Core" Version="2.3.5" />
-<PackageReference Include="Cadmus.Index.Sql" Version="1.1.8" />
-<PackageReference Include="Cadmus.Mongo" Version="2.3.8" />
-<PackageReference Include="Cadmus.Parts" Version="2.3.8" />
-<PackageReference Include="Cadmus.Philology.Parts" Version="2.3.6" />
-<PackageReference Include="Cadmus.Seed.Parts" Version="1.1.10" />
-<PackageReference Include="Cadmus.Seed.Philology.Parts" Version="1.1.8" />
-<PackageReference Include="Fusi.Microsoft.Extensions.Configuration.InMemoryJson" Version="1.0.3" />
+<ItemGroup>
+  <PackageReference Include="Cadmus.Core" Version="2.3.5" />
+  <PackageReference Include="Cadmus.Index.Sql" Version="1.1.8" />
+  <PackageReference Include="Cadmus.Mongo" Version="2.3.8" />
+  <PackageReference Include="Cadmus.Parts" Version="2.3.8" />
+  <PackageReference Include="Cadmus.Philology.Parts" Version="2.3.6" />
+  <PackageReference Include="Cadmus.Seed.Parts" Version="1.1.10" />
+  <PackageReference Include="Cadmus.Seed.Philology.Parts" Version="1.1.8" />
+  <PackageReference Include="Fusi.Microsoft.Extensions.Configuration.InMemoryJson" Version="1.0.3" />
+</ItemGroup>
 ```
 
 2. add a `<PRJ>RepositoryProvider` class, using this template (the only part which requires customization is the constructor):
@@ -284,3 +302,44 @@ namespace Cadmus.__PRJ__.Services
     }
 }
 ```
+
+## Publishing Packages
+
+Once your parts, seeders, and services are ready, typically you should package them and publish the package so that it is available to yourself and to the community. Alternatively, you will just add a reference to the compiled library in your consumer projects.
+
+To package the libraries for NuGet (you must have a free account for it), you should do this just once:
+
+1. not required, but suggested: ensure that you have added these to the PropertyGroup of each csproj to be packaged:
+
+```xml
+<IncludeSymbols>true</IncludeSymbols>
+<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+```
+
+This ensures that symbols are included when building the package.
+
+2. insert the package metadata by right clicking the project and picking `Properties`: author, license, version, etc.
+
+Once you have setup your projects in this way, just publish them like in this batch:
+
+```bat
+@echo off
+echo BUILD Cadmus Pura Packages
+del .\Cadmus.Pura.Parts\bin\Debug\*.nupkg
+
+cd .\Cadmus.Pura.Parts
+dotnet pack -c Debug -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
+cd..
+
+cd .\Cadmus.Pura.Services
+dotnet pack -c Debug -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
+cd..
+
+cd .\Cadmus.Seed.Pura.Parts
+dotnet pack -c Debug -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
+cd..
+
+pause
+```
+
+(in this sample I'm publishing the Debug versions for diagnostic purposes, but you should pick the Release version once you are comfortable with it).
