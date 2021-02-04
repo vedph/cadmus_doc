@@ -1,6 +1,6 @@
-# Backend Models
+# Backend Core
 
-- [Backend Models](#backend-models)
+- [Backend Core](#backend-core)
   - [Requirements](#requirements)
   - [Creating Solution](#creating-solution)
   - [Adding Parts or Fragments](#adding-parts-or-fragments)

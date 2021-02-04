@@ -3,7 +3,7 @@
 Creating a full Cadmus project with its backend and frontend layers happens in 3 steps:
 
 1. [create the backend models](./backend.md).
-2. create the backend API.
+2. [create the backend API](./api.md).
 3. create the frontend app with its part/fragment editors libraries.
 
 Step 1 is required only if you are going to add new models (parts/fragments). If you are just reusing existing models, you can proceed directly to step 2.
