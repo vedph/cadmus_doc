@@ -9,6 +9,7 @@
     - [Part Seeder Templates](#part-seeder-templates)
       - [Part Seeder](#part-seeder)
       - [Part Seeder Test](#part-seeder-test)
+        - [Test Helper](#test-helper)
     - [Test Templates](#test-templates)
       - [Part Test - Seeder](#part-test---seeder)
       - [List Part Test - Seeder](#list-part-test---seeder)
@@ -373,6 +374,8 @@ public sealed class __NAME__PartSeederTest
 }
 ```
 
+##### Test Helper
+
 This template requires some infrastructure files:
 
 - a minimalist JSON configuration file for the seeders to be tested: `SeedConfig.json` (embedded resource) under your test project's `Assets` folder.
@@ -460,8 +463,8 @@ static internal class TestHelper
         {
             // Cadmus.Core
             typeof(StandardItemSortKeyBuilder).Assembly,
-            // Cadmus.Pura.Parts
-            typeof(WordFormsPart).Assembly
+            // Cadmus.Philology.Parts
+            typeof(ApparatusLayerFragment).Assembly
         });
 
         // container
@@ -471,8 +474,10 @@ static internal class TestHelper
             new StandardPartTypeProvider(map),
             new[]
             {
-                // Cadmus.Seed.Pura.Parts
-                typeof(WordFormsPartSeeder).Assembly
+                // Cadmus.Seed.Parts
+                typeof(NotePartSeeder).Assembly,
+                // Cadmus.Seed.Philology.Parts
+                typeof(ApparatusLayerFragmentSeeder).Assembly
             });
 
         // config
