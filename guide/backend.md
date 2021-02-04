@@ -4,6 +4,7 @@
   - [Requirements](#requirements)
   - [Creating Solution](#creating-solution)
   - [Adding Parts or Fragments](#adding-parts-or-fragments)
+  - [Adding Part or Fragment Seeders](#adding-part-or-fragment-seeders)
 
 The backend is a set of C# libraries, built with VS. This step is required only if you have new data models (parts or fragments) specific to your project.
 
@@ -46,6 +47,8 @@ Your solution should now look like this (here `<PRJ>` is `Pura`):
 
 ![adding new project](./img/a06_project-deps.png)
 
+8. as your seeders need to know about the parts/fragments they are creating, add a project reference targeting the `Cadmus.PRJ.Parts` project to the `Cadmus.Seed.PRJ.Parts` project.
+
 ## Adding Parts or Fragments
 
 You can now add as many parts and fragments as required to the `Cadmus.<PRJ>.Parts` project.
@@ -59,6 +62,23 @@ You can now add as many parts and fragments as required to the `Cadmus.<PRJ>.Par
 Should you need existing components to build your own (e.g. to extend or integrate them), add their packages in the imports too.
 
 2. add a plain C# class for each part or fragment, representing its data model. Please refer to these pages for details:
+
+- [adding parts](../core/adding-parts.md)
+- [adding fragments](../core/adding-fragments.md)
+
+## Adding Part or Fragment Seeders
+
+For each part or fragment you should provide a corresponding mock data seeder to the `Cadmus.Seed.<PRJ>.Parts` project. This is extremely useful to let developers and users play with the editor.
+
+1. add a reference to the Cadmus core seed components to this project, as explained above. Also, a reference to the `Bogus` package is useful to leverage the power of this library rather than creating mock data from scratch. The package references are listed below (replace the version number with the latest available version):
+
+```xml
+<PackageReference Include="Bogus" Version="32.1.1" />
+<PackageReference Include="Cadmus.Core" Version="2.3.5" />
+<PackageReference Include="Cadmus.Seed" Version="1.1.7" />
+```
+
+2. add a plain C# class for each part or fragment seeder. Please refer to these pages for details:
 
 - [adding parts](../core/adding-parts.md)
 - [adding fragments](../core/adding-fragments.md)
