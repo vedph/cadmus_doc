@@ -7,6 +7,7 @@
   - [Startup](#startup)
   - [Assets](#assets)
   - [Docker](#docker)
+  - [Readme](#readme)
 
 The reference project for Cadmus API is [Cadmus API](https://github.com/vedph/cadmus_api).
 
@@ -755,4 +756,22 @@ To build a Docker image (replace `PRJ` with your project's name):
 
 ```ps1
 docker build . -t vedph2020/cadmus_PRJ_api:1.0.0 -t vedph2020/cadmus_PRJ_api:latest
+```
+
+## Readme
+
+Add a Readme like this:
+
+```txt
+# Cadmus PRJ API
+
+Quick Docker image build:
+
+    docker build . -t vedph2020/cadmus_PRJ_api:1.0.0 -t vedph2020/cadmus_PRJ_api:latest
+
+(replace with the current version).
+
+This is a Cadmus API layer customized for the PRJ project. Most of its code is derived from shared Cadmus libraries. See the [documentation](https://github.com/vedph/cadmus_doc/blob/master/guide/api.md) for more.
+
+Note: as per current [NuGet issues](https://github.com/NuGet/Home/issues/10491), I temporarily changed the Docker image from `mcr.microsoft.com/dotnet/sdk:5.0-buster-slim AS build` to `mcr.microsoft.com/dotnet/sdk:5.0.102-ca-patch-buster-slim AS build`. I will revert as soon as the MS issue is resolved (see [status](https://status.nuget.org/)).
 ```
