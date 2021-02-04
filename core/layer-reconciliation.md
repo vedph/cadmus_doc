@@ -1,5 +1,14 @@
 # Layers Reconciliation
 
+- [Layers Reconciliation](#layers-reconciliation)
+  - [Linking Text and Metatextual Data](#linking-text-and-metatextual-data)
+  - [The Cadmus Approach](#the-cadmus-approach)
+  - [Editing Experience](#editing-experience)
+  - [Reconciliating Layers via Diffing](#reconciliating-layers-via-diffing)
+    - [Notifying Layers as a Whole](#notifying-layers-as-a-whole)
+    - [Notifying Specific Fragments via Diffing](#notifying-specific-fragments-via-diffing)
+      - [Hints and Patches Generation](#hints-and-patches-generation)
+
 ## Linking Text and Metatextual Data
 
 In any system where you are adding metadata to a base text while keeping both separated, from TEI standoff solutions to Cadmus, an obvious practical issue is reconciling the resource depending on the other one, once you the other has changed.

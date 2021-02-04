@@ -1,5 +1,9 @@
 # Building Docker Images
 
+- [Building Docker Images](#building-docker-images)
+  - [Web API Image](#web-api-image)
+  - [Web App Image](#web-app-image)
+
 Quick directions for building images are also found in the readme of each dockerized project.
 
 ## Web API Image

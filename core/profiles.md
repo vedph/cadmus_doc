@@ -1,7 +1,5 @@
 # Cadmus Profiles
 
-<!-- TOC -->
-
 - [Cadmus Profiles](#cadmus-profiles)
   - [Facets](#facets)
   - [Flags](#flags)
@@ -10,8 +8,6 @@
     - [Thesauri Aliases](#thesauri-aliases)
     - [Thesaurus Scope in Parts](#thesaurus-scope-in-parts)
   - [Browsers](#browsers)
-
-<!-- /TOC -->
 
 A Cadmus profile is a JSON document used to define items facets, parts, flags, and taxonomies (thesauri).
 

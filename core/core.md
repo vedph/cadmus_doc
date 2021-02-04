@@ -1,5 +1,15 @@
 # Cadmus Core
 
+- [Cadmus Core](#cadmus-core)
+  - [Core](#core)
+    - [A.1. General-Purpose Interfaces](#a1-general-purpose-interfaces)
+    - [A.2. Tags](#a2-tags)
+    - [A.3. Data Blocks](#a3-data-blocks)
+      - [A.3.1. Items](#a31-items)
+      - [A.3.2. Parts](#a32-parts)
+      - [A.3.3. Summary Data](#a33-summary-data)
+      - [A.3.4. Items Browsers](#a34-items-browsers)
+
 This is the core namespace for the Cadmus system. It includes the following namespaces:
 
 - [config](cadmus.core.config.md): components related to the system configuration.

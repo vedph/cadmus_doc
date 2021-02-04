@@ -1,5 +1,11 @@
 # Docker: Using Images
 
+- [Docker: Using Images](#docker-using-images)
+  - [Web API Image](#web-api-image)
+    - [Running Cadmus](#running-cadmus)
+    - [Connecting to Databases (Advanced)](#connecting-to-databases-advanced)
+    - [Web App Image](#web-app-image)
+
 This section contains practical instructions for using the Cadmus Docker images. You can use Windows, Linux, or Mac. For Linux the suggested distribution is Ubuntu.
 
 We assume that you already have **Docker** installed and working (see [here](./docker-setup.md)). For Windows 10, it is recommended to apply all the latest updates, so that you can take advantage of WSL 2 (Windows Subsystem for Linux). Once your OS is up to date, just follow the directions during Docker setup (you will need to install an additional component when requested).

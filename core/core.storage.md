@@ -1,5 +1,9 @@
 # Cadmus Core
 
+- [Cadmus Core](#cadmus-core)
+  - [Storage](#storage)
+    - [History](#history)
+
 ## Storage
 
 ```plantuml

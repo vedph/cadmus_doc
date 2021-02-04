@@ -1,5 +1,12 @@
 # Docker Setup
 
+- [Docker Setup](#docker-setup)
+  - [Windows](#windows)
+  - [Ubuntu](#ubuntu)
+    - [Ubuntu - Docker-Compose](#ubuntu---docker-compose)
+    - [Ubuntu - Other Software](#ubuntu---other-software)
+  - [Mac](#mac)
+
 Here are some quick setup hints for Docker.
 
 ## Windows

@@ -1,5 +1,12 @@
 # Cadmus Core - Config
 
+- [Cadmus Core - Config](#cadmus-core---config)
+  - [Item Facets](#item-facets)
+  - [Flag Definitions](#flag-definitions)
+  - [Thesauri](#thesauri)
+  - [Part Providers](#part-providers)
+    - [Note on Part Instantiation](#note-on-part-instantiation)
+
 This namespace contains configuration-specific components, used to define the Cadmus data model and provide additional resources.
 
 ```plantuml

@@ -1,5 +1,12 @@
 # Using MQDQ in Cadmus
 
+- [Using MQDQ in Cadmus](#using-mqdq-in-cadmus)
+  - [Explanation](#explanation)
+  - [Preparation](#preparation)
+  - [Procedure](#procedure)
+    - [MongoDB (Data)](#mongodb-data)
+    - [MySql (Index)](#mysql-index)
+
 Here you find a procedure for installing MQDQ database for testing in a dockerized Cadmus stack.
 
 To setup the Cadmus MQDQ editor itself, please [see here](docker-usage.md).

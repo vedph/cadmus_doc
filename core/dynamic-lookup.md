@@ -1,5 +1,10 @@
 # Dynamic Lookup
 
+- [Dynamic Lookup](#dynamic-lookup)
+  - [Concept and Issues](#concept-and-issues)
+  - [Data Pins at Rescue](#data-pins-at-rescue)
+  - [Implementation Details](#implementation-details)
+
 Dynamic lookup refers to a feature of the system providing lookup data sets dynamically built from searching the underlying index. This feature stands side to side to the static lookup data sets provided by thesauri.
 
 ## Concept and Issues

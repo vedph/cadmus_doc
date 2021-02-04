@@ -1,8 +1,12 @@
 # Cadmus Core - Layers
 
+- [Cadmus Core - Layers](#cadmus-core---layers)
+    - [Layer Parts](#layer-parts)
+    - [Part Fragments](#part-fragments)
+
 See also [layers reconciliation](layer-reconciliation.md).
 
-The *layers* namespace contains components related to the text layers. Text layers are collections of metadata, all connected to a base text, just like all the pages of a book are connected to its spine.
+The _layers_ namespace contains components related to the text layers. Text layers are collections of metadata, all connected to a base text, just like all the pages of a book are connected to its spine.
 
 ```plantuml
 @startuml
@@ -134,7 +138,7 @@ In Cadmus, this scenario is rather represented in terms of parts, as for any oth
 - the base text is a text part, including only plain text (e.g. the text of an inscription, just as it appears on the stone);
 - then, any set of metatextual data is represented by a different part, like e.g. abbreviations part, paleographic description part, apparatus part, chronological part, geographical part, prosopographical part, etc.
 
-You can imagine all these metadata as **layers** which get overlaid on the base text, just as in photo-editing tools you have the original picture in its base layer, and add any modification by adding new layers to it. This makes it possible to have a *composable editing* procedure, where the original picture is never touched, and yet we can add as many layers as we want to modify it at will.
+You can imagine all these metadata as **layers** which get overlaid on the base text, just as in photo-editing tools you have the original picture in its base layer, and add any modification by adding new layers to it. This makes it possible to have a _composable editing_ procedure, where the original picture is never touched, and yet we can add as many layers as we want to modify it at will.
 
 In this metaphor, the original picture is the base text, while the layers are the parts which refer their data to any portion of it. So, all what we have here is a set of parts: one representing a text, and others representing layers.
 
@@ -148,7 +152,7 @@ A part fragment is an object whose class implements the `ITextLayerFragment` int
 
 A text location, even if serialized as a string, can be represented for manipulation purposes by a more structured object. This implements the `ITextLocation` interface, which in turn contains one or two text location points, implementing the `ITextPoint` interface.
 
-The default implementation for text location is *token-based* (where *token* = any sequence of characters delimited by whitespaces), and thus represented by `TokenTextPoint` and `TokenTextLocation`. In token-based location, each text portion is addressed by a set of 2 or 4 coordinates:
+The default implementation for text location is _token-based_ (where _token_ = any sequence of characters delimited by whitespaces), and thus represented by `TokenTextPoint` and `TokenTextLocation`. In token-based location, each text portion is addressed by a set of 2 or 4 coordinates:
 
 - **Y** represents the unit number, e.g. a line in an inscription.
 - **X** represents the token number inside the unit. A token is just any part of text surrounded by whitespace.

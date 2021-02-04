@@ -1,5 +1,11 @@
 # Development Environment
 
+- [Development Environment](#development-environment)
+  - [Angular](#angular)
+  - [MongoDB](#mongodb)
+  - [MySql](#mysql)
+  - [Switching Databases](#switching-databases)
+
 When developing on a single machine, I setup my environment as follows:
 
 - a Docker container for MongoDB, named `mongo`.

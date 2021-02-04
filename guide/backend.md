@@ -88,8 +88,8 @@ Should you need existing components to build your own (e.g. to extend or integra
 
 2. add a plain C# class for each part or fragment, representing its data model. Please refer to these pages for details:
 
-- [adding parts](../core/adding-parts.md)
-- [adding fragments](../core/adding-fragments.md)
+- [adding parts](../adding-parts.md)
+- [adding fragments](../adding-fragments.md)
 
 ## Adding Part or Fragment Seeders
 
@@ -107,20 +107,20 @@ For each part or fragment you should provide a corresponding mock data seeder to
 
 2. add a plain C# class for each part or fragment seeder. Please refer to these pages for details:
 
-- [adding parts](../core/adding-parts.md)
-- [adding fragments](../core/adding-fragments.md)
+- [adding parts](../adding-parts.md)
+- [adding fragments](../adding-fragments.md)
 
 ## Adding Tests for Parts or Fragments
 
 For each part or fragment you should provide a corresponding set of unit tests.
 
-Please refer to this set of [templates](../core/adding-parts.md#test-templates) for the tests.
+Please refer to this set of [templates](../adding-parts.md#test-templates) for the tests.
 
 ## Adding Tests for Part or Fragment Seeders
 
 For each part or fragment seeder you should provide a corresponding set of unit tests.
 
-Please refer to this set of [templates](../core/adding-parts.md#adding-tests-for-part-or-fragment-seeders) for the seeder tests.
+Please refer to this set of [templates](../adding-parts.md#adding-tests-for-part-or-fragment-seeders) for the seeder tests.
 
 ## Adding Services
 

@@ -1,5 +1,9 @@
 # Overview
 
+- [Overview](#overview)
+  - [Backend](#backend)
+  - [Frontend](#frontend)
+
 The Cadmus architecture is a distributed, web-based content editing system, with a _backend_ and a _frontend_ part.
 
 The general idea is allowing developers to build their own backend and frontend, by just composing them from a set of libraries, and packing the result into Docker images. The data architecture too is composable, data models being modular and dynamic.
