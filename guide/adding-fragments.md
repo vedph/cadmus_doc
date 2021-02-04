@@ -161,13 +161,11 @@ namespace Cadmus.Seed.Parts.Layers
         /// <param name="location">The location.</param>
         /// <param name="baseText">The base text.</param>
         /// <returns>A new fragment.</returns>
-        /// <exception cref="ArgumentNullException">item or location or
+        /// <exception cref="ArgumentNullException">location or
         /// baseText</exception>
         public override ITextLayerFragment GetFragment(
             IItem item, string location, string baseText)
         {
-            if (item == null)
-                throw new ArgumentNullException(nameof(item));
             if (location == null)
                 throw new ArgumentNullException(nameof(location));
             if (baseText == null)
@@ -281,66 +279,68 @@ using System.Reflection;
 using System.Text;
 using Xunit;
 
-namespace Cadmus.__PRJ__.Parts
+// ...
+
+public sealed class __NAME__LayerFragmentTest
 {
-    public sealed class __NAME__LayerFragmentTest
+    private static __NAME__LayerFragment GetFragment()
     {
-        private static __NAME__LayerFragment GetFragment()
+        var seeder = new __NAME__LayerFragmentSeeder();
+        return (__NAME__LayerFragment)
+            seeder.GetFragment(null, "1.2", "exemplum fictum");
+    }
+
+    private static __NAME__LayerFragment GetEmptyFragment()
+    {
+        return new __NAME__LayerFragment
         {
-            var seeder = new __NAME__LayerFragmentSeeder();
-            return (__NAME__LayerFragment)
-                seeder.GetFragment(null, "1.2", "exemplum fictum");
-        }
+            Location = "1.23",
+        };
+    }
 
-        private static __NAME__LayerFragment GetEmptyFragment()
-        {
-            return new __NAME__LayerFragment
-            {
-                Location = "1.23",
-                // TODO: set fragments data here...
-            };
-        }
+    [Fact]
+    public void Fragment_Has_Tag()
+    {
+        TagAttribute attr = typeof(__NAME__LayerFragment).GetTypeInfo()
+            .GetCustomAttribute<TagAttribute>();
+        string typeId = attr != null ? attr.Tag : GetType().FullName;
+        Assert.NotNull(typeId);
+        Assert.StartsWith(PartBase.FR_PREFIX, typeId);
+    }
 
-        [Fact]
-        public void Fragment_Has_Tag()
-        {
-            TagAttribute attr = typeof(__NAME__LayerFragment).GetTypeInfo()
-                .GetCustomAttribute<TagAttribute>();
-            string typeId = attr != null ? attr.Tag : GetType().FullName;
-            Assert.NotNull(typeId);
-            Assert.StartsWith(PartBase.FR_PREFIX, typeId);
-        }
+    [Fact]
+    public void Fragment_Is_Serializable()
+    {
+        __NAME__LayerFragment fragment = GetFragment();
 
-        [Fact]
-        public void Fragment_Is_Serializable()
-        {
-            __NAME__LayerFragment fragment = GetFragment();
+        string json = TestHelper.SerializeFragment(fragment);
+        __NAME__LayerFragment fragment2 =
+            TestHelper.DeserializeFragment<__NAME__LayerFragment>(json);
 
-            string json = TestHelper.SerializeFragment(fragment);
-            __NAME__LayerFragment fragment2 =
-                TestHelper.DeserializeFragment<__NAME__LayerFragment>(json);
+        Assert.Equal(fragment.Location, fragment2.Location);
+        // TODO: check fragments data here...
+    }
 
-            Assert.Equal(fragment.Location, fragment2.Location);
-            // TODO: check fragments data here...
-        }
+    [Fact]
+    public void GetDataPins_Ok()
+    {
+        __NAME__LayerFragment fragment = GetEmptyFragment();
+        // TODO: set fragment properties as needed for pins
 
-        [Fact]
-        public void GetDataPins_Tag_1()
-        {
-            __NAME__LayerFragment fragment = GetEmptyFragment();
-            List<DataPin> pins = fragment.GetDataPins(null).ToList();
+        List<DataPin> pins = fragment.GetDataPins(null).ToList();
 
-            // TODO assert pins: e.g.
-            // fr-tot-count
-            // DataPin pin = pins.Find(p => p.Name == PartBase.FR_PREFIX + "tot-count");
-            // Assert.NotNull(pin);
-            // Assert.Equal("3", pin.Value);
+        // TODO Assert.Equal(3, pins.Count);
 
-            // fr-tag
-            // pin = pins.Find(p => p.Name == PartBase.FR_PREFIX + "tag"
-            //    && p.Value == "odd");
-            // Assert.NotNull(pin);
-        }
+        // TODO assert pins: e.g.
+        // fr-tot-count
+        // DataPin pin = pins.Find(p => p.Name == PartBase.FR_PREFIX + "tot-count");
+        // Assert.NotNull(pin);
+        // Assert.Equal("3", pin.Value);
+
+        // fr-tag
+        // pin = pins.Find(p => p.Name == PartBase.FR_PREFIX + "tag"
+        //    && p.Value == "odd");
+        // Assert.NotNull(pin);
     }
 }
 ```
