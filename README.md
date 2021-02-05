@@ -1,13 +1,20 @@
-# Cadmus Conceptual Documentation
+# Cadmus Documentation
+
+- [Cadmus Documentation](#cadmus-documentation)
+  - [Projects Directory](#projects-directory)
+  - [Stack](#stack)
+  - [Core](#core)
+  - [API](#api)
+  - [Web](#web)
+  - [Deployment](#deployment)
 
 Quick start:
 
 - [setting up Docker](./deploy/docker-setup.md)
 - [using dockerized Cadmus](./deploy/docker-usage.md)
+- [developer's guide](./guide/overview.md)
 
-Just like the Cadmus project itself, this documentation is work in progress. Its main purpose is highlighting some conceptual points standing behind the general architecture of the system.
-
-For a more theoric and non-technical introduction to the Cadmus system, please see:
+Just like the Cadmus project itself, this documentation is work in progress. Its main purpose is highlighting some conceptual points standing behind the general architecture of the system. For a more theoric and non-technical introduction to the Cadmus system, please see:
 
 - [my seminar presentation at VeDPH](https://www.youtube.com/watch?v=lYykjz26TCg&feature=youtu.be)
 - D. Fusi, _Sailing for a Second Navigation: Paradigms in Producing Digital Content_, «SemRom» n.s. 7 (2018) 213-276.
@@ -16,11 +23,11 @@ Note: all the diagrams found in this documentation are made using [PlantUml](htt
 
 ## Projects Directory
 
-The picture below shows the main software packages of the projects currently based on Cadmus. The packages with the yellow diamond have a corresponding Docker image.
+The picture below shows the main software packages of the projects currently based on Cadmus. Each app or api project has a corresponding Docker image hosted in the [VeDPH Docker Hub](https://hub.docker.com/orgs/vedph2020/repositories).
 
-![projects](./images/packages.png)
+![projects](./img/packages.png)
 
-System projects:
+System core projects:
 
 - [documentation](https://github.com/vedph/cadmus_doc) (this repository)
 - [backend core](https://github.com/vedph/cadmus_core)
@@ -30,7 +37,7 @@ System projects:
 
 Projects using Cadmus:
 
-- Cadmus MQDQ (parts and API are from the system projects):
+- Cadmus MQDQ:
   - [app](https://github.com/vedph/cadmus_mqdq_app)
 - Cadmus Itinera
   - [documentation](https://github.com/vedph/cadmus_itinera_doc)
@@ -42,6 +49,14 @@ Projects using Cadmus:
   - [parts](https://github.com/vedph/cadmus_tgr)
   - [API](https://github.com/vedph/cadmus_tgr_api)
   - [app](https://github.com/vedph/cadmus_tgr_app)
+- Cadmus BDM
+  - [API](https://github.com/vedph/cadmus_bdm_api)
+  - [app](https://github.com/vedph/cadmus-bdm-app)
+- Cadmus PURA
+  - [documentation](https://github.com/vedph/cadmus_pura_doc)
+  - [parts](https://github.com/vedph/cadmus_pura)
+  - [API](https://github.com/vedph/cadmus_pura_api)
+  - app
 
 ## Stack
 
@@ -55,7 +70,7 @@ Cadmus essentially includes this stack of layers:
 4. *web API layer*: REST API. A future GraphQL API is planned.
 5. *web frontend*: Angular 10+ web application.
 
-These layers are distributed across 3 projects: core (2-3), api (4), web (`cadmus-shell`, which should supersede `cadmus-web`) (5).
+These layers are distributed across 3 projects: core (2-3), api (4), web (`cadmus-shell`, which superseded the legacy `cadmus-web`) (5).
 
 ## Core
 
@@ -68,8 +83,8 @@ Core data and business layers.
   - [core config](./core/core.config.md)
   - [dynamic lookup](./core/dynamic-lookup.md)
 - [backend packages](./core/packages.md)
-- [adding parts](./core/adding-parts.md)
-- [adding fragments](./core/adding-fragments.md)
+- [adding parts](./guide/adding-parts.md)
+- [adding fragments](./guide/adding-fragments.md)
 - [profiles](./core/profiles.md)
 - [seeding](./core/seeding.md)
 
@@ -78,7 +93,7 @@ Core data and business layers.
 Web REST API.
 
 - [settings](./api/settings.md)
-- [creating](./api/creating.md)
+- [creating](./guide/api.md)
 
 ## Web
 
@@ -95,9 +110,8 @@ Web frontend.
 - [demo presets](./web/demo-presets.md): preset JSON samples for editors demo pages.
 - [help home](./web/help/index.md)
 
-## Deploying
+## Deployment
 
-- [development environment](./deploy/develop.md)
 - [setting up Docker](./deploy/docker-setup.md)
 - [building Docker images](./deploy/docker-build.md)
 - [using Docker images](./deploy/docker-usage.md)

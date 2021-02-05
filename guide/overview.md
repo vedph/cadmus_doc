@@ -1,5 +1,7 @@
 # Developer's Guide - Creating a Cadmus Project
 
+The [developer environment](./environment.md) includes MongoDB, MySql, Visual Studio CE, NodeJS, and Angular.
+
 Quick links:
 
 - [backend: adding parts](./adding-parts.md)
@@ -14,11 +16,3 @@ Creating a full Cadmus project with its backend and frontend layers happens in 3
 Step 1 is required only if you are going to add new models (parts/fragments). If you are just reusing existing models, you can proceed directly to step 2.
 
 In what follows, the project's name (e.g. `Itinera`, `Pura`, `Tgr`, `Bdm`...) is abbreviated as `<PRJ>`.
-
-## Requirements
-
-All the requirements are freeware tools.
-
-- Visual Studio Community Edition or higher (backend; `VS` for short)
-- NodeJS, Angular (frontend) and your favourite code editor (`VSCode` is suggested)
-- Docker (deployment)

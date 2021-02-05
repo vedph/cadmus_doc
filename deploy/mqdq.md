@@ -47,11 +47,11 @@ In the target machine you should have installed [Studio 3T](https://studio3t.com
 
 5. from `Import` pick `BSON - mongodump folder` (mind _folder_ here!)
 
-![Importing MQDQ data with Studio 3T](../images/mqdq-studio3t-01.png)
+![Importing MQDQ data with Studio 3T](./img/mqdq-studio3t-01.png)
 
 6. pick the target connection (click the `Click here to connect to a server...` message) as <localhost:27017>, then choose the folder with the MongoDB dump. Note that this must not be the folder containing the `.gz` collections files, which should have the database name -`mqdq`-, but the folder _containing_ it; as you can see from the screenshot, in my example I selected the `Documents` folder, which in turn includes the `mqdq` folder with the `gz` files. Once chosen, in `Import as` type `cadmus`, instead of the folder's name (`mqdq` or whatever you called it): this means that you will restore the MQDQ database by naming it as `cadmus`. All the collections should be checked for import, as per default settings. Finally, click `Execute`.
 
-![Importing MQDQ data with Studio 3T](../images/mqdq-studio3t-02l.png)
+![Importing MQDQ data with Studio 3T](./img/mqdq-studio3t-02l.png)
 
 7. in the left pane, refresh the databases list to check if `cadmus` is now present.
 
@@ -81,7 +81,7 @@ CREATE SCHEMA `cadmus` DEFAULT CHARACTER SET utf8;
 
 You can execute the query by clicking the thunderbolt button in the query toolbar (=the 3rd button from the left in the row).
 
-![Importing MQDQ index with MySql Workbench](../images/mqdq-workbench-01.png)
+![Importing MQDQ index with MySql Workbench](./img/mqdq-workbench-01.png)
 
 After executing this, you should refresh the `Schemas` view (right click it and select `Refresh all`) to see `cadmus` appear in the list.
 
@@ -89,7 +89,7 @@ After executing this, you should refresh the `Schemas` view (right click it and 
 
 6. from `File` pick `Run SQL script...` and select the MySql dump file you copied into your target machine. Enter or pick `cadmus` as the target schema, and `utf8` as its character set, then run the script.
 
-![Importing MQDQ index with MySql Workbench](../images/mqdq-workbench-02.png)
+![Importing MQDQ index with MySql Workbench](./img/mqdq-workbench-02.png)
 
 7. check in the `Schemas` view that the `cadmus` database has tables `item` and `pin` with some data (a refresh is needed, as above).
 
