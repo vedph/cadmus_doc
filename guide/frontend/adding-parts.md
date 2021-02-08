@@ -730,9 +730,11 @@ HTML:
 
 Each part editor has its component, and its state management artifacts under the same folder (store, query, and service).
 
-1. add a **part editor feature component** named after the part (e.g. `ng g component note-part-feature` for `NotePartFeatureComponent` after `NotePart`). Ensure that this component is both under the module `declarations` and `exports`, and in the `public-api.ts` barrel file.
+1. under your library's `src/lib` folder, add a **part editor feature component** named after the part (e.g. `ng g component note-part-feature` for `NotePartFeatureComponent` after `NotePart`).
 
-2. add the corresponding **route** in the "pg" library's module, e.g.:
+2. ensure that this component is both under the module `declarations` and `exports`, and in the `public-api.ts` barrel file.
+
+3. add the corresponding **route** in the "pg" library's module, e.g.:
 
 ```ts
 {
@@ -772,7 +774,7 @@ export const RouterModuleForChild = RouterModule.forChild([
 export class CadmusTgrPartMsPgModule {}
 ```
 
-3. inside this new component's folder, add a new **store** for your model, named `edit-<partname>-part.store.ts`. Template:
+4. inside this new component's folder, add a new **store** for your model, named `edit-<partname>-part.store.ts`. Template:
 
 ```ts
 import { Injectable } from "@angular/core";
@@ -805,7 +807,7 @@ export class Edit__NAME__PartStore
 }
 ```
 
-4. in the same folder, add a new **query** for your model, named `edit-<partname>-part.query.ts`. Template:
+5. in the same folder, add a new **query** for your model, named `edit-<partname>-part.query.ts`. Template:
 
 ```ts
 import { Injectable } from "@angular/core";
@@ -820,7 +822,7 @@ export class Edit__NAME__PartQuery extends EditPartQueryBase {
 }
 ```
 
-5. in the same folder, add a new **service** for your model, named `edit-<partname>-part.service.ts`. Template:
+6. in the same folder, add a new **service** for your model, named `edit-<partname>-part.service.ts`. Template:
 
 ```ts
 import { Injectable } from "@angular/core";
@@ -841,7 +843,7 @@ export class Edit__NAME__PartService extends EditPartServiceBase {
 }
 ```
 
-6. implement the feature **editor component** by making it extend `EditPartFeatureBase`, like in this code template:
+7. implement the feature **editor component** by making it extend `EditPartFeatureBase`, like in this code template:
 
 ```ts
 import { Component, OnInit } from "@angular/core";
@@ -910,7 +912,7 @@ HTML template:
 ></cadmus-__NAME__-part>
 ```
 
-7. in your app's project `part-editor-keys.ts`, add the mapping for the part just created, like e.g.:
+8. in your app's project `part-editor-keys.ts`, add the mapping for the part just created, like e.g.:
 
 ```ts
   // itinera parts
