@@ -1,5 +1,14 @@
 # Editor Components
 
+- [Editor Components](#editor-components)
+  - [User Experience](#user-experience)
+    - [Layers Editors Types](#layers-editors-types)
+    - [Finding the Base Text for a Layer](#finding-the-base-text-for-a-layer)
+  - [Architecture](#architecture)
+  - [1. Dumb Editor](#1-dumb-editor)
+  - [2. Editor Demo](#2-editor-demo)
+  - [3. Feature Editor](#3-feature-editor)
+
 ## User Experience
 
 The user experience usually starts from a **list of items**, which is paged and filtered.

@@ -1,14 +1,10 @@
 # Adding Fragments
 
-<!-- TOC -->
-
 - [Adding Fragments](#adding-fragments)
   - [Adding a Parts/Fragments Libraries](#adding-a-partsfragments-libraries)
   - [Adding Fragment to the UI Library](#adding-fragment-to-the-ui-library)
     - [Fragment with List](#fragment-with-list)
   - [Adding Fragment to the PG Library](#adding-fragment-to-the-pg-library)
-
-<!-- /TOC -->
 
 ## Adding a Parts/Fragments Libraries
 

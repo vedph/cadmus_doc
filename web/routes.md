@@ -39,7 +39,7 @@ This means that the property named after the categories part type ID has an edit
 
 Here the property named after the token text layer part type ID has an editor key value of `general`, while according to the fragment type ID it has an editor key value of `general` or `philology`.
 
-Grouping parts is a requirement because we want to be able to *lazily* load our part-related modules. For instance, all our generic parts are under the same `generic` group key, and their code is found in the corresponding, lazy-loaded module. When editing an item's part, the frontend looks at the part definitions, searching for the first one matching the part's type ID; then, it uses the corresponding part's group key to build the edit URL.
+Grouping parts is a requirement because we want to be able to _lazily_ load our part-related modules. For instance, all our generic parts are under the same `generic` group key, and their code is found in the corresponding, lazy-loaded module. When editing an item's part, the frontend looks at the part definitions, searching for the first one matching the part's type ID; then, it uses the corresponding part's group key to build the edit URL.
 
 Routes to part/fragment editors are built by a specialized service, `LibraryRouteService`. The routes to feature editors are defined in the respective lazily-loaded modules.
 

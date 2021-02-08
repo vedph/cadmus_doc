@@ -1,6 +1,6 @@
-# Backend Core
+# Core
 
-- [Backend Core](#backend-core)
+- [Core](#core)
   - [Requirements](#requirements)
   - [Creating Solution](#creating-solution)
   - [Adding Parts or Fragments](#adding-parts-or-fragments)

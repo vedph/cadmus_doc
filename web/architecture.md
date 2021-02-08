@@ -1,5 +1,18 @@
 # Web App Architecture
 
+- [Web App Architecture](#web-app-architecture)
+  - [Application](#application)
+  - [Libraries](#libraries)
+  - [Editing Architecture](#editing-architecture)
+    - [Items List](#items-list)
+    - [Add or Edit Item](#add-or-edit-item)
+    - [Edit Part](#edit-part)
+      - [Part Editor Component](#part-editor-component)
+      - [Part Feature Component](#part-feature-component)
+    - [Edit Fragment](#edit-fragment)
+      - [Fragment Editor Component](#fragment-editor-component)
+      - [Fragment Feature Component](#fragment-feature-component)
+
 The general web app code architecture is structured into the following sections.
 
 ## Application

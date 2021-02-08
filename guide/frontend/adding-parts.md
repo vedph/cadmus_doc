@@ -1,7 +1,5 @@
 # Adding Parts
 
-<!-- TOC -->
-
 - [Adding Parts](#adding-parts)
   - [Adding UI Library](#adding-ui-library)
   - [Adding PG Library](#adding-pg-library)
@@ -9,11 +7,9 @@
     - [List Part Template](#list-part-template)
   - [Adding a Part to the PG Library](#adding-a-part-to-the-pg-library)
 
-<!-- /TOC -->
-
 When adding parts, you can choose to add them to an existing library, or to a new one. In the latter case, first add the UI and PG libraries as specified below. Please notice that the following naming is just a suggested convention.
 
-These new procedures were defined for the Angular-libraries based Cadmus frontend ([Cadmus shell](https://github.com/vedph/cadmus_shell)). The [old procedures](adding-parts-old.md) still include instructions about building demo components, which are less useful at this stage of development.
+These new procedures were defined for the Angular-libraries based Cadmus frontend ([Cadmus shell](https://github.com/vedph/cadmus_shell)). The [old procedures](adding-parts-old.md) still include instructions about building demo components, which have been dropped at this stage of development.
 
 ## Adding UI Library
 
@@ -476,7 +472,7 @@ export class __MODEL__sPartComponent
     };
     this.entries.setValue([...this.entries.value, unit]);
     this.edit__NAME__(this.entries.value.length - 1);
- }
+  }
 
   public edit__NAME__(index: number): void {
     if (index < 0) {

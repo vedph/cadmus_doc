@@ -1,5 +1,18 @@
 # Edit State
 
+- [Edit State](#edit-state)
+  - [Akita Overview](#akita-overview)
+    - [Store](#store)
+    - [Query](#query)
+    - [Putting All Together](#putting-all-together)
+  - [Edit Model](#edit-model)
+  - [Items List](#items-list)
+  - [Edit Item](#edit-item)
+  - [Edit Part](#edit-part)
+  - [Edit Layer Part](#edit-layer-part)
+  - [Edit Thesaurus](#edit-thesaurus)
+  - [App State](#app-state)
+
 The local edit state is kept in the web app using Akita.
 
 ## Akita Overview
