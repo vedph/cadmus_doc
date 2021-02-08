@@ -109,31 +109,30 @@ Every module imported in the "ui" library should be listed here among the peer d
 
 ## Adding PG Library
 
-1. in your web app, add a **new Angular library** for the editor features ("pages") elements: `ng generate library @myrmidon/cadmus-<PRJ>-part-pg` (with the same naming scheme as above). This is the "pg" library. In this library, every page wraps the dumb UI component into a component which has a corresponding Akita's state, and gets its data pushed via observables. Also, each page has a route to itself. The app module routes will just include a new route entry, representing the base route for all the routes defined for the new library module: customize it as required. For instance, here is the route to the general parts library:
+Before proceeding, you might want to ensure that you have built the corresponding UI libraries, so that it's available for import in your development environment, e.g. `ng build @myrmidon/cadmus-<PRJ>-part-ui --prod`.
+
+1. in your web app, add a **new Angular library** for the editor features ("pages") elements: `ng generate library @myrmidon/cadmus-<PRJ>-part-pg` (with the same naming scheme as above). This is the "pg" library. In this library, every page wraps the dumb UI component into a component which has a corresponding Akita's state, and gets its data pushed via observables. Also, each page has a route to itself. The app module routes will just include a new route entry, representing the base route for all the routes defined for the new library module: customize it as required.
 
 2. remove the sample service and component files created by Angular in your new library.
 
-3. add to your web app `app.module` the "root" route to the "pg" library module, like in this sample (where the root route to that module is named `itinera-lt`):
-
-```ts
-{
-    path: 'items/:iid/itinera-lt',
-    loadChildren: () =>
-    import('@myrmidon/cadmus-itinera-part-lt-pg').then(
-        (module) => module.CadmusItineraPartLtPgModule
-    ),
-    canActivate: [AuthGuardService],
-},
-```
-
-Note that you must _not_ explicitly import the target module into your app module, as this is lazily loaded.
-
-4. edit your "ui" library `package.json` to add **peer dependencies**, like in this sample:
+3. edit your "ui" library `package.json` to add **peer dependencies** and metadata, like in this sample:
 
 ```json
 {
   "name": "@myrmidon/cadmus-itinera-part-lt-pg",
   "version": "0.0.1",
+  "description": "Cadmus - PURA parts UI components.",
+  "keywords": [
+    "Cadmus"
+  ],
+  "homepage": "https://github.com/vedph/cadmus_pura_app",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vedph/cadmus_pura_app"
+  },
+  "author": {
+    "name": "Daniele Fusi"
+  },
   "peerDependencies": {
     "@angular/common": "^10.1.4",
     "@angular/core": "^10.1.4",
@@ -149,7 +148,7 @@ Note that you must _not_ explicitly import the target module into your app modul
 }
 ```
 
-5. edit your "ui" library `ng-package.json` to add an **UMD module IDs** for each imported modules. If you miss any of these, you will get some warnings during the compilation. Example:
+4. edit your "ui" library `ng-package.json` to add an **UMD module IDs** for each imported modules. If you miss any of these, you will get some warnings during the compilation. Example:
 
 ```json
 {
@@ -169,6 +168,75 @@ Note that you must _not_ explicitly import the target module into your app modul
   }
 }
 ```
+
+5. add typical imports to the `<LIB>.module.ts`, like:
+
+```ts
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { CadmusCoreModule, PendingChangesGuard } from '@myrmidon/cadmus-core';
+import { CadmusMaterialModule } from '@myrmidon/cadmus-material';
+import { CadmusStateModule } from '@myrmidon/cadmus-state';
+import { CadmusUiModule } from '@myrmidon/cadmus-ui';
+import { CadmusUiPgModule } from '@myrmidon/cadmus-ui-pg';
+
+export const RouterModuleForChild = RouterModule.forChild([
+  /* add paths like:
+  {
+    path: `${AVAILABLE_WITNESSES_PART_TYPEID}/:pid`,
+    pathMatch: 'full',
+    component: AvailableWitnessesPartFeatureComponent,
+    canDeactivate: [PendingChangesGuard],
+  },
+  {
+    path: `fragment/:pid/${INTERPOLATIONS_FRAGMENT_TYPEID}/:loc`,
+    pathMatch: 'full',
+    component: InterpolationsFragmentFeatureComponent,
+    canDeactivate: [PendingChangesGuard],
+  },
+  */
+]);
+
+@NgModule({
+  declarations: [
+    // your editor wrappers here...
+  ],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    // Cadmus
+    RouterModuleForChild,
+    CadmusCoreModule,
+    CadmusMaterialModule,
+    CadmusStateModule,
+    CadmusUiModule,
+    CadmusUiPgModule,
+    CadmusTgrPartGrUiModule,
+  ],
+  exports: [
+    // your editor wrappers here...
+  ],
+})
+export class __LIB__Module {}
+```
+
+6. add to your web app `app.module` the "root" route to the "pg" library module, like in this sample (where the root route to that module is named `itinera-lt`):
+
+```ts
+{
+    path: 'items/:iid/itinera-lt',
+    loadChildren: () =>
+    import('@myrmidon/cadmus-itinera-part-lt-pg').then(
+        (module) => module.CadmusItineraPartLtPgModule
+    ),
+    canActivate: [AuthGuardService],
+},
+```
+
+Note that you must _not_ explicitly import the target module into your app module, as this is lazily loaded.
 
 ## Adding a Part to the UI Library
 
