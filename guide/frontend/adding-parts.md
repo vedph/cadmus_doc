@@ -13,9 +13,11 @@ These new procedures were defined for the Angular-libraries based Cadmus fronten
 
 ## Adding UI Library
 
-1. in your web app, add a **new Angular library** for the editor UI elements: `ng generate library @myrmidon/cadmus-PRJNAME-part-LIBNAME-ui`. Please note that here `@myrmidon` is the NPM user name I'm using for publishing my libraries. Replace it with your own, so that no name clashes can occur. This is the "ui" library. In this library you will place the part and fragment editors. You can remove the sample component and service added by Angular.
+1. in your web app, add a **new Angular library** for the editor UI elements: `ng generate library @myrmidon/cadmus-<PRJ>-part-ui`; if you have several libraries in your project, add their name before the last suffix (e.g. `cadmus-tgr-part-gr-ui` for grammar libraries, `cadmus-tgr-part-ms-ui` for manuscript libraries, etc.). Here `@myrmidon` is the NPM user name I'm using for publishing my libraries. Replace it with your own, so that no name clashes can occur. This is the "ui" library. In this library you will place the part and fragment editors. You can remove the sample component and service added by Angular.
 
-2. in the "ui" library **module**, add the typical imports, like this:
+2. remove the sample service and component files created by Angular in your new library.
+
+3. in the "ui" library **module**, add the typical imports, like this:
 
 ```ts
 import { CommonModule } from "@angular/common";
@@ -51,12 +53,24 @@ import { PersonPartComponent } from "./person-part/person-part.component";
 export class CadmusItineraPartLtUiModule {}
 ```
 
-3. edit your "ui" library `package.json` to add **peer dependencies**, like in this sample:
+3. edit your "ui" library `package.json` to add **peer dependencies** and library metadata, like in this sample:
 
 ```json
 {
   "name": "@myrmidon/cadmus-itinera-part-lt-ui",
   "version": "0.0.1",
+  "description": "Cadmus - general parts UI components.",
+  "keywords": [
+    "Cadmus"
+  ],
+  "homepage": "https://github.com/vedph/cadmus_shell",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vedph/cadmus_shell"
+  },
+  "author": {
+    "name": "Daniele Fusi"
+  },
   "peerDependencies": {
     "@angular/common": "^10.1.4",
     "@angular/core": "^10.1.4",
@@ -71,7 +85,7 @@ export class CadmusItineraPartLtUiModule {}
 }
 ```
 
-As you can see, every module imported in the "ui" library is listed here among the peer dependencies.
+Every module imported in the "ui" library should be listed here among the peer dependencies.
 
 4. edit your "ui" library `ng-package.json` to add an **UMD module IDs** for each imported modules. If you miss any of these, you will get some warnings during the compilation. Example:
 
@@ -95,9 +109,11 @@ As you can see, every module imported in the "ui" library is listed here among t
 
 ## Adding PG Library
 
-1. in your web app, add a **new Angular library** for the editor features ("pages") elements: `ng generate library @myrmidon/cadmus-PRJNAME-part-LIBNAME-pg`. This is the "pg" library. You can remove the sample component and service added by Angular. In this library, every page wraps the dumb UI component into a component which has a corresponding Akita's state, and gets its data pushed via observables. Also, each page has a route to itself. The app module routes will just include a new route entry, representing the base route for all the routes defined for the new library module: customize it as required. For instance, here is the route to the general parts library:
+1. in your web app, add a **new Angular library** for the editor features ("pages") elements: `ng generate library @myrmidon/cadmus-<PRJ>-part-pg` (with the same naming scheme as above). This is the "pg" library. In this library, every page wraps the dumb UI component into a component which has a corresponding Akita's state, and gets its data pushed via observables. Also, each page has a route to itself. The app module routes will just include a new route entry, representing the base route for all the routes defined for the new library module: customize it as required. For instance, here is the route to the general parts library:
 
-2. add to your web app `app.module` the "root" route to the "pg" library module, like in this sample (where the root route to that module is named `itinera-lt`):
+2. remove the sample service and component files created by Angular in your new library.
+
+3. add to your web app `app.module` the "root" route to the "pg" library module, like in this sample (where the root route to that module is named `itinera-lt`):
 
 ```ts
 {
@@ -112,7 +128,7 @@ As you can see, every module imported in the "ui" library is listed here among t
 
 Note that you must _not_ explicitly import the target module into your app module, as this is lazily loaded.
 
-3. edit your "ui" library `package.json` to add **peer dependencies**, like in this sample:
+4. edit your "ui" library `package.json` to add **peer dependencies**, like in this sample:
 
 ```json
 {
@@ -133,7 +149,7 @@ Note that you must _not_ explicitly import the target module into your app modul
 }
 ```
 
-4. edit your "ui" library `ng-package.json` to add an **UMD module IDs** for each imported modules. If you miss any of these, you will get some warnings during the compilation. Example:
+5. edit your "ui" library `ng-package.json` to add an **UMD module IDs** for each imported modules. If you miss any of these, you will get some warnings during the compilation. Example:
 
 ```json
 {
@@ -156,7 +172,7 @@ Note that you must _not_ explicitly import the target module into your app modul
 
 ## Adding a Part to the UI Library
 
-1. add the **part model** (derived from `Part`), its type ID constant, and its JSON schema constant to `<part>.ts` (e.g. `note-part.ts`). Remember to add the new file to the exports of the "barrel" `public-api.ts` file in the module. You can use a template like this (replace `__PROJECT__` with the project's name, e.g. `itinera`; and `__NAME__` with your part's name, without the `Part` suffix; e.g. `Note`, adjusting case where required):
+1. add under `src/lib` the **part model** (derived from `Part`), its type ID constant, and its JSON schema constant to `<part>.ts` (e.g. `note-part.ts`). You can use a template like this (replace `__PRJ__` with the project's name, e.g. `itinera`; and `__NAME__` with your part's name, without the `Part` suffix; e.g. `Note`, adjusting case where required):
 
 ```ts
 import { Part } from "@myrmidon/cadmus-core";
@@ -171,7 +187,7 @@ export interface __NAME__Part extends Part {
 /**
  * The type ID used to identify the __NAME__Part type.
  */
-export const __NAME___PART_TYPEID = "it.vedph.__PROJECT__.__NAME__";
+export const __NAME___PART_TYPEID = "it.vedph.__PRJ__.__NAME__";
 
 /**
  * JSON schema for the __NAME__ part. This is used in the editor demo.
@@ -180,7 +196,7 @@ export const __NAME___PART_TYPEID = "it.vedph.__PROJECT__.__NAME__";
 export const __NAME___PART_SCHEMA = {
   $schema: "http://json-schema.org/draft-07/schema#",
   $id:
-    "www.vedph.it/cadmus/parts/__PROJECT__/__LIB__/" +
+    "www.vedph.it/cadmus/parts/__PRJ__/__LIB__/" +
     __NAME___PART_TYPEID +
     ".json",
   type: "object",
@@ -248,7 +264,9 @@ If you want to infer a schema in the [JSON schema tool](https://jsonschema.net/)
 }
 ```
 
-2. add a **part editor dumb component** named after the part (e.g. `ng g component note-part` for `NotePartComponent` after `NotePart`), and extending `ModelEditorComponentBase<T>` where `T` is the part's type:
+2. add the new file to the exports of the "barrel" `public-api.ts` file in the module, like `export * from './lib/<NAME>-part';`. 
+
+3. in the same `src/lib` directory, add a **part editor dumb component** named after the part (e.g. `ng g component note-part` for `NotePartComponent` after `NotePart`), and extending `ModelEditorComponentBase<T>` where `T` is the part's type:
    1. in the _constructor_, instantiate its "root" form group (named `form`), filling it with the required controls.
    2. eventually add _thesaurus_ entries properties for binding, populating them by overriding `onThesauriSet` (`protected onThesauriSet() {}`).
    3. implement `OnInit` calling `this.initEditor();` in it.
@@ -363,7 +381,7 @@ HTML template:
 </form>
 ```
 
-3. ensure the component has been added to its module's `declarations` and `exports`, and to the `public-api.ts` barrel file.
+4. ensure the component has been added to its module's `declarations` and `exports`, and to the `public-api.ts` barrel file.
 
 ### List Part Template
 
