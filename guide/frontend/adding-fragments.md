@@ -14,7 +14,7 @@ Same as [parts](adding-parts.md).
 
 In the `<partgroup>-ui` module:
 
-1. add the fragment _model_ (derived from `Fragment`), its type ID constant, and its JSON schema constant to `<fragment>.ts` (e.g. `comment-fragment.ts`). Remember to add the new file to the "barrel" `index.ts` in the module. You can use a template like this (replace `__NAME__` with your part's name, e.g. `Comment`, adjusting case where required):
+1. add the fragment _model_ (derived from `Fragment`), its type ID constant, and its JSON schema constant to `<fragment>.ts` (e.g. `comment-fragment.ts`). You can use a template like this (replace `__NAME__` with your part's name, e.g. `Comment`, adjusting case where required):
 
 ```ts
 import { Fragment } from "@myrmidon/cadmus-core";
@@ -26,13 +26,13 @@ export interface __NAME__Fragment extends Fragment {
   // TODO: add properties
 }
 
-export const __NAME___FRAGMENT_TYPEID = "fr.it.vedph.__NAME__";
+export const __NAME___FRAGMENT_TYPEID = "fr.it.vedph.__PRJ__.__NAME__";
 
 export const __NAME___FRAGMENT_SCHEMA = {
   definitions: {},
   $schema: "http://json-schema.org/draft-07/schema#",
   $id:
-    "www.vedph.it/cadmus/fragments/general/" +
+    "www.vedph.it/cadmus/fragments/<PRJ>/" +
     __NAME___FRAGMENT_TYPEID +
     ".json",
   type: "object",
@@ -63,7 +63,9 @@ If you want to infer a schema in the [JSON schema tool](https://jsonschema.net/)
 }
 ```
 
-2. add a _fragment editor dumb component_ named after the fragment (e.g. `ng g component comment-fragment` for `CommentFragmentComponent` after `CommentFragment`), and extending `ModelEditorComponentBase<T>` where `T` is the fragment's type:
+2. add the export for the new file to the library's "barrel" file `public-api.ts`, e.g. `export * from './lib/<NAME>';`.
+
+3. add a _fragment editor dumb component_ named after the fragment (e.g. `ng g component comment-fragment` for `CommentFragmentComponent` after `CommentFragment`), and extending `ModelEditorComponentBase<T>` where `T` is the fragment's type:
    1. in the _constructor_, instantiate its "root" form group (named `form`), filling it with the required controls.
    2. eventually add _thesaurus_ entries properties for binding, populating them by overriding `onThesauriSet` (`protected onThesauriSet() {}`).
    3. implement `OnInit` calling `this.initEditor();` in it.
@@ -174,7 +176,7 @@ Sample HTML template:
 </form>
 ```
 
-Remember to add the component to its module's `declarations` and `exports`.
+4. remember to add the component to the barrel `public-api.ts`, and to its module's `declarations` and `exports`.
 
 ### Fragment with List
 
