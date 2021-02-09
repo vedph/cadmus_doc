@@ -95,12 +95,10 @@ import { __NAME__Fragment } from "../__NAME__-fragment";
 export class __NAME__FragmentComponent
   extends ModelEditorComponentBase<__NAME__Fragment>
   implements OnInit {
-  public tag: FormControl;
-  public tags: FormControl;
-  public text: FormControl;
+  // TODO: add form controls
 
   // TODO: add tag entries if required, e.g.:
-  // public tagEntries: ThesaurusEntry[];
+  // public tagEntries: ThesaurusEntry[] | undefined;
 
   constructor(authService: AuthService, formBuilder: FormBuilder) {
     super(authService);
@@ -137,7 +135,7 @@ export class __NAME__FragmentComponent
     // if (this.thesauri && this.thesauri[key]) {
     //   this.tagEntries = this.thesauri[key].entries;
     // } else {
-    //   this.tagEntries = null;
+    //   this.tagEntries = undefined;
     // }
   }
 
