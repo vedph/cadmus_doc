@@ -434,7 +434,7 @@ HTML template:
 
 In a `<partgroup>-pg` module:
 
-1. add a _fragment editor feature component_ named after the part (e.g. `ng g component comment-fragment-feature` for `CommentFragmentFeatureComponent` after `CommentFragment`), with routing. Ensure that this component is both under the module `declarations` and in `public-api.ts`. Each editor has its component, and its state management artifacts under the same folder (store, query, and service). Add the corresponding route in the module file, under the `RouterModuleForChild` constant (which is among the `imports` of the module) e.g.:
+1. add a _fragment editor feature component_ named after the part (e.g. `ng g component comment-fragment-feature` for `CommentFragmentFeatureComponent` after `CommentFragment`), with routing. Each editor has its component, and its state management artifacts under the same folder (store, query, and service). Add the corresponding route in the module file, under the `RouterModuleForChild` constant (which is among the `imports` of the module) e.g.:
 
 ```ts
 export const RouterModuleForChild = RouterModule.forChild([
@@ -448,7 +448,9 @@ export const RouterModuleForChild = RouterModule.forChild([
 ]);
 ```
 
-2. inside this new component's folder, add a new **store** for your model, named `edit-<fragmentname>-fragment.store.ts`. Template:
+2. ensure that the component added is both under the module `declarations` (imports and exports) and in `public-api.ts`.
+
+3. inside this new component's folder, add a new **store** for your model, named `edit-<fragmentname>-fragment.store.ts`. Template:
 
 ```ts
 import { Injectable } from "@angular/core";
@@ -479,7 +481,7 @@ export class Edit__NAME__FragmentStore
 }
 ```
 
-3. in the same folder, add a new **query** for your model, named `edit-<fragmentname>-fragment.query.ts`. Template:
+4. in the same folder, add a new **query** for your model, named `edit-<fragmentname>-fragment.query.ts`. Template:
 
 ```ts
 import { Injectable } from "@angular/core";
@@ -494,7 +496,7 @@ export class Edit__NAME__FragmentQuery extends EditFragmentQueryBase {
 }
 ```
 
-4. in the same folder, add a new **service** for your model, named `edit-<fragmentname>-fragment.service.ts`. Template:
+5. in the same folder, add a new **service** for your model, named `edit-<fragmentname>-fragment.service.ts`. Template:
 
 ```ts
 import { Injectable } from "@angular/core";
@@ -515,7 +517,7 @@ export class Edit__NAME__FragmentService extends EditFragmentServiceBase {
 }
 ```
 
-5. implement the feature editor component by making it extend `EditFragmentFeatureBase`, like in this code template:
+6. implement the feature editor component by making it extend `EditFragmentFeatureBase`, like in this code template:
 
 ```ts
 import { Component, OnInit } from "@angular/core";
@@ -592,7 +594,7 @@ Define the corresponding HTML template like:
 ></cadmus-__NAME__-fragment>
 ```
 
-6. in your app's project `part-editor-keys.ts`, add the mapping for the fragment just created under the layer part key, like e.g.:
+7. in your app's project `part-editor-keys.ts`, add the mapping for the fragment just created under the layer part key, like e.g.:
 
 ```ts
 // layer parts
