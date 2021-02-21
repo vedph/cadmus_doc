@@ -5,8 +5,9 @@
     - [Scenario 1: External Data Services](#scenario-1-external-data-services)
     - [Scenario 2: Dockerized Data Services](#scenario-2-dockerized-data-services)
   - [Databases](#databases)
+    - [How Many Databases?](#how-many-databases)
   - [Security](#security)
-    - [Auditing](#auditing)
+    - [Auditing and Privacy](#auditing-and-privacy)
   - [CORS](#cors)
   - [Messaging](#messaging)
 
@@ -67,7 +68,7 @@ services:
     command: --default-authentication-plugin=mysql_native_password
     environment:
       MYSQL_ROOT_PASSWORD: mysql
-      MYSQL_ROOT_HOST: '%'
+      MYSQL_ROOT_HOST: "%"
     ports:
       - 3306:3306
     volumes:
@@ -92,6 +93,17 @@ When the Cadmus API starts, it connects to its data services and checks whether 
 
 If you want to start with empty databases, set `Seed:ItemCount` to 0. In this way, databases will be created empty, which is usually what is desired in a true editing environment.
 
+### How Many Databases?
+
+Cadmus uses a number of MongoDB and MySql databases. At a minimum, they are:
+
+- 1 MongoDB database for data.
+- 1 MongoDB database for user accounts.
+- 1 MongoDB database for auditing.
+- 1 MySql database for real-time data indexing.
+
+Anyway, depending on the Docker stack, more databases might be used. For instance, in Cadmus _Itinera_ we add another MySql database to hold a project-wide, centrialized bibliography.
+
 ## Security
 
 The source code and Docker scripts include some default, dummy values for sensitive data like connection strings, user accounts, etc. It is imperative that you change all these settings before deploying a Cadmus based solution.
@@ -114,11 +126,15 @@ Please notice that when referring to these settings keys in the Docker compose s
 
 You will find that some of these keys are already present in the Docker compose script, to give you a guidance by sample. You just have to replace their values, and add other entries in the same way.
 
-### Auditing
+### Auditing and Privacy
 
-Please notice that Cadmus has a granular auditing policy for data being edited. Most edits are logged in the auditing log (hosted in a MongoDB database), and the full editing history of each datum is stored in the data themselves. Please take the appropriate measures to periodically checking this log for suspected activities, and protect it to comply with privacy requirements. No personal data is directly found in the log, as it just stores user names, which usually mean nothing outside a team (e.g. my user name for testing is "zeus"). User details (if set) are separately stored in a different database. Anyway, sensitive operations are logged with user names and their IP address.
+Please notice that Cadmus has a granular auditing policy for data being edited. Most edits are logged in the auditing log (hosted in a MongoDB database), and the full editing history of each datum is stored in the data themselves. Please take the appropriate measures to periodically checking this log for suspected activities, and protect it to comply with privacy requirements.
 
-The log is cyclic, so that it won't grow indefinitely; you can anyway control its options via `Serilog`-related settings in the configuration. The data history instead never gets pruned, as it's part of the data themselves and can be used to recover from errors or other accidents, and track the evolution of data being entered.
+No personal data is directly found in the log, as it just stores user names, which usually mean nothing outside a team. For instance, my user name for testing is "zeus"; and the mapping between zeus and my real name, if any, is found only in another database, related to user accounts. Of course, it's up to you to decide whether you want to map user names to real names, or just use first names, fake names, or whatever you prefer.
+
+In any case, all sensitive operations on data are logged with user names and their IP address. The log is cyclic, so that it won't grow indefinitely (usually it's limited to 10 MB); you can anyway control its options via `Serilog`-related settings in the configuration.
+
+Data history instead never gets pruned, as it's part of the data themselves and can be used to recover from errors or other accidents, and track the evolution of data being entered.
 
 ## CORS
 
