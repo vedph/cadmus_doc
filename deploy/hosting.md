@@ -4,7 +4,11 @@
   - [Infrastructure](#infrastructure)
     - [Scenario 1: External Data Services](#scenario-1-external-data-services)
     - [Scenario 2: Dockerized Data Services](#scenario-2-dockerized-data-services)
+  - [Databases](#databases)
   - [Security](#security)
+    - [Auditing](#auditing)
+  - [CORS](#cors)
+  - [Messaging](#messaging)
 
 ## Infrastructure
 
@@ -82,6 +86,12 @@ Anyway, don't rely on the volume files only; it is suggested that you also regul
 
 If instead you are just experimenting, you can safely use the "standard" Docker compose script with no volume. In this case, your data is kept only until you destroy the container (e.g. via a `docker-compose down`; just stopping and restarting the container will instead preserve your data). In this case, you will start anew with fresh databases.
 
+## Databases
+
+When the Cadmus API starts, it connects to its data services and checks whether its required databases exist. If they do not exist, they get created, and usually seeded with mock data.
+
+If you want to start with empty databases, set `Seed:ItemCount` to 0. In this way, databases will be created empty, which is usually what is desired in a true editing environment.
+
 ## Security
 
 The source code and Docker scripts include some default, dummy values for sensitive data like connection strings, user accounts, etc. It is imperative that you change all these settings before deploying a Cadmus based solution.
@@ -96,10 +106,32 @@ At a minimum, you should change:
 - `ConnectionStrings:Index`
 - `Serilog:ConnectionString`
 - `Jwt:SecureKey`
-- `StockUsers`: all the accounts
 - `Mailer:UserName`
 - `Mailer:Password`
+- `StockUsers`: all the accounts. Cadmus provides a set of builtin user accounts, with various levels of privilege. You should at least provide an admin builtin account.
 
 Please notice that when referring to these settings keys in the Docker compose script you will use `__` (2 underscore characters, not just 1!) instead of colons (and usually capitalize the keys). Thus, `Jwt:SecureKey` becomes `JWT__SECUREKEY`.
 
 You will find that some of these keys are already present in the Docker compose script, to give you a guidance by sample. You just have to replace their values, and add other entries in the same way.
+
+### Auditing
+
+Please notice that Cadmus has a granular auditing policy for data being edited. Most edits are logged in the auditing log (hosted in a MongoDB database), and the full editing history of each datum is stored in the data themselves. Please take the appropriate measures to periodically checking this log for suspected activities, and protect it to comply with privacy requirements. No personal data is directly found in the log, as it just stores user names, which usually mean nothing outside a team (e.g. my user name for testing is "zeus"). User details (if set) are separately stored in a different database. Anyway, sensitive operations are logged with user names and their IP address.
+
+The log is cyclic, so that it won't grow indefinitely; you can anyway control its options via `Serilog`-related settings in the configuration. The data history instead never gets pruned, as it's part of the data themselves and can be used to recover from errors or other accidents, and track the evolution of data being entered.
+
+## CORS
+
+Cadmus API implement [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) for cross-origin access. If required, you can configure the allowed origins for CORS under the `AllowedOrigins` section of the API settings.
+
+Anyway, this is usually not required unless you are planning to let 3rd parties access the Cadmus API directly, bypassing the Cadmus app. Otherwise, the Cadmus app being in the same origin of its API, CORS is not a requirement for it.
+
+## Messaging
+
+The Cadmus API can optionally use some messaging functions to communicate with registered users. Usually, the only motivation for this is enabling password recovery functions, users creation (by administrators), and similar user-driven maintenance tasks.
+
+The default API settings anyway have messaging disabled, as you should otherwise provide an SMTP account to be used.
+
+If you want to enable messaging, you must change settings in the `Mailer` section. By default, Cadmus API use a generic SMTP account to send such messages, as they are sparingly used and thus do not require mass-mailing services. If anyway you want to use such services, Cadmus provides two builtin providers for [SendGrid](www.sendgrid.com) and Mailjet (www.mailjet.com), or you can add your own providers.
+
+The messaging provider is usually chosen when creating the API for a specific project. It just implies replacing a single line in the code, to tell the dependency injection system which mailer component should be used for messaging.
