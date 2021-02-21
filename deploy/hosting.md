@@ -1,6 +1,6 @@
 # Hosting a Cadmus Solution
 
-This guide mostly targets system administrators.
+This guide mostly targets system administrators. It is suggested to also review the page about [Cadmus API settings](settings.md) for more details about the available customizations.
 
 - [Hosting a Cadmus Solution](#hosting-a-cadmus-solution)
   - [Infrastructure](#infrastructure)
@@ -157,11 +157,19 @@ The messaging provider is usually chosen when creating the API for a specific pr
 
 ## Publishing Cadmus Services
 
-Once you have setup your dockerized Cadmus solution, you just have to decide which Cadmus services you want to expose to the outer world.
+Once you have setup your Docker compose script for Cadmus, you just have to launch it in your hosting environment, and decide which Cadmus services you want to expose to the outer world.
 
-Usually, you just expose the surface layer, i.e. the web application with the editor. In some cases, you might also want to expose the API layer.
+To quickly launch the script you can just enter the folder where you placed your `docker-compose.yml` file and run:
 
-Unless you change the default ports in the Docker compose script, you will find:
+```bash
+docker-compose up
+```
+
+You can then destroy the containers with `docker-compose down`. Most times anyway you will rather host the Docker stack into some more advanced environment.
+
+As for publishing, usually you just expose the surface layer, i.e. the web application with the editor. In some cases, you might also want to expose the API layer.
+
+Unless you change the default ports in the Docker compose script, you will find these endpoints:
 
 - Cadmus API service can be browsed at <localhost:X/swagger> where `X` is the port number specified in your Docker compose script for the API container.
 - Cadmus application at <localhost:4200>.
