@@ -131,9 +131,9 @@ You will find that some of these keys are already present in the Docker compose 
 
 ### Auditing and Privacy
 
-Please notice that Cadmus has a granular auditing policy for data being edited. Most edits are logged in the auditing log (hosted in a MongoDB database), and the full editing history of each datum is stored in the data themselves. Please take the appropriate measures to periodically checking this log for suspected activities, and protect it to comply with privacy requirements.
+Cadmus has a granular auditing policy for data being edited. Most edits are logged in the auditing log (hosted in a MongoDB database), and the full editing history of each datum is stored in the data themselves. Please take the appropriate measures to periodically check this log for suspected activities, and protect it to comply with privacy requirements.
 
-No personal data is directly found in the log, as it just stores user names, which usually mean nothing outside a team. For instance, my user name for testing is "zeus"; and the mapping between zeus and my real name, if any, is found only in another database, related to user accounts. Of course, it's up to you to decide whether you want to map user names to real names, or just use first names, fake names, or whatever you prefer.
+Anyway, no personal data is directly found in the log, as it just stores user names, which usually mean nothing outside a team. For instance, my user name for testing is "zeus"; and the mapping between zeus and my real name, if any, is found only in another database, related to user accounts. Of course, it's up to you to decide whether you want to map user names to real names, or just use first names, fake names, or whatever you prefer.
 
 In any case, all sensitive operations on data are logged with user names and their IP address. The log is cyclic, so that it won't grow indefinitely (usually it's limited to 10 MB); you can anyway control its options via `Serilog`-related settings in the configuration.
 
