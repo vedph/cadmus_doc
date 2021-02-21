@@ -1,5 +1,7 @@
 # Hosting a Cadmus Solution
 
+This guide mostly targets system administrators.
+
 - [Hosting a Cadmus Solution](#hosting-a-cadmus-solution)
   - [Infrastructure](#infrastructure)
     - [Scenario 1: External Data Services](#scenario-1-external-data-services)
@@ -10,6 +12,7 @@
     - [Auditing and Privacy](#auditing-and-privacy)
   - [CORS](#cors)
   - [Messaging](#messaging)
+  - [Publishing Cadmus Services](#publishing-cadmus-services)
 
 ## Infrastructure
 
@@ -148,6 +151,17 @@ The Cadmus API can optionally use some messaging functions to communicate with r
 
 The default API settings anyway have messaging disabled, as you should otherwise provide an SMTP account to be used.
 
-If you want to enable messaging, you must change settings in the `Mailer` section. By default, Cadmus API use a generic SMTP account to send such messages, as they are sparingly used and thus do not require mass-mailing services. If anyway you want to use such services, Cadmus provides two builtin providers for [SendGrid](www.sendgrid.com) and Mailjet (www.mailjet.com), or you can add your own providers.
+If you want to enable messaging, you must change settings in the `Mailer` section. By default, Cadmus API use a generic SMTP account to send such messages, as they are sparingly used and thus do not require mass-mailing services. If anyway you want to use such services, Cadmus provides two builtin providers for [SendGrid](www.sendgrid.com) and [Mailjet](www.mailjet.com), or you can add your own providers.
 
 The messaging provider is usually chosen when creating the API for a specific project. It just implies replacing a single line in the code, to tell the dependency injection system which mailer component should be used for messaging.
+
+## Publishing Cadmus Services
+
+Once you have setup your dockerized Cadmus solution, you just have to decide which Cadmus services you want to expose to the outer world.
+
+Usually, you just expose the surface layer, i.e. the web application with the editor. In some cases, you might also want to expose the API layer.
+
+Unless you change the default ports in the Docker compose script, you will find:
+
+- Cadmus API service can be browsed at <localhost:X/swagger> where `X` is the port number specified in your Docker compose script for the API container.
+- Cadmus application at <localhost:4200>.
