@@ -56,7 +56,7 @@ Projects using Cadmus:
   - [documentation](https://github.com/vedph/cadmus_pura_doc)
   - [parts](https://github.com/vedph/cadmus_pura)
   - [API](https://github.com/vedph/cadmus_pura_api)
-  - app
+  - [app](https://github.com/vedph/cadmus_pura_app)
 
 ## Stack
 
@@ -92,8 +92,8 @@ Core data and business layers.
 
 Web REST API.
 
-- [settings](./api/settings.md)
 - [creating](./guide/api.md)
+- [settings](./deploy/settings.md)
 
 ## Web
 
@@ -112,6 +112,7 @@ Web frontend.
 
 ## Deployment
 
+- [hosting a Cadmus solution](./deploy/hosting.md)
 - [setting up Docker](./deploy/docker-setup.md)
 - [building Docker images](./deploy/docker-build.md)
 - [using Docker images](./deploy/docker-usage.md)
