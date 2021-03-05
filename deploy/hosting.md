@@ -16,7 +16,7 @@ This guide mostly targets system administrators. It is suggested to also review 
 
 ## Infrastructure
 
-Accordig to your deployment environment, you should decide if you want to use existing data services from your infrastructure, or just take advantage of those defined in the Cadmus default Docker stack.
+According to your deployment environment, you should decide if you want to use existing data services from your infrastructure, or just take advantage of those defined in the Cadmus default Docker stack.
 
 The former is the commonest scenario, and requires you to derive a new Docker compose script from the existing one, by just removing the unused layers from the stack.
 
@@ -37,7 +37,23 @@ To this end:
 - `CONNECTIONSTRINGS__DEFAULT` and `SERILOG__CONNECTIONSTRING` for MongoDB;
 - `CONNECTIONSTRINGS__INDEX` for MySql.
 
-The original script just uses container names as data server names in the connection strings. You will replace these with your data service address (usually, an IP address).
+The original script just uses container names as data server names in the connection strings. You will replace these with your data service address.
+
+As the containers in the compose script all refer to a Docker virtual network, you must use `extra_hosts` to address a service outside this network; this is the case of your infrastructure data services. Thus, you should end up adding an `extra_hosts` section to each API service using a database, having an arbitrary name for your database service, and its mapping to an IP address. Once you have this, just replace the server name in the connection string with the arbitrary name chosen for your database service. To sum up, your API structure should resemble this:
+
+```yml
+services:
+  the-api:
+    image: ...
+    environment:
+      - CONNECTIONSTRINGS__DEFAULT=Server=vedphdb;...
+    networks:
+      - lsj-network
+    extra_hosts:
+      - "vedphdb:130.140.150.200"
+```
+
+In this API service the connection string points to the `vedphdb` server, which is mapped to the IP 130.140.150.200 in its `extra_hosts` section.
 
 Please notice that in all the connection strings the `{0}` part is just a placeholder for the database name, which will be replaced by the API at runtime. So, you are effectively editing connection string _templates_. Of course, if required you can also change the database names (see [settings](./settings.md)).
 
