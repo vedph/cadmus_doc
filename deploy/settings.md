@@ -107,6 +107,7 @@ All the messaging services share these options:
 - `IsEnabled`: a boolean used to enable or disable messaging.
 - `SenderEmail`: the sender email address.
 - `SenderName`: the sender human-friendly name.
+- `TestRecipient`: the recipient email address to be used when sending a test email message. If not specified, no mail message will be sent.
 
 Other options are specific for each service. Of course, any sensitive configuration data found here should be fake. True passwords will be set as environment variables in the host.
 
