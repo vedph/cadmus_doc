@@ -2,6 +2,8 @@
 
 This guide mostly targets system administrators. It is suggested to also review the page about [Cadmus API settings](settings.md) for more details about the available customizations.
 
+Also, [here](./hosting-sample.md) you can find a real-world scenario hosting sample, using a simple Linux VM to host the whole Cadmus stack.
+
 - [Hosting a Cadmus Solution](#hosting-a-cadmus-solution)
   - [Infrastructure](#infrastructure)
     - [Scenario 1: External Data Services](#scenario-1-external-data-services)
