@@ -153,7 +153,7 @@ cadmus-api:
 
 Of course, this assumes that our Cadmus solution is using SendGrid to send email messages. Just change the `MESSAGING` parameters accordingly if you are using other services.
 
-Finally, in the **app layer** ensure that in `cadmus-web` you are using the production version of the app image. The production version is equal to the development version, with the only difference that its `env.js` file has been manually patched before creating the Docker image, in order to set the `apiUrl` variable to your host VM URI, e.g.:
+Finally, in the **app layer** ensure that the published port number is changed to 80 (from 4200), and that in `cadmus-web` you are using the production version of the app image. The production version is equal to the development version, with the only difference that its `env.js` file has been manually patched before creating the Docker image, in order to set the `apiUrl` variable to your host VM URI, e.g.:
 
 ```js
 // https://www.jvandemo.com/how-to-use-environment-variables-to-configure-your-angular-application-without-a-rebuild/
@@ -166,7 +166,7 @@ Finally, in the **app layer** ensure that in `cadmus-web` you are using the prod
 })(this);
 ```
 
-Thus, the final part of the Docker compose script is equal to the standard one, except for the image name (notice the `-prod` suffix here):
+Thus, the final part of the Docker compose script is equal to the standard one, except for the port number mapping (`80:80` instead of `4200:80`), and the image name (notice the `-prod` suffix here):
 
 ```yml
   cadmus-web:
