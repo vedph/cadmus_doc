@@ -98,13 +98,13 @@ While the preceding code can be copied as it is from the corresponding Cadmus so
 
 1. the connection strings to databases (including Serilog) do not need to be changed, as databases are never accessed from outside the VM host.
 
-2. `SEED_ITEMCOUNT` should be set to `0`, as we do not want mock data in the database.
+2. `SEED__ITEMCOUNT` should be set to `0`, as we do not want mock data in the database.
 
 3. stock users passwords and eventually names should be overridden here. In this sample, I just have 1 stock user, and I'm overriding its password with `STOCKUSERS__0__PASSWORD`, where `0` is the index in the array of stock users.
 
-4. `JWT_SECUREKEY` must be changed to some random key. Just ensure that its length is a multiple of 16.
+4. `JWT__SECUREKEY` must be changed to some random key. Just ensure that its length is a multiple of 16.
 
-5. `ALLOWED_ORIGINS` must be set to the IP address of your host VM. This is used for CORS, to allow the web application access the API.
+5. `ALLOWED__ORIGINS` must be set to the IP address of your host VM. This is used for CORS, to allow the web application access the API.
 
 6. `MESSAGING` variables must be set accordingly: API root and app URI to your host VM IP or domain name (followed by `/api/` for `MESSAGING__APIROOTURL`); `MESSAGING__SUPPORTEMAIL` must be the email address dedicated to users support.
 
@@ -153,7 +153,9 @@ cadmus-api:
 
 Of course, this assumes that our Cadmus solution is using SendGrid to send email messages. Just change the `MESSAGING` parameters accordingly if you are using other services.
 
-Finally, in the **app layer** ensure that the published port number is changed to 80 (from 4200), and that in `cadmus-web` you are using the production version of the app image. The production version is equal to the development version, with the only difference that its `env.js` file has been manually patched before creating the Docker image, in order to set the `apiUrl` variable to your host VM URI, e.g.:
+Finally, in the **app layer** ensure that the published port number is changed to 80 (from 4200; or 443 for SSL, but usually we first setup for HTTP to test the stack, and then add HTTPS); and that in `cadmus-web` you are using the *production version* of the app image.
+
+The production version of the web app is equal to the development version, with the only difference that its `env.js` file has been manually patched before creating the Docker image, in order to set the `apiUrl` variable to your host VM URI, e.g.:
 
 ```js
 // https://www.jvandemo.com/how-to-use-environment-variables-to-configure-your-angular-application-without-a-rebuild/
