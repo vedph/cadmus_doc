@@ -227,7 +227,7 @@ The quotations fragment includes any number of quotation entries. Each entry has
 
 #### Quotations Editor
 
-The bibliography editor shows a list of bibliographical entries.
+The quotation editor shows a list of quotations.
 
 ![Quotations Fragment - List](./images/parts/fr-quotations01-tips.png)
 
