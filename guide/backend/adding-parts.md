@@ -509,6 +509,8 @@ This template takes advantage of the part's seeder. If you are not using a seede
 using System;
 using Xunit;
 using Cadmus.Core;
+using System.Collections.Generic;
+using System.Linq;
 
 public sealed class __NAME__PartTest
 {
@@ -570,8 +572,8 @@ public sealed class __NAME__PartTest
     // public void GetDataPins_Tag_1()
     // {
     //     __NAME__Part part = GetEmptyPart();
-    //     TODO: set only the properties required for pins
-    //     in a predictable way so we can test them
+    //     // TODO: set only the properties required for pins
+    //     // in a predictable way so we can test them
 
     //     List<DataPin> pins = part.GetDataPins(null).ToList();
     //     Assert.Single(pins);
@@ -582,6 +584,9 @@ public sealed class __NAME__PartTest
     //     Assert.Equal(part.RoleId, pin.RoleId);
     //     Assert.Equal("tag", pin.Name);
     //     Assert.Equal("some-tag", pin.Value);
+    //     // another way:
+    //     pin = pins.Find(p => p.Name == "id" && p.Value == "steph");
+    //     TestHelper.AssertPinIds(part, pin);
     // }
 }
 ```
