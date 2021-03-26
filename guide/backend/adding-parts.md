@@ -259,7 +259,7 @@ using System;
 // ...
 
 /// <summary>
-/// __NAME__ part seeder.
+/// Seeder for __NAME__ part.
 /// Tag: <c>seed.it.vedph.__PRJ__.__NAME__</c>.
 /// </summary>
 /// <seealso cref="Cadmus.Seed.PartSeederBase" />
@@ -303,6 +303,10 @@ public sealed class __NAME__PartSeeder : PartSeederBase,
         }
 
         __NAME__Part part = new __NAME__Part();
+        // or with Bogus:
+        // __NAME__Part part = new Faker<__NAME__Part>()
+        //    .RuleFor(p => p.X, f => TODO)
+        //    .Generate();
         SetPartMetadata(part, roleId, item);
 
         // TODO: add seed code here...
