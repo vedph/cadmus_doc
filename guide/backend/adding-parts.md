@@ -586,6 +586,7 @@ public sealed class __NAME__PartTest
     //     Assert.Equal("some-tag", pin.Value);
     //     // another way:
     //     pin = pins.Find(p => p.Name == "id" && p.Value == "steph");
+    //     Assert.NotNull(pin);
     //     TestHelper.AssertPinIds(part, pin);
     // }
 }
