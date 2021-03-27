@@ -13,7 +13,7 @@ The reference project for Cadmus API is [Cadmus API](https://github.com/vedph/ca
 
 ## Creating the Project
 
-1. create a new ASP.NET Core 5.0 web API project (no authentication).
+1. create a new ASP.NET Core 5.0 web API project (no authentication) named `Cadmus<PRJ>Api`.
 
 ![creating API project](./img/b01_create-project.png)
 
@@ -613,7 +613,7 @@ Inside the `messages` folder you can customize the message templates as you pref
 
 ## Docker
 
-1. add a `Dockerfile` to build the Docker image (replace `__PRJ__` with your project's name):
+1. in the project's root (where the `.sln` file is located), add a `Dockerfile` to build the Docker image (replace `__PRJ__` with your project's name):
 
 ```yml
 # Stage 1: base
@@ -623,9 +623,7 @@ EXPOSE 80
 EXPOSE 443
 
 # Stage 2: build
-# TEMPFIX
-# FROM mcr.microsoft.com/dotnet/sdk:5.0-buster-slim AS build
-FROM mcr.microsoft.com/dotnet/sdk:5.0.102-ca-patch-buster-slim AS build
+FROM mcr.microsoft.com/dotnet/sdk:5.0-buster-slim AS build
 WORKDIR /src
 COPY ["Cadmus__PRJ__Api/Cadmus__PRJ__Api.csproj", "Cadmus__PRJ__Api/"]
 # copy local packages to avoid using a NuGet custom feed, then restore
