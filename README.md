@@ -87,8 +87,8 @@ Core data and business layers.
   - [core config](./core/core.config.md)
   - [dynamic lookup](./core/dynamic-lookup.md)
 - [backend packages](./core/packages.md)
-- [adding parts](./guide/adding-parts.md)
-- [adding fragments](./guide/adding-fragments.md)
+- [adding parts](./guide/backend/adding-parts.md)
+- [adding fragments](./guide/backend/adding-fragments.md)
 - [profiles](./core/profiles.md)
 - [seeding](./core/seeding.md)
 
@@ -109,8 +109,8 @@ Web frontend.
 - [editor components](./web/editor-components.md): editor components.
 - [edit state](./web/edit-state.md): app's local edit state.
 - [roles](./web/roles.md): user roles for authorizing operations.
-- [adding parts](./web/adding-parts.md): how to add new parts.
-- [adding fragments](./web/adding-fragments.md): how to add new fragments.
+- [adding parts](./guide/frontend/adding-parts.md): how to add new parts.
+- [adding fragments](./guide/frontend/adding-fragments.md): how to add new fragments.
 - [demo presets](./web/demo-presets.md): preset JSON samples for editors demo pages.
 - [help home](./web/help/index.md)
 
