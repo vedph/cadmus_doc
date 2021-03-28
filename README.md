@@ -57,6 +57,10 @@ Projects using Cadmus:
   - [parts](https://github.com/vedph/cadmus_pura)
   - [API](https://github.com/vedph/cadmus_pura_api)
   - [app](https://github.com/vedph/cadmus_pura_app)
+- Cadmus Inquisition Graffiti
+  - [parts](https://github.com/vedph/cadmus_ingra)
+  - [API](https://github.com/vedph/cadmus_ingra_api)
+  - [app](https://github.com/vedph/cadmus_ingra_app)
 
 ## Stack
 
