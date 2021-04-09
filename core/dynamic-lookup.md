@@ -4,6 +4,7 @@
   - [Concept and Issues](#concept-and-issues)
   - [Data Pins at Rescue](#data-pins-at-rescue)
   - [Implementation Details](#implementation-details)
+    - [Developer's Hints](#developers-hints)
 
 Dynamic lookup refers to a feature of the system providing lookup data sets dynamically built from searching the underlying index. This feature stands side to side to the static lookup data sets provided by thesauri.
 
@@ -88,3 +89,47 @@ In the case of our sample, we would have a person ID lookup definition (with an 
 The cited persons part would simply import this definition by its ID (`person-id`), and use the parameters in that definition to lookup person IDs using the index service.
 
 The index lookup definitions set is implemented as a dictionary of `IndexLookupDefinition`'s (`IndexLookupDefinitions`), provided in the main application's module as an injectable resource.
+
+### Developer's Hints
+
+To implement a lookup in your frontend, in your app's `index-lookup-definitions.ts` add all the lookup definitions you want to use. For instance, in this code we setup a single lookup named `prison` corresponding to the part's type ID `it.vedph.ingra.prison-info` and to the pin's name `id` (the part's role ID is not specified as it's null). Here, `typeId` refers to the part where the ID to be looked up is stored, and `name` is its corresponding data pin's name. These constants are defined in the backend part model, and consequently in its frontend counterpart.
+
+```ts
+import { IndexLookupDefinitions } from '@myrmidon/cadmus-core';
+
+export const INDEX_LOOKUP_DEFINITIONS : IndexLookupDefinitions = {
+  prison: {
+    typeId: 'it.vedph.ingra.prison-info',
+    name: 'id'
+  }
+}
+```
+
+Once this definition is in place, it can be injected where needed by adding this among the consumer class constructor's arguments:
+
+```ts
+@Inject('indexLookupDefinitions')
+private _lookupDefs: IndexLookupDefinitions
+```
+
+Having these definitions injected allows the consumer class to retrieve all the parameters needed to search data pins from a simple lookup key. For instance, in this sample we just need to specify `prison` to get the part type's ID and data pin's name from the lookup definitions.
+
+Once you have these parameters, use them to build a query and pass it to `ItemService.searchPins` to search for the first N data pins matching:
+
+- the specified part's type ID.
+- the optionally specified part's role ID.
+- the specified data pin's name.
+- the data pin's value starting with the input filter.
+
+This way, if a user types `pa` in a lookup control, and there is a data pin for that part type and pin name whose value starts with `pa` (like `Palermo`), it will be included in the results (up to a specified limit). The user will thus see a list of values starting with `pa`, and eventually pick the desired one from it.
+
+For an implementation of this lookup mechanism in the frontend you can see the `LookupPinComponent`, having these input properties:
+
+- `lookupKey`: the lookup key to be used for this component (in our sample, `prison`, as defined in `indexLookupDefinitions`).
+- `initialName`: the lookup value initially set when the component loads. This usually corresponds to the current value got from the database for a part being edited.
+- `label`: a label to display in the lookup component.
+- `limit`: the maximum number of data pins to retrieve for a lookup.
+
+This lookup component emits an `entryChange` event whenever a lookup entry is picked, whose argument is a `DataPinInfo` object.
+
+As the backend just leverages the existing search infrastructure, and data pins get updated whenever a part is saved, there is no action to be taken in the backend for this to work.
