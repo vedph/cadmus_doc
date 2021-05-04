@@ -456,7 +456,7 @@ services:
       # https://docs.microsoft.com/en-us/aspnet/core/security/docker-compose-https?view=aspnetcore-5.0
       - ASPNETCORE_URLS=https://+:443;http://+:80
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/Infrastructure/Certificate/certificate.pfx
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=Itinera
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=<CERTPASS>
       - CONNECTIONSTRINGS__DEFAULT=mongodb://cadmus-mongo:27017/{0}
       - CONNECTIONSTRINGS__INDEX=Server=cadmus-mysql;port=3306;Database={0};Uid=root;Pwd=mysql
       - SEED__ITEMCOUNT=1
@@ -491,7 +491,7 @@ services:
     environment:
       - ASPNETCORE_URLS=https://+:443;http://+:80
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/Infrastructure/Certificate/certificate.pfx
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=Itinera
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=<CERTPASS>
       - CONNECTIONSTRINGS__DEFAULT=mongodb://cadmus-mongo:27017/{0}
       - CONNECTIONSTRINGS__BIBLIO=Server=cadmus-mysql;port=3306;Database={0};Uid=root;Pwd=mysql
       - SEED__BIBLIODELAY=50
