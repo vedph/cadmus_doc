@@ -81,7 +81,7 @@ These layers are distributed across 3 projects: core (2-3), api (4), web (`cadmu
 Core data and business layers.
 
 - [core](./core/core.md)
-  - [core layers](./core/core.layers)
+  - [core layers](./core/core.layers.md)
   - [layer reconciliation](./core/layer-reconciliation.md)
   - [core storage](./core/core.storage.md)
   - [core config](./core/core.config.md)
