@@ -159,9 +159,15 @@ Data history instead never gets pruned, as it's part of the data themselves and 
 
 ## CORS
 
-Cadmus API implement [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) for cross-origin access. If required, you can configure the allowed origins for CORS under the `AllowedOrigins` section of the API settings.
+Cadmus API implement [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) for cross-origin access. You can configure the allowed origins for CORS under the `AllowedOrigins` section of the API settings.
 
-Anyway, this is usually not required unless you are planning to let 3rd parties access the Cadmus API directly, bypassing the Cadmus app. Otherwise, the Cadmus app being in the same origin of its API, CORS is not a requirement for it.
+Usually, all what you have to do is set the `ALLOWEDORIGINS__0` environment variable to the URL of your web app. Allowed origins is an array, so that the `_0` suffix just means that you are setting the first item in it. The order in the array does not matter.
+
+As for API access, the web frontend essentially requires two changes (see the [sample](./hosting-sample.md#docker_compose_script)):
+
+1. compile a production version of the web app and then change the `env.js` constants, so that the API URL points to the location you are using for the backend. The default location is `localhost`, which is meaningful only when launching Cadmus locally on your own machine. Usually I create a production image with just this change, which does not require recompiling the web app (you just edit `env.js` found in the compiled files); conventionally, its tag is equal to the non-production app, with a `-prod` suffix.
+
+2. add to the CORS allowed origins the URL of your web app.
 
 ## Messaging
 
