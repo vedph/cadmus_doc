@@ -272,6 +272,13 @@ Of course, first you need a certificate. Get it from somewhere, and prepare it i
 openssl pkcs12 -export -out certificate.pfx -inkey <NAME>.key -in <NAME>.cer
 ```
 
+Here your mileage may vary according to the format you get for the certificate. See the [openssl manual](https://www.openssl.org/docs/manmaster/man1/) for more, e.g. to convert PEM into CRT and KEY:
+
+```bash
+openssl x509 -outform der -in fullchain.pem -out docker_it.crt
+openssl rsa -outform der -in privkey.pem -out docker_it.key
+```
+
 Then place the 3 files under some folder in your host, e.g.:
 
 - my CER and KEY files are under `opt/cadmus/cert`.
