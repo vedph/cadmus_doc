@@ -28,9 +28,9 @@
 
 ```json
 {
-  "build-core": "ng build @myrmidon/cadmus-tgr-core --prod && ng build @myrmidon/cadmus-tgr-ui --prod",
-  "build-gr": "ng build @myrmidon/cadmus-tgr-part-gr-ui --prod && ng build @myrmidon/cadmus-tgr-part-gr-pg --prod",
-  "build-ms": "ng build @myrmidon/cadmus-tgr-part-ms-ui --prod && ng build @myrmidon/cadmus-tgr-part-ms-pg --prod",
+  "build-core": "ng build @myrmidon/cadmus-tgr-core --configuration production && ng build @myrmidon/cadmus-tgr-ui --configuration production",
+  "build-gr": "ng build @myrmidon/cadmus-tgr-part-gr-ui --configuration production && ng build @myrmidon/cadmus-tgr-part-gr-pg --configuration production",
+  "build-ms": "ng build @myrmidon/cadmus-tgr-part-ms-ui --configuration production && ng build @myrmidon/cadmus-tgr-part-ms-pg --configuration production",
   "build-all": "npm run-script build-core && npm run-script build-gr && npm run-script build-ms"
 }
 ```
@@ -41,10 +41,10 @@ When we generate the library (`ng generate library`), Angular CLI adds library p
 
 Once you publish the library to the actual npm repository and want to start using that version, you won't have to change any imports in the source of the application: just remove that `paths` entry.
 
-To make the library available on npm, create a production build (`ng build <LIB> --prod`), and run `npm publish` from the project’s `dist` directory:
+To make the library available on npm, create a production build (`ng build <LIB> --configuration production`), and run `npm publish` from the project’s `dist` directory:
 
 ```ps1
-ng build mylib --prod
+ng build mylib --configuration production
 cd dist/mylib
 npm publish
 ```
@@ -80,7 +80,7 @@ and then just add `RouterModuleForChild` to your library module `imports`.
 }
 ```
 
-Before consuming the library, you must always build it: `ng build LIBNAME --prod` (mind the `--prod` flag! This allows the library to be consumed by both non-Ivy and Ivy clients).
+Before consuming the library, you must always build it: `ng build LIBNAME --configuration production`.
 
 You can then import it in the host app as any other library, like `import { MyDemoLibModule } from '@myrmidon/my-lib';`.
 
@@ -223,7 +223,7 @@ Also, the `vendorSourceMap` option suggested in the above link no more belongs t
 /* @import "assets/icons/material-icons.css"; */
 ```
 
-10. ensure you have the required icons and images in `assets` (see `cadmus-shell/assets`): usually they are `logo-white-40.png` for the top bar logo (you can use your own), and a banner for the homepage.
+10. ensure you have the required icons and images in `assets` (see `cadmus-shell/assets`): usually they are `logo-white-40.png` for the top bar logo (you can use your own), and a couple of banner images for the homepage.
 
 ### Cadmus Infrastructure
 
@@ -781,20 +781,7 @@ Copy the `home` component from `cadmus-shell` and eventually customize it. The t
 
 ```css
 #banner {
-  height: 258px;
-  background-image: url("/assets/img/banner.png");
-  background-size: cover;
   margin-bottom: 16px;
-}
-#banner h1 {
-  position: relative;
-  padding-top: 60px;
-  width: auto;
-  text-align: center;
-  font-size: 100px;
-  font-weight: normal;
-  letter-spacing: -5px;
-  color: #ac7666;
 }
 article {
   column-width: 600px;
@@ -804,7 +791,13 @@ article {
 ```html
 <div style="margin: 0 16px">
   <div id="banner">
-    <h1>TODO: Project title</h1>
+    <img
+      srcset="
+        ./assets/img/banner-1024.jpg 1024w,
+        ./assets/img/banner-512.jpg   512w
+      "
+      sizes="(max-width: 600px) 512px, 1024px"
+    />
   </div>
   <article>
     <h2>Welcome</h2>
