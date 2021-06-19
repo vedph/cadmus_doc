@@ -56,6 +56,9 @@ Add these settings to `appsettings.json` (replace `__PRJ__` with your project's 
     "Auth": "cadmus-__PRJ__-auth",
     "Data": "cadmus-__PRJ__"
   },
+  "Server": {
+    "UseHSTS": false
+  },
   "Serilog": {
     "ConnectionString": "mongodb://localhost:27017/{0}-log",
     "MaxMbSize": 10,
@@ -96,39 +99,6 @@ Add these settings to `appsettings.json` (replace `__PRJ__` with your project's 
       ],
       "FirstName": "Daniele",
       "LastName": "Fusi"
-    },
-    {
-      "UserName": "editor",
-      "Password": "P4ss-W0rd!",
-      "Email": "editor@cadmus.com",
-      "Roles": [
-        "editor",
-        "operator",
-        "visitor"
-      ],
-      "FirstName": "Mario",
-      "LastName": "Rossi"
-    },
-    {
-      "UserName": "operator",
-      "Password": "P4ss-W0rd!",
-      "Email": "operator@cadmus.com",
-      "Roles": [
-        "operator",
-        "visitor"
-      ],
-      "FirstName": "Anna",
-      "LastName": "Verdi"
-    },
-    {
-      "UserName": "visitor",
-      "Password": "P4ss-W0rd!",
-      "Email": "visitor@cadmus.com",
-      "Roles": [
-        "visitor"
-      ],
-      "FirstName": "Visitor",
-      "LastName": "Fake"
     }
   ],
   "Messaging": {
@@ -429,7 +399,7 @@ namespace Cadmus__PRJ__Api
 #endif
         }
 
-        private void ConfigureSwaggerServices(IServiceCollection services)
+        private static void ConfigureSwaggerServices(IServiceCollection services)
         {
             services.AddSwaggerGen(c =>
             {
@@ -574,6 +544,16 @@ namespace Cadmus__PRJ__Api
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                // https://docs.microsoft.com/en-us/aspnet/core/security/enforcing-ssl?view=aspnetcore-5.0&tabs=visual-studio
+                app.UseExceptionHandler("/Error");
+                if (Configuration.GetValue<bool>("Server:UseHSTS"))
+                {
+                    Console.WriteLine("Using HSTS");
+                    app.UseHsts();
+                }
+            }
 
             app.UseHttpsRedirection();
             app.UseRouting();
@@ -591,7 +571,10 @@ namespace Cadmus__PRJ__Api
             app.UseSwagger();
             app.UseSwaggerUI(options =>
             {
-                options.SwaggerEndpoint("/swagger/v1/swagger.json", "V1 Docs");
+                //options.SwaggerEndpoint("/swagger/v1/swagger.json", "V1 Docs");
+                string url = Configuration.GetValue<string>("Swagger:Endpoint");
+                if (string.IsNullOrEmpty(url)) url = "v1/swagger.json";
+                options.SwaggerEndpoint(url, "V1 Docs");
             });
         }
     }
@@ -617,13 +600,13 @@ Inside the `messages` folder you can customize the message templates as you pref
 
 ```yml
 # Stage 1: base
-FROM mcr.microsoft.com/dotnet/aspnet:5.0-buster-slim AS base
+FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
 # Stage 2: build
-FROM mcr.microsoft.com/dotnet/sdk:5.0-buster-slim AS build
+FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
 COPY ["Cadmus__PRJ__Api/Cadmus__PRJ__Api.csproj", "Cadmus__PRJ__Api/"]
 # copy local packages to avoid using a NuGet custom feed, then restore
@@ -770,6 +753,4 @@ Quick Docker image build:
 (replace with the current version).
 
 This is a Cadmus API layer customized for the PRJ project. Most of its code is derived from shared Cadmus libraries. See the [documentation](https://github.com/vedph/cadmus_doc/blob/master/guide/api.md) for more.
-
-Note: as per current [NuGet issues](https://github.com/NuGet/Home/issues/10491), I temporarily changed the Docker image from `mcr.microsoft.com/dotnet/sdk:5.0-buster-slim AS build` to `mcr.microsoft.com/dotnet/sdk:5.0.102-ca-patch-buster-slim AS build`. I will revert as soon as the MS issue is resolved (see [status](https://status.nuget.org/)).
 ```
