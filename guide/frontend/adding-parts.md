@@ -109,9 +109,9 @@ Every module imported in the "ui" library should be listed here among the peer d
 
 ## Adding PG Library
 
-Before proceeding, you might want to ensure that you have built the corresponding UI libraries, so that it's available for import in your development environment, e.g. `ng build @myrmidon/cadmus-<PRJ>-part-ui --prod`.
+Before proceeding, you might want to ensure that you have built the corresponding UI libraries, so that it's available for import in your development environment, e.g. `ng build @myrmidon/cadmus-<PRJ>-part-ui --configuration=production`.
 
-1. in your web app, add a **new Angular library** for the editor features ("pages") elements: `ng generate library @myrmidon/cadmus-<PRJ>-part-pg` (with the same naming scheme as above). This is the "pg" library. In this library, every page wraps the dumb UI component into a component which has a corresponding Akita's state, and gets its data pushed via observables. Also, each page has a route to itself. The app module routes will just include a new route entry, representing the base route for all the routes defined for the new library module: customize it as required.
+1. in your web app, add a **new Angular library** for the editor features ("pages") elements: `ng generate library @myrmidon/cadmus-<PRJ>-part-pg --prefix cadmus-<PRJ>` (with the same naming scheme as above). This is the "pg" library. In this library, every page wraps the dumb UI component into a component which has a corresponding Akita's state, and gets its data pushed via observables. Also, each page has a route to itself. The app module routes will just include a new route entry, representing the base route for all the routes defined for the new library module: customize it as required.
 
 2. remove the sample service and component files created by Angular in your new library.
 
@@ -121,7 +121,7 @@ Before proceeding, you might want to ensure that you have built the correspondin
 {
   "name": "@myrmidon/cadmus-itinera-part-lt-pg",
   "version": "0.0.1",
-  "description": "Cadmus - PURA parts UI components.",
+  "description": "Cadmus - PURA parts UI component wrappers.",
   "keywords": [
     "Cadmus"
   ],
@@ -355,7 +355,7 @@ import { ThesaurusEntry, deepCopy } from "@myrmidon/cadmus-core";
 import { __PARTNAME__Part, __PARTNAME___PART_TYPEID } from "../YOURPARTFILE";
 
 /**
- * __PARTNAME__ editor component.
+ * __PARTNAME__ part editor component.
  * Thesauri: TODO thesauri names and optionality
  */
 @Component({
@@ -369,7 +369,7 @@ export class __PARTNAME__PartComponent
   // TODO form controls (form: FormGroup is inherited)
 
   // TODO thesauri entries, e.g.:
-  // public tagEntries: ThesaurusEntry[];
+  // public tagEntries: ThesaurusEntry[] | undefined;
 
   constructor(authService: AuthService, formBuilder: FormBuilder) {
     super(authService);
@@ -400,7 +400,7 @@ export class __PARTNAME__PartComponent
     // if (this.thesauri && this.thesauri[key]) {
     // this.tagEntries = this.thesauri[key].entries;
     // } else {
-    //   this.tagEntries = null;
+    //   this.tagEntries = undefined;
     // }
     // if not using any thesauri, just remove this function
   }
