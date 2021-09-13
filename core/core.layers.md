@@ -1,7 +1,7 @@
 # Cadmus Core - Layers
 
 - [Cadmus Core - Layers](#cadmus-core---layers)
-    - [Layer Parts](#layer-parts)
+  - [Layer Parts](#layer-parts)
     - [Part Fragments](#part-fragments)
 
 See also [layers reconciliation](layer-reconciliation.md).
@@ -127,7 +127,7 @@ Patches get applied in a generalized way, whatever the type of the fragment invo
 
 To this end, the `AnonLayerPart` artifact is used to represent a layer part with any type of fragments. This allows deserializing any layer part model into it, dropping all the fragments data except their location. It is then possible to compare the fragments locations with the editing operations locations. When applying patches, i.e. deleting or moving fragments, the locations are used to find them, and then the backend directly patches its JSON-serialized representation.
 
-### Layer Parts
+## Layer Parts
 
 A part can represent any type of data. In the case of text, usually there is a base text, and any number of metatextual structures attached to it.
 

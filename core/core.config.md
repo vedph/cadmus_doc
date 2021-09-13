@@ -102,10 +102,10 @@ Each part has its own definition (`PartDefinition`), which includes a set of met
 
 The **part definition** includes:
 
-- part *type ID* and (optional) *role ID*;
-- a human readable *name* and *description*;
-- a flag specifying whether the part is *required*;
-- further presentational aspects: a *color key*, a *group key*, a *sort key*, and an *editor key*. These are used to present parts with different colors, group them, and sort them in a UI.
+- part _type ID_ and (optional) _role ID_;
+- a human readable _name_ and _description_;
+- a flag specifying whether the part is _required_;
+- further presentational aspects: a _color key_, a _group key_, a _sort key_, and an _editor key_. These are used to present parts with different colors, group them, and sort them in a UI.
 
 ## Flag Definitions
 
@@ -149,7 +149,7 @@ This mapping can be provided from statically linking the desired parts/fragments
 
 ### Note on Part Instantiation
 
-In this discussion, for brevity I use the term *type ID* for the value of the attribute (in C#) decorating the corresponding part or fragment class, and the term *class type* for the C# class types.
+In this discussion, for brevity I use the term _type ID_ for the value of the attribute (in C#) decorating the corresponding part or fragment class, and the term _class type_ for the C# class types.
 
 The type ID is provided by the `TagAttribute` attribute.
 

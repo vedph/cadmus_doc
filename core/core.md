@@ -171,7 +171,7 @@ All the **IDs** for these blocks are client-side generated GUIDs, modeled as str
 
 #### A.3.1. Items
 
-The item is what roughly corresponds to a *record* in the Cadmus database: for instance, in a collection of inscriptions it would be a single inscription; in a collection of archeological artifacts, it would be a single artifact; in a literary text document, it would be a semantically defined division in it (e.g. a poem or a paragraph); etc.
+The item is what roughly corresponds to a _record_ in the Cadmus database: for instance, in a collection of inscriptions it would be a single inscription; in a collection of archeological artifacts, it would be a single artifact; in a literary text document, it would be a semantically defined division in it (e.g. a poem or a paragraph); etc.
 
 All the items have a single data model. This model is represented by the `IItem` interface. Each item has:
 
@@ -179,7 +179,7 @@ All the items have a single data model. This model is represented by the `IItem`
 - a set of essential **metadata** (like title or last modified time);
 - a collection of **parts**, each representing a specialized piece of data, with its own model.
 
-Notice that, the item essentially being a data-transfer object, this does not necessarily reflect the underlying storage. In fact, *parts are stored independently of items*. Yet, at a higher level of abstraction items "contain" parts. According to the API, an `IItem` can have its parts collection filled, or just leave it empty; in both cases, this does not necessarily means that in the database the items has or has not parts; it only represents the subset of data requested by a specific API.
+Notice that, the item essentially being a data-transfer object, this does not necessarily reflect the underlying storage. In fact, _parts are stored independently of items_. Yet, at a higher level of abstraction items "contain" parts. According to the API, an `IItem` can have its parts collection filled, or just leave it empty; in both cases, this does not necessarily means that in the database the items has or has not parts; it only represents the subset of data requested by a specific API.
 
 Among its metadata, an item also has a **sort key**, i.e. a string representing its position in a lexicographic order. This order is the default order used when retrieving items for presentation purposes, e.g. when getting a virtual page of items. As such, the sort key is algorithmically defined by an object implementing the `IItemSortKeyBuilder` interface.
 
@@ -187,22 +187,22 @@ Finally, an item can also have a set of 32 **flags**, whose meaning is arbitrari
 
 #### A.3.2. Parts
 
-The concept of part derives from the fact that *most items share a common subset of data models*. For instance, think of a structured datation, with different levels of granularity, from day, month, and year up to centuries, and different levels of uncertainty, from a point to an interval in time (*terminus ante*, *terminus post*, between two dates, etc.). The model of a similar piece of information would be needed to be fully repeated in each item requiring to be dated, whatever its nature. Also, whenever we want to add the date to an item, we would have to change its model.
+The concept of part derives from the fact that _most items share a common subset of data models_. For instance, think of a structured datation, with different levels of granularity, from day, month, and year up to centuries, and different levels of uncertainty, from a point to an interval in time (_terminus ante_, _terminus post_, between two dates, etc.). The model of a similar piece of information would be needed to be fully repeated in each item requiring to be dated, whatever its nature. Also, whenever we want to add the date to an item, we would have to change its model.
 
-Rather, *the items model is composed by its parts*. Items contain a collection of such parts, each representing a specialized data model. This makes the abstract data model of each item totally dynamic, as far as it depends on the parts it contains.
+Rather, _the items model is composed by its parts_. Items contain a collection of such parts, each representing a specialized data model. This makes the abstract data model of each item totally dynamic, as far as it depends on the parts it contains.
 
-You can think of an item as a black *box*, which can contain whatever *object* you toss into it. These objects are the parts.
+You can think of an item as a black _box_, which can contain whatever _object_ you toss into it. These objects are the parts.
 
 This makes it possible not only to reuse data models in the context of a composable record, but also to reuse editing user interfaces in the context of a composable frontend.
 
-A part can represent *any* type of data. If we refer to text, a part can either be *textual* (=a text), *meta-textual* (=a piece of data linked to a specific portion of a text), or *extra-textual* (=a piece of data which has no direct relationship with a text).
+A part can represent _any_ type of data. If we refer to text, a part can either be _textual_ (=a text), _meta-textual_ (=a piece of data linked to a specific portion of a text), or _extra-textual_ (=a piece of data which has no direct relationship with a text).
 
 A part is thus the atomic data record. Each part has its own model, plus a common shape represented by the `IPart` interface, which defines a set of metadata, like the container **item ID**, the **part type ID** (an arbitrary string which uniquely identifies its type: e.g. `date` for a datation part), and eventually its **role ID**.
 
-The role ID is used only when adding *several parts of the same type* to the same item. This happens in two cases:
+The role ID is used only when adding _several parts of the same type_ to the same item. This happens in two cases:
 
-- when we need *several parts of the same type*, because of the intrinsic nature of our data. For instance, two date parts may refer to the date of the original text and to that of its later copy. In this case, a role ID helps selecting the desired part from an item. The value of the role ID is an arbitrary string, as defined by content authors. It should be a very short identifier, usually a single word, like e.g. `copy`.
-- when we add *text layers*. A text layer (see below under `Layers`) is a collection of data fragments linked to a specific portion of a base text. As such, the text layer is a single part type; but it may contain different types of fragments. Thus, we typically have several layer parts with different roles, one for each type of fragment: e.g. an apparatus layer and a comment layer. The role ID for layer parts always starts with the reserved `fr.` (=fragment) prefix (defined in `PartBase.FR_PREFIX`), to distinguish it from other role ID types.
+- when we need _several parts of the same type_, because of the intrinsic nature of our data. For instance, two date parts may refer to the date of the original text and to that of its later copy. In this case, a role ID helps selecting the desired part from an item. The value of the role ID is an arbitrary string, as defined by content authors. It should be a very short identifier, usually a single word, like e.g. `copy`.
+- when we add _text layers_. A text layer (see below under `Layers`) is a collection of data fragments linked to a specific portion of a base text. As such, the text layer is a single part type; but it may contain different types of fragments. Thus, we typically have several layer parts with different roles, one for each type of fragment: e.g. an apparatus layer and a comment layer. The role ID for layer parts always starts with the reserved `fr.` (=fragment) prefix (defined in `PartBase.FR_PREFIX`), to distinguish it from other role ID types.
 
 The interface `IItem` is implemented by `Item`. Given that items are all created equal, as far as they share a common model, a single concrete type is enough to represent any item.
 
@@ -220,7 +220,7 @@ The summary information for items and parts used when browsing them is represent
 
 As this is a general-purpose UI, items are just listed in a flat table, with various filtering options. Yet, it may be the case that some databases require a more specialized items browsing experience.
 
-For instance, consider a database representing a **documental archive**. Such archives are typically structured around a central *hierarchy*, which holds all the data in its different locations. This hierarchy can be more or less granular, thus counting a different numbers of levels.
+For instance, consider a database representing a **documental archive**. Such archives are typically structured around a central _hierarchy_, which holds all the data in its different locations. This hierarchy can be more or less granular, thus counting a different numbers of levels.
 
 In its maximum extent, this hierarchy would include all these standardized levels (in parentheses I add an arbitrary abbreviation used for each of these levels):
 
@@ -243,7 +243,7 @@ In the real world, each archive just contains some of these levels, according to
 
 Yet, not only the extent of this configuration is highly variable across software; it may also happen that the same archive has more than a single hierarchy. For instance, this happens when an archivist has provided one or more historical hierarchies, or any other grouping and sorting criteria, side to side with a purely descriptive hierarchy.
 
-In this context, Cadmus is typically used as a transport data store to collect archives imported from a number of different sources, each with its own peculiarities and media, from paper to legacy databases. Thus, it adopts a very open modeling, where there is no single, data-bearing hierarchy; starting from the hierarchy chosen as the import source (often, a presentational hierarchy), *each node of its tree becomes an item*. Each semantically specialized datum inside that node becomes a *part*. Finally, the hierarchy itself is represented by a *hierarchy part*, which simply connects a parent item with a set of children items. When more than a single hierarchy is present, this just means that we will have more than a single hierarchy part for each item (with different roles).
+In this context, Cadmus is typically used as a transport data store to collect archives imported from a number of different sources, each with its own peculiarities and media, from paper to legacy databases. Thus, it adopts a very open modeling, where there is no single, data-bearing hierarchy; starting from the hierarchy chosen as the import source (often, a presentational hierarchy), _each node of its tree becomes an item_. Each semantically specialized datum inside that node becomes a _part_. Finally, the hierarchy itself is represented by a _hierarchy part_, which simply connects a parent item with a set of children items. When more than a single hierarchy is present, this just means that we will have more than a single hierarchy part for each item (with different roles).
 
 This implies that the hierarchies which traditionally bear data are dissected into a "flat" set of items and parts. We can just browse the list of items, but it would not be very user-friendly, as archives are often modeled and always presented as hierarchical structures. So, this is a case where an additional, specialized items browser is required; we would like to browse items in a tree-shaped view, where each node can be expanded or collapsed at will, and then view or edit each item by clicking it.
 
@@ -259,7 +259,7 @@ Thus, where items, parts and the like are all handled via a repository abstracti
 
 Currently, the only database technology used for data storage is MongoDB, so that there is a MongoDB hierarchy-based items browser.
 
-Despite this specialization, *all the item browsers implement the same interface* (`IItemBrowser`). This exposes a single `BrowseAsync` method, which gets the database name, the paging options (page number and size), and any number of additional filters. These are a generic dictionary with name/value pairs, as each browser will require its own filtering criteria.
+Despite this specialization, _all the item browsers implement the same interface_ (`IItemBrowser`). This exposes a single `BrowseAsync` method, which gets the database name, the paging options (page number and size), and any number of additional filters. These are a generic dictionary with name/value pairs, as each browser will require its own filtering criteria.
 
 For instance, the MongoDB-based hierarchical items browsers requires two filtering parameters: the hierarchy tag (used to select a hierarchy), and the parent item ID. This is because the browser is designed to retrieve a page of sibling items which all depend from the same parent item. Users will walk the hierarchy tree by expanding one node after the other; and whenever a node is expanded, the items browser will be invoked to retrieve a page of children nodes for it. The same will happen when paging through sibling nodes, too.
 
