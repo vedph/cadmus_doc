@@ -61,6 +61,10 @@ Projects using Cadmus:
   - [parts](https://github.com/vedph/cadmus_ingra)
   - [API](https://github.com/vedph/cadmus_ingra_api)
   - [app](https://github.com/vedph/cadmus_ingra_app)
+- Cadmus Re.Novella
+  - [parts](https://github.com/vedph/cadmus-renovella)
+  - [API](https://github.com/vedph/cadmus-renovella-api)
+  - [app](https://github.com/vedph/cadmus-renovella-app)
 
 ## Stack
 
@@ -71,8 +75,8 @@ Cadmus essentially includes this stack of layers:
 1. *database*: MongoDB for data, MySql for index.
 2. *data layer*: storage repositories and their types.
 3. *business layer*: core models and logic.
-4. *web API layer*: REST API. A future GraphQL API is planned.
-5. *web frontend*: Angular 10+ web application.
+4. *web API layer*: REST API.
+5. *web frontend*: Angular 12+ web application.
 
 These layers are distributed across 3 projects: core (2-3), api (4), web (`cadmus-shell`, which superseded the legacy `cadmus-web`) (5).
 
@@ -86,6 +90,7 @@ Core data and business layers.
   - [core storage](./core/core.storage.md)
   - [core config](./core/core.config.md)
   - [dynamic lookup](./core/dynamic-lookup.md)
+  - [graph](./core/core.graph.md)
 - [backend packages](./core/packages.md)
 - [adding parts](./guide/backend/adding-parts.md)
 - [adding fragments](./guide/backend/adding-fragments.md)
