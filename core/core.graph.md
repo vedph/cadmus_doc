@@ -54,7 +54,25 @@ This not only provides a graph ready to be exported for the semantic web; but it
 
 We can then get the best from both worlds: composable, open, and dynamically defined data models with all the details we desire, yet fully independent and self-contained, thus maximizing their reuse; on the other side, a full-fledged RDF graph which can be edited to express any sort of complex relationships and classifications for the entities coming from these data, or from external resources. This provides new grounds for deeper integrations across several projects, well beyond Cadmus boundaries.
 
-As Cadmus is a general, open-model solution, this subsystem too must adopt the same level of generalization and openness. In fact, it all starts from data pins, and the graph itself is stored in the same database where pins are stored to allow for real-time search in the editor.
+The picture below shows the integration of the graph into the Cadmus system:
+
+![the semantic subsystem](img/graph10.png)
+
+At the hearth of data we have the dynamic, composable models represented by _items_. Items are empty boxes, all created equal, with a predefined set of metadata (the "labels" attached to the boxes).
+
+Each item contains any number of any data objects (_parts_). Every part has its own model, and a corresponding editor in the UI, so that the editor, just like its data, is built from composition. Thus, the model of the item results from the sum of the models it contains; and part types are unlimited, so expanding the model is as easy as tossing new objects in a box; i.e. adding new parts to an item.
+
+Every part is a self-contained, semantically coherent model, including all the data a scholar wants to handle as a logical unit when creating content. Thus, often several projects share parts, as they are reusable pieces of data and UI.
+
+Users edit data via a friendly, composable UI; their experience can be as easy as filling a web form. Yet, data are created in a highly structured context, with a strong model and real-time validation.
+
+Once data are stored in this form, a number of exporters can transform them into even more traditional outputs, like e.g. TEI XML, HTML, PDF, RDBMS, etc. So, in a sense users can create a full-fledged and highly complex TEI document, with advanced features like critical apparatus and standoff notation, without even knowing XML. In a sense, a similar capability is provided by the semantic subsystem: users can build entire RDF-based graphs without even knowing about semantic web.
+
+Each part being an independent, opaque model, it is the only software component having the competence of its internal structure. Among other consequences, this means that to allow real-time search in the editor each part must index itself. This happens via offshots known as _data pins_.
+
+When requested, a part provides any number of these pins, which are just name=value pairs, representing whatever piece of information considered useful for indexing purposes. These are the small orange circles connected to parts in the above picture.
+
+As Cadmus is a general, open-model solution, this subsystem too must adopt the same level of generalization and openness. In fact, it all starts right from these data pins, and the graph itself is stored in the same database where pins are stored to allow for real-time search in the editor.
 
 ## Data Pins
 
