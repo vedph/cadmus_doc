@@ -33,6 +33,7 @@
   - [Update Procedure](#update-procedure)
     - [Deleted Item/Part](#deleted-itempart)
   - [User Experience](#user-experience)
+  - [Data Setup](#data-setup)
 
 The graph is a semantic-web oriented subsystem of Cadmus, planned since its inception and essentially based on part's data pins.
 
@@ -967,3 +968,26 @@ To this end, the graph editor will provide:
     - O as a literal; it contains a textbox with a value. Next to the textbox there is a button to open a dialog with a specialized editor for that value, according to its designated literal editor, if any.
 
 I will then provide other UI for less used editing and browsing tasks, like namespaces, URIs, SIDs, properties and their restrictions. Anyway these are usually design-time resources in a project, so editing them in the UI is less relevant.
+
+## Data Setup
+
+Typically, when using the graph you should setup the index database so that it contains a number of "fixed" data in advance, like common properties, classes, prefixes, etc.
+
+In detail, this means:
+
+- in table `namespace_lookup`, all the URI prefixes used must be mapped to the full URI. This is not an operational requisite, but it's necessary to let graph consumers resolve the prefixes used.
+- in table `node`, there must be an entry for each _property_ (with tag=`property`) and _class_ (with `is_class`=true) used.
+- eventually, in table `property` you can specify further metadata for each property.
+- in table `uri_lookup`, all the node URIs must be mapped to an arbitrary numeric ID, internally used in the database.
+
+So, for instance, say you have these properties and classes:
+
+- property `a` (=`rdfs:type`)
+- property `rdfs:comment`
+- class `foaf:person`
+
+These are all nodes in the `node` table. As such, each of them will have a corresponding entry in the `uri_lookup` table, e.g.:
+
+- 1=`a`
+- 2=`rdfs:comment`
+- 3=`foaf:person`
