@@ -59,7 +59,7 @@ Please note that currently the libraries specified with a version need to stay w
 (3) finally, you will need all the libraries from the shell app workspace, which there are just imported as projects in the same workspace:
 
 ```bash
-npm i @myrmidon/cadmus-api @myrmidon/cadmus-core @myrmidon/cadmus-profile-core @myrmidon/cadmus-state @myrmidon/cadmus-ui @myrmidon/cadmus-ui-pg @myrmidon/cadmus-graph-pg @myrmidon/cadmus-graph-ui @myrmidon/cadmus-item-editor @myrmidon/ admus-item-list @myrmidon/cadmus-item-search @myrmidon/cadmus-layer-demo @myrmidon/cadmus-thesaurus-editor @myrmidon/ admus-thesaurus-list @myrmidon/cadmus-thesaurus-ui
+npm i @myrmidon/cadmus-api @myrmidon/cadmus-core @myrmidon/cadmus-profile-core @myrmidon/cadmus-state @myrmidon/cadmus-ui @myrmidon/cadmus-ui-pg @myrmidon/cadmus-graph-pg @myrmidon/cadmus-graph-ui @myrmidon/cadmus-item-editor @myrmidon/cadmus-item-list @myrmidon/cadmus-item-search @myrmidon/cadmus-layer-demo @myrmidon/cadmus-thesaurus-editor @myrmidon/cadmus-thesaurus-list @myrmidon/cadmus-thesaurus-ui
 ```
 
 (you can leave out the graph if you don't use it); and eventually the parts, like e.g.:
