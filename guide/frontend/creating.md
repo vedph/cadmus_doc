@@ -54,7 +54,7 @@ npm i @types/diff-match-patch @types/rangy
 
 Please note that currently the libraries specified with a version need to stay with that version because of issues in their latest bits.
 
-(2) typically you will also need some [bricks](https://github.com/vedph/cadmus-bricks-shell), like `@myrmidon/cadmus-refs-doc-references`, `@myrmidon/cadmus-refs-historical-date`, etc. This depends on the part editors you will use or create.
+(2) typically you will also need some [bricks](https://github.com/vedph/cadmus-bricks-shell), like `@myrmidon/cadmus-refs-doc-references`, `@myrmidon/cadmus-refs-historical-date`, `@myrmidon/cadmus-refs-external-ids`, etc. This depends on the part editors you will use or create.
 
 (3) finally, you will need all the libraries from the shell app workspace, which there are just imported as projects in the same workspace:
 
