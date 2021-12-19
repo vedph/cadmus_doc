@@ -348,9 +348,10 @@ Template:
 import { Component, OnInit } from "@angular/core";
 import { FormControl, FormBuilder, Validators } from "@angular/forms";
 
-import { ModelEditorComponentBase, DialogService } from "@myrmidon/cadmus-ui";
-import { AuthService } from "@myrmidon/cadmus-api";
-import { ThesaurusEntry, deepCopy } from "@myrmidon/cadmus-core";
+import { deepCopy } from '@myrmidon/ng-tools';
+import { AuthJwtService } from '@myrmidon/auth-jwt-login';
+import { ModelEditorComponentBase } from "@myrmidon/cadmus-ui";
+import { ThesaurusEntry } from "@myrmidon/cadmus-core";
 
 import { __PARTNAME__Part, __PARTNAME___PART_TYPEID } from "../YOURPARTFILE";
 
@@ -371,7 +372,7 @@ export class __PARTNAME__PartComponent
   // TODO thesauri entries, e.g.:
   // public tagEntries: ThesaurusEntry[] | undefined;
 
-  constructor(authService: AuthService, formBuilder: FormBuilder) {
+  constructor(authService: AuthJwtService, formBuilder: FormBuilder) {
     super(authService);
     // form
     // TODO build controls and set this.form
@@ -459,9 +460,11 @@ As this is a frequent case, here is a start template for parts consisting only i
 import { Component, OnInit } from "@angular/core";
 import { FormControl, FormBuilder, Validators } from "@angular/forms";
 
-import { ModelEditorComponentBase, DialogService } from "@myrmidon/cadmus-ui";
-import { AuthService } from "@myrmidon/cadmus-api";
-import { ThesaurusEntry, deepCopy } from "@myrmidon/cadmus-core";
+import { deepCopy } from '@myrmidon/ng-tools';
+import { DialogService } from '@myrmidon/ng-tools';
+import { AuthJwtService } from '@myrmidon/auth-jwt-login';
+import { ModelEditorComponentBase } from "@myrmidon/cadmus-ui";
+import { ThesaurusEntry } from "@myrmidon/cadmus-core";
 import {
   __MODEL__,
   __MODEL__sPart,
@@ -492,7 +495,7 @@ export class __MODEL__sPartComponent
   public entries: FormControl;
 
   constructor(
-    authService: AuthService,
+    authService: AuthJwtService,
     formBuilder: FormBuilder,
     private _dialogService: DialogService
   ) {
