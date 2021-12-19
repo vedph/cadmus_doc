@@ -785,8 +785,7 @@ import { StoreConfig, Store } from "@datorama/akita";
 
 import {
   EditPartState,
-  EditPartStoreApi,
-  editPartInitialState,
+  EditPartStoreApi
 } from "@myrmidon/cadmus-state";
 
 // TODO: add import from your UI library
@@ -798,7 +797,7 @@ export class Edit__NAME__PartStore
   extends Store<EditPartState>
   implements EditPartStoreApi {
   constructor() {
-    super(editPartInitialState);
+    super({});
   }
 
   public setDirty(value: boolean): void {
