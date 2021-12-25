@@ -47,7 +47,7 @@ Typically you will also need ngx-markdown if you have components displaying Mark
 (1) add some essential libraries:
 
 ```bash
-npm i @angular/flex-layout @auth0/angular/jwt @datorama/akita @datorama/akita-ngdevtools @myrmidon/ng-tools @myrmidon/ng-mat-tools @myrmidon/auth-jwt-login @myrmidon/auth-jwt-admin diff-match-patch gravatar moment ngx-markdown ngx-moment@5.0.0 ngx-monaco-editor@9.0.0 rangy
+npm i @angular/flex-layout @auth0/angular-jwt @datorama/akita @datorama/akita-ngdevtools @myrmidon/ng-tools @myrmidon/ng-mat-tools @myrmidon/auth-jwt-login @myrmidon/auth-jwt-admin diff-match-patch gravatar moment ngx-markdown ngx-moment@5.0.0 ngx-monaco-editor@9.0.0 rangy
 
 npm i @types/diff-match-patch @types/rangy
 ```
