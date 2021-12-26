@@ -252,7 +252,6 @@ If the seeder does not require configuration options, remove the `__NAME__PartSe
 ```cs
 using Bogus;
 using Cadmus.Core;
-using Cadmus.Parts.General;
 using Fusi.Tools.Config;
 using System;
 
@@ -353,28 +352,28 @@ public sealed class __NAME__PartSeederTest
     public void TypeHasTagAttribute()
     {
         Type t = typeof(__NAME__PartSeeder);
-        TagAttribute attr = t.GetTypeInfo().GetCustomAttribute<TagAttribute>();
+        TagAttribute? attr = t.GetTypeInfo().GetCustomAttribute<TagAttribute>();
         Assert.NotNull(attr);
-        Assert.Equal("seed.it.vedph.__PRJ__.__NAME__", attr.Tag);
+        Assert.Equal("seed.it.vedph.__PRJ__.__NAME__", attr!.Tag);
     }
 
     [Fact]
     public void Seed_Ok()
     {
-        __NAME__PartSeeder seeder = new __NAME__PartSeeder();
+        __NAME__PartSeeder seeder = new();
         seeder.SetSeedOptions(_seedOptions);
 
         IPart part = seeder.GetPart(_item, null, _factory);
 
         Assert.NotNull(part);
 
-        __NAME__Part p = part as __NAME__Part;
+        __NAME__Part? p = part as __NAME__Part;
         Assert.NotNull(p);
 
-        TestHelper.AssertPartMetadata(p);
+        TestHelper.AssertPartMetadata(p!);
 
         // TODO: assert properties like:
-        // Assert.NotEmpty(p.Works);
+        // Assert.NotEmpty(p!.Works);
     }
 }
 ```
@@ -613,7 +612,7 @@ public sealed class __NAME__PartTest
 {
     private static __NAME__Part GetPart()
     {
-        __NAME__PartSeeder seeder = new __NAME__PartSeeder();
+        __NAME__PartSeeder seeder = new();
         IItem item = new Item
         {
             FacetId = "default",
@@ -644,7 +643,7 @@ public sealed class __NAME__PartTest
 
         string json = TestHelper.SerializePart(part);
         __NAME__Part part2 =
-            TestHelper.DeserializePart<__NAME__Part>(json);
+            TestHelper.DeserializePart<__NAME__Part>(json)!;
 
         Assert.Equal(part.Id, part2.Id);
         Assert.Equal(part.TypeId, part2.TypeId);
@@ -686,15 +685,15 @@ public sealed class __NAME__PartTest
 
         Assert.Equal(5, pins.Count);
 
-        DataPin pin = pins.Find(p => p.Name == "tot-count");
+        DataPin? pin = pins.Find(p => p.Name == "tot-count");
         Assert.NotNull(pin);
-        TestHelper.AssertPinIds(part, pin);
-        Assert.Equal("3", pin.Value);
+        TestHelper.AssertPinIds(part, pin!);
+        Assert.Equal("3", pin!.Value);
 
         // TODO: assert counts and values e.g.:
         // pin = pins.Find(p => p.Name == "pos-bottom-count");
         // Assert.NotNull(pin);
-        // TestHelper.AssertPinIds(part, pin);
+        // TestHelper.AssertPinIds(part, pin!);
         // Assert.Equal("2", pin.Value);
     }
 }
