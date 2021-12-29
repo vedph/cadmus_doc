@@ -549,7 +549,7 @@ public sealed class __NAME__PartTest
         __NAME__Part part = GetPart();
 
         string json = TestHelper.SerializePart(part);
-        __NAME__Part part2 = TestHelper.DeserializePart<__NAME__Part>(json);
+        __NAME__Part part2 = TestHelper.DeserializePart<__NAME__Part>(json)!;
 
         Assert.Equal(part.Id, part2.Id);
         Assert.Equal(part.TypeId, part2.TypeId);
@@ -565,7 +565,7 @@ public sealed class __NAME__PartTest
     // [Fact]
     // public void GetDataPins_NoTag_Empty()
     // {
-    //     __NAME__Part part = GetEmptyPart();
+    //     __NAME__Part part = GetEmptyPart(null);
     //     part.Tag = null;
 
     //     Assert.Empty(part.GetDataPins());
