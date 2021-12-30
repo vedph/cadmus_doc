@@ -3,18 +3,15 @@
 - [Adding Parts](#adding-parts)
   - [Parts](#parts)
     - [Procedure](#procedure)
-    - [Part Templates](#part-templates)
-      - [Simple Part](#simple-part)
-      - [List Part](#list-part)
-    - [Part Seeder Templates](#part-seeder-templates)
-      - [Part Seeder](#part-seeder)
-      - [Part Seeder Test](#part-seeder-test)
-        - [Test Helper](#test-helper)
-    - [Test Templates](#test-templates)
-      - [Part Test - Seeder](#part-test---seeder)
-      - [List Part Test - Seeder](#list-part-test---seeder)
-      - [No Seeder Simple Part Test](#no-seeder-simple-part-test)
-      - [No Seeder List Part Test Template](#no-seeder-list-part-test-template)
+    - [Part - Single Entity](#part---single-entity)
+    - [Part - Multiple Entities](#part---multiple-entities)
+    - [Part Seeder](#part-seeder)
+    - [Part Seeder Test](#part-seeder-test)
+      - [Test Helper](#test-helper)
+    - [Part Test - Single Entity Using Seeder](#part-test---single-entity-using-seeder)
+    - [Part Test - Multiple Entities Using Seeder](#part-test---multiple-entities-using-seeder)
+    - [Part Test - Single Entity Without Seeder](#part-test---single-entity-without-seeder)
+    - [Part Test - Multiple Entities Without Seeder](#part-test---multiple-entities-without-seeder)
     - [Test Helper for Parts](#test-helper-for-parts)
   - [Layer Parts](#layer-parts)
     - [Layer Fragment Test Template](#layer-fragment-test-template)
@@ -29,9 +26,9 @@ Guidelines for **implementing a part**:
 
 - _decorate_ the class with a `TagAttribute` providing the part's type ID.
 
-- _do not add any logic_ to the part. The part is just a POCO object modeling the data it represents, and should have no logic. The only piece of logic required is the method returning the part's data pins, which is just a form of reflecting on the part's data themselves, e.g. for indexing.
+- _do not add any logic_ to the part. The part is just a POCO object modeling the data it represents, and should have no logic. The only piece of logic required is the method returning the part's data pins, which is just a form of reflecting on the part's data themselves, e.g. for indexing or semantic projection.
 
-- if creating a part representing a _base text_ for text layers, implement the `IHasText` interface by providing a `GetText()` method which, whatever the part's model, produces a single string representing its whole text. The same interface should be implemented whenever your part has some rather long piece of free, unstructured text you might want to be included in processes like full-text indexing. Also, set the role ID to `base-text` (defined in `PartBase.BASE_TEXT_ROLE_ID`).
+- if creating a part representing a _base text_ for text layers, implement the `IHasText` interface by providing a `GetText()` method which, whatever the part's model, produces a single string representing its whole text. The same interface should be implemented whenever your part has some rather long piece of free, unstructured text you might want to be included in processes like full-text indexing. Also, when the part represents the base text in a stack of textual layers, set the role ID to `base-text` (defined in `PartBase.BASE_TEXT_ROLE_ID`).
 
 - consider that the part will be subject to automatic serialization and deserialization. As the part is just a POCO object, this should not pose any issue.
 
@@ -44,9 +41,7 @@ The typical procedure when adding a new part is:
 3. create the part seeder test.
 4. create the part test (using both the part under test and its part seeder).
 
-### Part Templates
-
-#### Simple Part
+### Part - Single Entity
 
 In the following template replace `__NAME__` with your part's name, minus the `Part` suffix:
 
@@ -133,7 +128,7 @@ public sealed class __NAME__Part : PartBase
 }
 ```
 
-#### List Part
+### Part - Multiple Entities
 
 As this is a typical scenario, here is a variant for those parts which essentially just include a list of objects (of type `__ENTRY__`):
 
@@ -241,9 +236,7 @@ public sealed class __NAME__Part : PartBase
 }
 ```
 
-### Part Seeder Templates
-
-#### Part Seeder
+### Part Seeder
 
 Add a `<NAME>PartSeeder.cs` for the seeder (replace `__NAME__` with the part name, using the proper case, and adjust the namespace).
 
@@ -323,7 +316,7 @@ public sealed class __NAME__PartSeederOptions
 }
 ```
 
-#### Part Seeder Test
+### Part Seeder Test
 
 Template for a seeder:
 
@@ -378,7 +371,7 @@ public sealed class __NAME__PartSeederTest
 }
 ```
 
-##### Test Helper
+#### Test Helper
 
 This template requires some infrastructure files:
 
@@ -502,9 +495,7 @@ static internal class TestHelper
 }
 ```
 
-### Test Templates
-
-#### Part Test - Seeder
+### Part Test - Single Entity Using Seeder
 
 This template takes advantage of the part's seeder. If you are not using a seeder, refer to the [next section](#part-test-template---no-seeder).
 
@@ -595,7 +586,7 @@ public sealed class __NAME__PartTest
 }
 ```
 
-#### List Part Test - Seeder
+### Part Test - Multiple Entities Using Seeder
 
 The corresponding test for the list-only part scenario:
 
@@ -699,7 +690,7 @@ public sealed class __NAME__PartTest
 }
 ```
 
-#### No Seeder Simple Part Test
+### Part Test - Single Entity Without Seeder
 
 The part being usually a DTO object, its logic is found only in indexing. Thus, the tests must ensure that the object is serializable, and that the pins are created as expected. In the following template replace `__NAME__` with your part's name, minus the `Part` suffix.
 
@@ -768,7 +759,7 @@ public sealed class __NAME__PartTest
 }
 ```
 
-#### No Seeder List Part Test Template
+### Part Test - Multiple Entities Without Seeder
 
 The corresponding test for the list-only part scenario:
 
