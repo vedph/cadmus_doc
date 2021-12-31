@@ -510,7 +510,7 @@ public sealed class __NAME__PartTest
 {
     private static __NAME__Part GetPart()
     {
-        __NAME__PartSeeder seeder = new __NAME__PartSeeder();
+        __NAME__PartSeeder seeder = new();
         IItem item = new Item
         {
             FacetId = "default",
