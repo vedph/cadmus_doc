@@ -169,7 +169,7 @@ public sealed class __NAME__Part : PartBase
     /// to access further data.</param>
     /// <returns>The pins: <c>tot-count</c> and a collection of pins with
     /// these keys: ....</returns>
-    public override IEnumerable<DataPin> GetDataPins(IItem item)
+    public override IEnumerable<DataPin> GetDataPins(IItem item = null)
     {
         DataPinBuilder builder = new DataPinBuilder();
 
@@ -330,16 +330,12 @@ using Xunit;
 // ...
 public sealed class __NAME__PartSeederTest
 {
-    private static readonly PartSeederFactory _factory;
-    private static readonly SeedOptions _seedOptions;
-    private static readonly IItem _item;
-
-    static __NAME__PartSeederTest()
-    {
-        _factory = TestHelper.GetFactory();
-        _seedOptions = _factory.GetSeedOptions();
-        _item = _factory.GetItemSeeder().GetItem(1, "facet");
-    }
+    private static readonly PartSeederFactory _factory =
+        TestHelper.GetFactory();
+    private static readonly SeedOptions _seedOptions =
+        _factory.GetSeedOptions();
+    private static readonly IItem _item =
+        _factory.GetItemSeeder().GetItem(1, "facet");
 
     [Fact]
     public void TypeHasTagAttribute()
@@ -366,7 +362,7 @@ public sealed class __NAME__PartSeederTest
         TestHelper.AssertPartMetadata(p!);
 
         // TODO: assert properties like:
-        // Assert.NotEmpty(p!.Works);
+        // Assert.NotEmpty(p!.Entries);
     }
 }
 ```
