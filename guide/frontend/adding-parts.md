@@ -258,7 +258,7 @@ export interface __NAME__Part extends Part {
 export const __NAME___PART_TYPEID = "it.vedph.__PRJ__.__NAME__";
 
 /**
- * JSON schema for the __NAME__ part. This is used in the editor demo.
+ * JSON schema for the __NAME__ part.
  * You can use the JSON schema tool at https://jsonschema.net/.
  */
 export const __NAME___PART_SCHEMA = {
@@ -384,18 +384,18 @@ export class __PARTNAME__PartComponent
 
   private updateForm(model: __PARTNAME__Part): void {
     if (!model) {
-      this.form.reset();
+      this.form!.reset();
       return;
     }
     // TODO set controls values from model
-    this.form.markAsPristine();
+    this.form!.markAsPristine();
   }
 
   protected onModelSet(model: __PARTNAME__Part): void {
     this.updateForm(deepCopy(model));
   }
 
-  protected onThesauriSet(): void {
+  protected override onThesauriSet(): void {
     // TODO set entries from this.thesauri, e.g.:
     // const key = 'note-tags';
     // if (this.thesauri && this.thesauri[key]) {
@@ -410,14 +410,14 @@ export class __PARTNAME__PartComponent
     let part = this.model;
     if (!part) {
       part = {
-        itemId: this.itemId,
-        id: null,
+        itemId: this.itemId || '',
+        id: '',
         typeId: __PARTNAME___PART_TYPEID,
         roleId: this.roleId,
         timeCreated: new Date(),
-        creatorId: null,
+        creatorId: '',
         timeModified: new Date(),
-        userId: null,
+        userId: '',
         // TODO default values
       };
     }
@@ -430,7 +430,7 @@ export class __PARTNAME__PartComponent
 HTML template:
 
 ```html
-<form [formGroup]="form" (submit)="save()">
+<form [formGroup]="form!" (submit)="save()">
   <mat-card>
     <mat-card-header>
       <div mat-card-avatar>
