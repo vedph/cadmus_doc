@@ -848,25 +848,24 @@ export class Edit__NAME__PartService extends EditPartServiceBase {
 7. implement the feature **editor component** by making it extend `EditPartFeatureBase`, like in this code template:
 
 ```ts
-import { Component, OnInit } from "@angular/core";
-import { Router, ActivatedRoute } from "@angular/router";
-import { Observable } from "rxjs";
+import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { ThesauriSet } from "@myrmidon/cadmus-core";
-import { MatSnackBar } from "@myrmidon/cadmus-material";
 import {
   EditItemQuery,
   EditItemService,
   EditPartFeatureBase,
-} from "@myrmidon/cadmus-state";
+} from '@myrmidon/cadmus-state';
 
-import { Edit__NAME__PartService } from "./edit-__NAME__-part.service";
-import { Edit__NAME__PartQuery } from "./edit-__NAME__-part.query";
+import { Edit__NAME__PartService } from './edit-__NAME__-part.service';
+import { Edit__NAME__PartQuery } from './edit-__NAME__-part.query';
 
 @Component({
-  selector: "cadmus-__NAME__-part-feature",
-  templateUrl: "./__NAME__-part-feature.component.html",
-  styleUrls: ["./__NAME__-part-feature.component.css"],
+  selector: 'cadmus-__NAME__-part-feature',
+  templateUrl: './__NAME__-part-feature.component.html',
+  styleUrls: ['./__NAME__-part-feature.component.css'],
 })
 export class __NAME__PartFeatureComponent
   extends EditPartFeatureBase
@@ -894,7 +893,7 @@ export class __NAME__PartFeatureComponent
   public ngOnInit(): void {
     // TODO: select your thesauri if required, e.g.:
     // this.initEditor(['note-tags']);
-    this.initEditor(["your", "thesauri", "ids", "here"]);
+    this.initEditor(['your', 'thesauri', 'ids', 'here']);
   }
 }
 ```
@@ -906,9 +905,9 @@ HTML template:
 <cadmus-__NAME__-part
   [itemId]="itemId"
   [roleId]="roleId"
-  [model]="part$ | async"
+  [model]="$any(part$ | async)"
   (modelChange)="save($event)"
-  [thesauri]="thesauri$ | async"
+  [thesauri]="(thesauri$ | async) || undefined"
   (editorClose)="close()"
   (dirtyChange)="onDirtyChange($event)"
 ></cadmus-__NAME__-part>
