@@ -631,7 +631,7 @@ export class __MODEL__sPartComponent
 HTML:
 
 ```html
-<form [formGroup]="form" (submit)="save()">
+<form [formGroup]="form!" (submit)="save()">
   <mat-card>
     <mat-card-header>
       <div mat-card-avatar>
