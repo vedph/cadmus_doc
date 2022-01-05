@@ -460,7 +460,7 @@ As this is a frequent case, here is a start template for parts consisting only i
 import { Component, OnInit } from "@angular/core";
 import { FormControl, FormBuilder, Validators } from "@angular/forms";
 
-import { deepCopy } from '@myrmidon/ng-tools';
+import { deepCopy, NgToolsValidators } from '@myrmidon/ng-tools';
 import { DialogService } from '@myrmidon/ng-tools';
 import { AuthJwtService } from '@myrmidon/auth-jwt-login';
 import { ModelEditorComponentBase } from "@myrmidon/cadmus-ui";
@@ -503,7 +503,8 @@ export class __MODEL__sPartComponent
     this._editedIndex = -1;
     this.tabIndex = 0;
     // form
-    this.entries = formBuilder.control([], Validators.required);
+    this.entries = formBuilder.control([],
+      NgToolsValidators.strictMinLengthValidator(1));
     this.form = formBuilder.group({
       entries: this.entries,
     });
@@ -526,7 +527,7 @@ export class __MODEL__sPartComponent
     this.updateForm(deepCopy(model));
   }
 
-  protected onThesauriSet(): void {
+  protected override onThesauriSet(): void {
     // TODO: thesauri e.g.:
     // let key = 'ms-materials';
     // if (this.thesauri && this.thesauri[key]) {
@@ -540,7 +541,7 @@ export class __MODEL__sPartComponent
     let part = this.model;
     if (!part) {
       part = {
-        itemId: this.itemId,
+        itemId: this.itemId || '',
         id: "",
         typeId: __MODEL__S_PART_TYPEID,
         roleId: this.roleId,
@@ -556,10 +557,10 @@ export class __MODEL__sPartComponent
   }
 
   public add__NAME__(): void {
-    const unit: __MODEL__ = {
-      // TODO set parts
+    const entry: __MODEL__ = {
+      // TODO set properties
     };
-    this.entries.setValue([...this.entries.value, unit]);
+    this.entries.setValue([...this.entries.value, entry]);
     this.edit__NAME__(this.entries.value.length - 1);
   }
 
