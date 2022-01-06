@@ -93,7 +93,20 @@ If you are going to use the [external bibliography API](https://github.com/vedph
 window.__env.biblioApiUrl = 'http://localhost:61691/api/';
 ```
 
-In this case typically you will also need to install `@myrmidon/cadmus-part-biblio-ui`, which provides the corresponding frontend.
+In this case typically you will also need to install `@myrmidon/cadmus-biblio-core @myrmidon/cadmus-biblio-api @myrmidon/cadmus-biblio-ui @myrmidon/cadmus-part-biblio-ui`, which provide the corresponding frontend. Later, in your app's `part-editor-keys.ts`, remember to setup the route to the bibliography part editor like:
+
+```ts
+import { EXT_BIBLIOGRAPHY_PART_TYPEID } from '@myrmidon/cadmus-part-biblio-ui';
+
+// ...
+
+export const PART_EDITOR_KEYS: PartEditorKeys = {
+  [EXT_BIBLIOGRAPHY_PART_TYPEID]: {
+    part: BIBLIO,
+  },
+  // ... etc.
+};
+```
 
 (2) in `angular.json`, under `projects/APPNAME/architect/build/options/assets`:
 
