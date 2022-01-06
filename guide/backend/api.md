@@ -13,9 +13,7 @@ The reference project for Cadmus API is [Cadmus API](https://github.com/vedph/ca
 
 ## Creating the Project
 
-1. create a new ASP.NET Core 5.0 web API project (no authentication) named `Cadmus<PRJ>Api`.
-
-![creating API project](./img/b01_create-project.png)
+1. create a new ASP.NET Core 6.0 web API project (no authentication) named `Cadmus<PRJ>Api`: select `None` for `Authentication type`, uncheck `Configure for HTTPS` and `Enable Docker`, check `Use controllers` and `Enable OpenAPI support`.
 
 2. remove the mock `WeatherForecast.cs` class and its corresponding `WeatherForecastController.cs` class from the `Controllers` folder.
 
@@ -44,10 +42,18 @@ The reference project for Cadmus API is [Cadmus API](https://github.com/vedph/ca
 
 ## Settings
 
-Add these settings to `appsettings.json` (replace `__PRJ__` with your project's name). Feel free to customize them as required. Please notice that all the sensitive data like users and passwords are there only for illustration purposes, and they will be overwritten by environment variables from the hosting server.
+Add these settings to `appsettings.json` (replace `__PRJ__` with your project's name). Feel free to customize them as required. Please notice that all the sensitive data like users and passwords are there only for illustration purposes, and they will be overwritten by environment variables set in the hosting server.
 
 ```json
 {
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft": "Warning",
+      "Microsoft.Hosting.Lifetime": "Information"
+    }
+  },
+  "AllowedHosts": "*",
   "ConnectionStrings": {
     "Default": "mongodb://localhost:27017/{0}",
     "Index": "Server=localhost;Database={0};Uid=root;Pwd=mysql;"
@@ -55,9 +61,6 @@ Add these settings to `appsettings.json` (replace `__PRJ__` with your project's 
   "DatabaseNames": {
     "Auth": "cadmus-__PRJ__-auth",
     "Data": "cadmus-__PRJ__"
-  },
-  "Server": {
-    "UseHSTS": false
   },
   "Serilog": {
     "ConnectionString": "mongodb://localhost:27017/{0}-log",
@@ -73,8 +76,6 @@ Add these settings to `appsettings.json` (replace `__PRJ__` with your project's 
   },
   "AllowedOrigins": [
     "http://localhost:4200",
-    "http://www.fusisoft.it/",
-    "https://www.fusisoft.it/"
   ],
   "Seed": {
     "ProfileSource": "%wwwroot%/seed-profile.json",
@@ -112,7 +113,8 @@ Add these settings to `appsettings.json` (replace `__PRJ__` with your project's 
   },
   "Indexing": {
     "IsEnabled": true,
-    "DatabaseType": "mysql"
+    "DatabaseType": "mysql",
+    "IsGraphEnabled": false
   },
   "Mailer": {
     "IsEnabled": false,
@@ -151,17 +153,17 @@ namespace Cadmus__PRJ__Api
     /// <summary>
     /// Program.
     /// </summary>
-    public sealed class Program
+    public static class Program
     {
         private static void DumpEnvironmentVars()
         {
             Console.WriteLine("ENVIRONMENT VARIABLES:");
             IDictionary dct = Environment.GetEnvironmentVariables();
-            List<string> keys = new List<string>();
+            List<string> keys = new();
             var enumerator = dct.GetEnumerator();
             while (enumerator.MoveNext())
             {
-                keys.Add(((DictionaryEntry)enumerator.Current).Key.ToString());
+                keys.Add(((DictionaryEntry)enumerator.Current).Key.ToString()!);
             }
 
             foreach (string key in keys.OrderBy(s => s))
@@ -217,7 +219,7 @@ namespace Cadmus__PRJ__Api
                         Debug.WriteLine($"Serilog:ConnectionString override = {cs}");
                         Console.WriteLine($"Serilog:ConnectionString override = {cs}");
 
-                        Dictionary<string, string> dct = new Dictionary<string, string>
+                        Dictionary<string, string> dct = new()
                         {
                             { "Serilog:ConnectionString", cs }
                         };
@@ -251,7 +253,7 @@ namespace Cadmus__PRJ__Api
 
 ## Startup
 
-Use this template to replace the code in `Startup.cs` (replace `__PRJ__` with your project's name):
+Use this template for `Startup.cs` (replace `__PRJ__` with your project's name; in ASP.NET 6 web project you will need to add this file):
 
 ```cs
 using System;
@@ -467,8 +469,7 @@ namespace Cadmus__PRJ__Api
                 {
                     options.JsonSerializerOptions.PropertyNamingPolicy =
                         JsonNamingPolicy.CamelCase;
-                })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+                });
 
             // authentication
             ConfigureAuthServices(services);
@@ -506,6 +507,17 @@ namespace Cadmus__PRJ__Api
             services.AddSingleton<IItemIndexFactoryProvider>(_ =>
                 new StandardItemIndexFactoryProvider(
                     indexCS));
+
+            // graph repository
+            services.AddSingleton<IGraphRepository>(_ =>
+            {
+                var repository = new MySqlGraphRepository();
+                repository.Configure(new SqlOptions
+                {
+                    ConnectionString = indexCS
+                });
+                return repository;
+            });
 
             // swagger
             ConfigureSwaggerServices(services);
