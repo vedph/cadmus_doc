@@ -70,7 +70,7 @@ public sealed class __NAME__Part : PartBase
     /// can optionally be passed to this method for those parts requiring
     /// to access further data.</param>
     /// <returns>The pins.</returns>
-    public override IEnumerable<DataPin> GetDataPins(IItem item)
+    public override IEnumerable<DataPin> GetDataPins(IItem item = null)
     {
         // TODO: build pins, eventually using DataPinBuilder like this:
         //DataPinBuilder builder = new DataPinBuilder(
