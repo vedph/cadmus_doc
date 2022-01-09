@@ -459,9 +459,10 @@ As this is a frequent case, here is a start template for parts consisting only i
 ```ts
 import { Component, OnInit } from "@angular/core";
 import { FormControl, FormBuilder, Validators } from "@angular/forms";
+import { take } from "rxjs/operators";
 
 import { deepCopy, NgToolsValidators } from '@myrmidon/ng-tools';
-import { DialogService } from '@myrmidon/ng-tools';
+import { DialogService } from '@myrmidon/ng-mat-tools';
 import { AuthJwtService } from '@myrmidon/auth-jwt-login';
 import { ModelEditorComponentBase } from "@myrmidon/cadmus-ui";
 import { ThesaurusEntry } from "@myrmidon/cadmus-core";
@@ -470,7 +471,6 @@ import {
   __MODEL__sPart,
   __MODEL__S_PART_TYPEID,
 } from "../__MODEL__-part";
-import { take } from "rxjs/operators";
 
 /**
  * __MODEL__sPart editor component.
@@ -516,11 +516,11 @@ export class __MODEL__sPartComponent
 
   private updateForm(model: __MODEL__sPart): void {
     if (!model) {
-      this.form.reset();
+      this.form!.reset();
       return;
     }
     this.entries.setValue(model.entries || []);
-    this.form.markAsPristine();
+    this.form!.markAsPristine();
   }
 
   protected onModelSet(model: __MODEL__sPart): void {
