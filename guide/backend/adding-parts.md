@@ -568,16 +568,9 @@ public sealed class __NAME__PartTest
     //     List<DataPin> pins = part.GetDataPins(null).ToList();
     //     Assert.Single(pins);
 
-    //     DataPin pin = pins[0];
-    //     Assert.Equal(part.ItemId, pin.ItemId);
-    //     Assert.Equal(part.Id, pin.PartId);
-    //     Assert.Equal(part.RoleId, pin.RoleId);
-    //     Assert.Equal("tag", pin.Name);
-    //     Assert.Equal("some-tag", pin.Value);
-    //     // another way:
-    //     pin = pins.Find(p => p.Name == "id" && p.Value == "steph");
+    //     DataPin? pin = pins.Find(p => p.Name == "id" && p.Value == "steph");
     //     Assert.NotNull(pin);
-    //     TestHelper.AssertPinIds(part, pin);
+    //     TestHelper.AssertPinIds(part, pin!);
     // }
 }
 ```
