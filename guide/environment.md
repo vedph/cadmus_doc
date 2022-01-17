@@ -2,27 +2,36 @@
 
 When developing on a single machine, I setup my environment as follows:
 
-- a Docker container for MongoDB, named `mongo`.
-- a Docker container for MySql, named `mysql`.
-- [Visual Studio Community Edition](https://visualstudio.microsoft.com/vs/community/) for the backend.
-- [NodeJS](https://nodejs.org/en/download/) and Angular for the frontend.
-- [VSCode](https://code.visualstudio.com/download) for the frontend.
+1. a Docker container for MongoDB, named `mongo`.
+2. a Docker container for MySql, named `mysql`.
+3. [Visual Studio Community Edition](https://visualstudio.microsoft.com/vs/community/) for the backend.
+4. [NodeJS](https://nodejs.org/en/download/): use the LTS version.
+5. [Angular CLI](https://angular.io/cli): this requires NodeJS. Both NodeJS and Angular are used for the frontend.
+6. [VSCode](https://code.visualstudio.com/download) to be used as the frontend editor.
 
-## Angular
+Note that you can either install MySql and MongoDB the usual way, or use a Docker-based service. I prefer the latter because it gives you more freedom and does not pollute my workstation with stuff I have then to maintain; yet, you can perfectly go with the former solution, which probably is easier. In this case, just install them and you are ready to go without requiring Docker.
 
-To update to the latest version:
+If you are installing your databases rather than using Docker containers for them, just accept all the defaults during setup. For MySql you also need to setup a root user; I usually add an internal root user named `root` with password=`mysql`; these are the defaults in Cadmus. Of course you can change them (in the connection strings); but it's easier if you stick to this convention. This won't hurt anyway, because you will use MySql only in your local machine for development.
 
-```ps1
-npm uninstall -g @angular/cli
-npm cache verify
+## Angular CLI
+
+To install Angular CLI globally:
+
+```bash
 npm install -g @angular/cli@latest
+```
+
+To upgrade it:
+
+```bash
+npm upgrade -g @angular/cli
 ```
 
 ## MongoDB
 
 **Windows**: to run a mongo container persisting data in the host via a volume in `c:\users\<USERNAME>\data\mongo`:
 
-```ps1
+```bash
 docker run --name mongo -d -p 27017:27017 --volume c:/users/dfusi/dockerVolMongo/db:/data/db mongo --noauth
 ```
 
@@ -37,7 +46,7 @@ Some database clients:
 
 **Windows**: to run a mysql container storing data in host through a volume in `c:\data\mysql`:
 
-```ps1
+```bash
 docker run --name mysql -d -e MYSQL_ROOT_PASSWORD=mysql -v c:/data/mysql:/var/lib/mysql -p 3306:3306 mysql --default-authentication-plugin=mysql_native_password
 ```
 

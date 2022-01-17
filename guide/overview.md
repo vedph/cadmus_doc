@@ -11,12 +11,13 @@ In what follows, the project's name (e.g. `Itinera`, `Pura`, `Tgr`, `Bdm`...) is
 
 ## Backend
 
-1. [create the backend models](./backend/core.md).
-2. [create the backend API](./backend/api.md).
+1. [create the backend models](./backend/core.md)
+2. [add CLI plugins](./backend/cli.md): this is required only if you want to use the [Cadmus CLI tool](https://github.com/vedph/cadmus_tool) with your parts.
+3. [create the backend API](./backend/api.md)
 
 Step 1 is required only if you are going to add new models (parts/fragments). If you are just reusing existing models, you can proceed directly to step 2.
 
 ## Frontend
 
-1. [create the frontend app](./frontend/creating.md) the frontend with its part/fragment editors libraries.
+1. [create the frontend app](./frontend/creating.md) the frontend with its part/fragment editors libraries
 2. [adding parts](./frontend/adding-parts.md) and [fragments](./frontend/adding-fragments.md)
