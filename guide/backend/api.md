@@ -256,18 +256,10 @@ namespace Cadmus__PRJ__Api
 Use this template for `Startup.cs` (replace `__PRJ__` with your project's name; in ASP.NET 6 web project you will need to add this file):
 
 ```cs
-using System;
-using System.IO;
 using System.Text;
 using System.Text.Json;
 using MessagingApi;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
@@ -285,8 +277,10 @@ using Cadmus.Index.Config;
 using Cadmus.Api.Services.Auth;
 using Cadmus.Api.Services.Messaging;
 using Cadmus.Api.Services;
-using System.Linq;
 using Microsoft.AspNetCore.HttpOverrides;
+using Cadmus.Index.Graph;
+using Cadmus.Index.MySql;
+using Cadmus.Index.Sql;
 using Cadmus.__PRJ__.Services;
 
 namespace Cadmus__PRJ__Api
@@ -612,13 +606,13 @@ Inside the `messages` folder you can customize the message templates as you pref
 
 ```yml
 # Stage 1: base
-FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
 # Stage 2: build
-FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY ["Cadmus__PRJ__Api/Cadmus__PRJ__Api.csproj", "Cadmus__PRJ__Api/"]
 # copy local packages to avoid using a NuGet custom feed, then restore
