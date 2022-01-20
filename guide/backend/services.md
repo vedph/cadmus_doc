@@ -1,5 +1,10 @@
 # Backend Part Services
 
+- [Backend Part Services](#backend-part-services)
+  - [Adding Project](#adding-project)
+  - [Adding Repository Provider](#adding-repository-provider)
+  - [Adding Part Seeder Factory Provider](#adding-part-seeder-factory-provider)
+
 Typically, when dealing with your own project having its parts, you also add a services library to provide API with ready to use services for getting a repository and a set of seeders configured for the parts to use in that project. These include all the parts you specifically add to your projects, and all the parts imported from other libraries. All these are glued into these services.
 
 So, you can create the backend services library for your project in the same solution containing the parts specific to that project. If instead you are just importing parts from other libraries, typically adding the services directly to the API project is enough.
@@ -44,7 +49,9 @@ install-package Cadmus.Seed.Philology.Parts
 <Version>1.0.0</Version>
 ```
 
-7. add a `PRJRepositoryProvider.cs` class with a content like this:
+## Adding Repository Provider
+
+1. add a `PRJRepositoryProvider.cs` class with a content like this:
 
 ```cs
 using System;
@@ -128,7 +135,9 @@ namespace Cadmus.__PRJ__.Services
 }
 ```
 
-8. add a `PRJPartSeederFactoryProvider.cs` class with a content like this:
+## Adding Part Seeder Factory Provider
+
+1. add a `PRJPartSeederFactoryProvider.cs` class with a content like this:
 
 ```cs
 using Cadmus.Core.Config;
