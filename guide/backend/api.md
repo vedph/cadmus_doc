@@ -40,6 +40,28 @@ The reference project for Cadmus API is [Cadmus API](https://github.com/vedph/ca
   - `Cadmus.Seed.<PRJ>.Parts`
   - `Cadmus.<PRJ>.Services`
 
+From inside Visual Studio, you can open the Package Manager Console and enter commands like:
+
+```bash
+install-package AspNetCore.Identity.Mongo
+install-package Cadmus.Api.Controllers
+install-package Cadmus.Api.Models
+install-package Cadmus.Api.Services
+install-package Microsoft.AspNetCore.Authentication.JwtBearer
+install-package Microsoft.AspNetCore.Mvc.NewtonsoftJson
+install-package Microsoft.Extensions.Configuration
+install-package Newtonsoft.Json
+install-package Polly
+install-package Serilog
+install-package Serilog.AspNetCore
+install-package Serilog.Exceptions
+install-package Serilog.Extensions.Hosting
+install-package Serilog.Sinks.Console
+install-package Serilog.Sinks.File
+install-package Serilog.Sinks.MongoDB
+install-package Swashbuckle.AspNetCore
+```
+
 ## Settings
 
 Add these settings to `appsettings.json` (replace `__PRJ__` with your project's name). Feel free to customize them as required. Please notice that all the sensitive data like users and passwords are there only for illustration purposes, and they will be overwritten by environment variables set in the hosting server.
@@ -376,7 +398,7 @@ namespace Cadmus__PRJ__Api
                 IConfigurationSection jwtSection = Configuration.GetSection("Jwt");
                     string key = jwtSection["SecureKey"];
                     if (string.IsNullOrEmpty(key))
-                        throw new ApplicationException("Required JWT SecureKey not found");
+                        throw new InvalidOperationException("Required JWT SecureKey not found");
 
                     options.SaveToken = true;
                     options.RequireHttpsMetadata = false;
