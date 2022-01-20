@@ -542,7 +542,7 @@ namespace Cadmus__PRJ__Api
             // Install-Package Serilog.Exceptions Serilog.Sinks.MongoDB
             // https://github.com/RehanSaeed/Serilog.Exceptions
             string maxSize = Configuration["Serilog:MaxMbSize"];
-            services.AddSingleton<ILogger>(_ => new LoggerConfiguration()
+            services.AddSingleton<Serilog.ILogger>(_ => new LoggerConfiguration()
                 .MinimumLevel.Information()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                 .Enrich.WithExceptionDetails()
