@@ -672,9 +672,8 @@ HTML:
 </form>
 ```
 
-Typically you should edit each single entry in a component, similar to the following template:
+Typically you should edit each single entry in a component (generated with `ng g component <NAME>-editor` where NAME is the model's name, e.g. `cod-binding-editor` for the `cod-bindings-part` component - remember to export it both from the library's module and from its barrel `public-api.ts` file), similar to the following template:
 
-```ts
 ```ts
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
