@@ -15,7 +15,7 @@ For what follows please see the reference [shell app repository](https://github.
 
 To start with, just create a new Angular app with routing support and add Angular Material to it. Eventually, you will add a number of libraries with your own models and editors.
 
-(1) create a new Angular app: `ng new cadmus-<PRJ>-app --prefix cadmus`: add routing and use CSS.
+(1) create a new Angular app: `ng new cadmus-<PRJ>-app`: add routing and use CSS.
 
 (2) enter the newly created directory and add Angular Material support: `ng add @angular/material` (Indigo/Pink theme - or whatever you prefer -, setup typography styles=yes, setup animations=yes).
 

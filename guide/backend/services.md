@@ -126,7 +126,7 @@ namespace Cadmus.__PRJ__.Services
             {
                 ConnectionString = string.Format(
                     _configuration.GetConnectionString("Default"),
-                    _configuration.GetValue<string>("DatabaseName"))
+                    _configuration.GetValue<string>("DatabaseNames:Data"))
             });
 
             return repository;
