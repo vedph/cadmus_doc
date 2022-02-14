@@ -15,6 +15,16 @@ So you need these two CLI providers:
 
 Templates follow for each of them.
 
+## Creating Project
+
+1. in your backend models solution, add a new NET 6 library project named `Cadmus.Cli.Plugin.__PRJ__` where `__PRJ__` is your project name (e.g. `Pura`).
+
+2. whithin that solution, add reference to the parts project and to the seeder project.
+
+3. add NuGet packages `Cadmus.Cli.Core`, `Cadmus.Mongo`.
+
+4. add the two classes for the providers.
+
 ## CLI Cadmus Repository Provider
 
 Template (replace `__PRJ__` with your project name):
@@ -49,7 +59,7 @@ namespace Cadmus.Cli.Plugin.__PRJ__
         /// <summary>
         /// Gets or sets the connection string.
         /// </summary>
-        public string ConnectionString { get; set; }
+        public string? ConnectionString { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the
@@ -61,6 +71,8 @@ namespace Cadmus.Cli.Plugin.__PRJ__
             _map.Add(new[]
             {
                 // TODO: define all your libraries here...
+                // typically you copy from Cadmus.__PRJ__.Services
+                // e.g.:
                 // Cadmus.Parts
                 typeof(NotePart).GetTypeInfo().Assembly,
                 // Cadmus.Philology.Parts
@@ -89,7 +101,7 @@ namespace Cadmus.Cli.Plugin.__PRJ__
 
             repository.Configure(new MongoCadmusRepositoryOptions
             {
-                ConnectionString = string.Format(ConnectionString, database)
+                ConnectionString = string.Format(ConnectionString!, database)
             });
 
             return repository;
@@ -120,12 +132,12 @@ using System.Reflection;
 namespace Cadmus.Cli.Plugin.__PRJ__
 {
     /// <summary>
-    /// CLI part seeder factory provider for PURA.
-    /// Tag: <c>cli-seeder-factory-provider.pura</c>.
+    /// CLI part seeder factory provider for __PRJ__.
+    /// Tag: <c>cli-seeder-factory-provider.__PRJ__</c>.
     /// </summary>
     /// <seealso cref="ICliPartSeederFactoryProvider" />
-    [Tag("cli-seeder-factory-provider.pura")]
-    public class __PRJ__CliPartSeederFactoryProvider
+    [Tag("cli-seeder-factory-provider.__PRJ__")]
+    public sealed class __PRJ__CliPartSeederFactoryProvider
         : ICliPartSeederFactoryProvider
     {
         public PartSeederFactory GetFactory(string profile)
@@ -136,6 +148,9 @@ namespace Cadmus.Cli.Plugin.__PRJ__
             // build the tags to types map for parts/fragments
             Assembly[] seedAssemblies = new[]
             {
+                // TODO: your seeders here...
+                // // typically you copy from Cadmus.__PRJ__.Services
+                // e.g.:
                 // Cadmus.Seed.Parts
                 typeof(NotePartSeeder).Assembly,
                 // Cadmus.Seed.Philology.Parts
