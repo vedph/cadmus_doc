@@ -133,6 +133,8 @@ sudo npm cache verify
 sudo npm install -g @angular/cli@latest
 ```
 
+Once installed, upgrade globally with `npm upgrade -g @angular/cli`.
+
 ## Mac
 
 - download and install Docker for Desktop from <https://docs.docker.com/docker-for-mac/install/>. As for Windows, it already includes docker compose.
