@@ -62,7 +62,39 @@ Check for installation: `docker --version`.
 
 ### Ubuntu - Docker-Compose
 
-Install Docker compose:
+Docker compose now comes as a plugin, which is automatically installed by the desktop versions of Docker for Windows/MacOS. As for Linux, you install it with the commands shown here.
+
+#### Docker Compose V2
+
+This is taken from <https://www.rockyourcode.com/how-to-install-docker-compose-v2-on-linux-2021/>:
+
+1. find the latest release with the v2 tag at <https://github.com/docker/compose/tree/v2> (e.g. 2.2.3).
+
+2. ensure that the Docker CLI plugins directory exists:
+
+```bash
+mkdir -p ~/.docker/cli-plugins
+```
+
+3. download the compose CLI plugin (here replace version `2.2.3` with the latest one):
+
+```bash
+curl -sSL https://github.com/docker/compose/releases/download/v2.2.3/docker-compose-linux-x86_64 -o ~/.docker/cli-plugins/docker-compose
+```
+
+4. make it executable:
+
+```bash
+chmod +x ~/.docker/cli-plugins/docker-compose
+```
+
+5. check with: `docker compose version`.
+
+Remember that docker V2 being a plugin no more uses dashes (like `docker-compose`) but rather spaces (like `docker compose`).
+
+#### Docker Compose V1
+
+Just for reference, here are the commands used to install the old V1 version:
 
 ```bash
 sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
@@ -103,4 +135,4 @@ sudo npm install -g @angular/cli@latest
 
 ## Mac
 
-- download and install Docker for Desktop from <https://docs.docker.com/docker-for-mac/install/>. As for Windows, it includes docker-compose.
+- download and install Docker for Desktop from <https://docs.docker.com/docker-for-mac/install/>. As for Windows, it already includes docker compose.
