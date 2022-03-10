@@ -526,6 +526,7 @@ export class __MODEL__sPartComponent
         i === this._editedIndex ? entry : e
       )
     );
+    this.entries.markAsDirty();
     this.edit__NAME__(-1);
   }
 
@@ -542,6 +543,7 @@ export class __MODEL__sPartComponent
           const entries = [...this.entries.value];
           entries.splice(index, 1);
           this.entries.setValue(entries);
+          this.entries.markAsDirty();
         }
       });
   }
@@ -555,6 +557,7 @@ export class __MODEL__sPartComponent
     entries.splice(index, 1);
     entries.splice(index - 1, 0, entry);
     this.entries.setValue(entries);
+    this.entries.markAsDirty();
   }
 
   public move__NAME__Down(index: number): void {
@@ -566,6 +569,7 @@ export class __MODEL__sPartComponent
     entries.splice(index, 1);
     entries.splice(index + 1, 0, entry);
     this.entries.setValue(entries);
+    this.entries.markAsDirty();
   }
 }
 ```

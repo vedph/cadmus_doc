@@ -133,7 +133,7 @@ sudo npm cache verify
 sudo npm install -g @angular/cli@latest
 ```
 
-Once installed, upgrade globally with `npm upgrade -g @angular/cli`.
+Once installed, upgrade globally with `npm update -g @angular/cli`.
 
 ## Mac
 
