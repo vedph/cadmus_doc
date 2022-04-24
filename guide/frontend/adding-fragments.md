@@ -182,8 +182,8 @@ Sample HTML template:
 ```ts
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormControl, Validators } from "@angular/forms";
-import { AuthService } from "@myrmidon/cadmus-api";
-import { deepCopy } from "@myrmidon/cadmus-core";
+import { AuthJwtService } from '@myrmidon/auth-jwt-login';
+import { deepCopy } from '@myrmidon/ng-tools';
 import { DialogService, ModelEditorComponentBase } from "@myrmidon/cadmus-ui";
 import { take } from "rxjs/operators";
 
@@ -206,7 +206,7 @@ export class __NAME__FragmentComponent
   public entries: FormControl;
 
   constructor(
-    authService: AuthService,
+    authService: AuthJwtService,
     formBuilder: FormBuilder,
     private _dialogService: DialogService
   ) {
@@ -582,14 +582,14 @@ Define the corresponding HTML template like:
 <cadmus-current-item-bar></cadmus-current-item-bar>
 <div class="base-text">
   <cadmus-decorated-token-text
-    [baseText]="baseText$ | async"
-    [locations]="[frLoc]"
+    [baseText]="$any(baseText$ | async)"
+    [locations]="[$any(frLoc)]"
   ></cadmus-decorated-token-text>
 </div>
 <cadmus-__NAME__-fragment
-  [model]="fragment$ | async"
+  [model]="$any(fragment$ | async)"
   (modelChange)="save($event)"
-  [thesauri]="thesauri$ | async"
+  [thesauri]="$any(thesauri$ | async)"
   (editorClose)="close()"
   (dirtyChange)="onDirtyChange($event)"
 ></cadmus-__NAME__-fragment>
