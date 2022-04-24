@@ -76,11 +76,12 @@ If you want to infer a schema in the [JSON schema tool](https://jsonschema.net/)
 Code template:
 
 ```ts
-import { Component, OnInit } from "@angular/core";
-import { FormBuilder, FormControl, Validators } from "@angular/forms";
-import { Fragment, ThesaurusEntry, deepCopy } from "@myrmidon/cadmus-core";
-import { AuthService } from "@myrmidon/cadmus-api";
-import { ModelEditorComponentBase, DialogService } from "@myrmidon/cadmus-ui";
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { AuthJwtService } from '@myrmidon/auth-jwt-login';
+import { Fragment, ThesaurusEntry } from '@myrmidon/cadmus-core';
+import { ModelEditorComponentBase } from '@myrmidon/cadmus-ui';
+import { deepCopy } from '@myrmidon/ng-tools';
 import { __NAME__Fragment } from "../__NAME__-fragment";
 
 /**
@@ -100,7 +101,7 @@ export class __NAME__FragmentComponent
   // TODO: add tag entries if required, e.g.:
   // public tagEntries: ThesaurusEntry[] | undefined;
 
-  constructor(authService: AuthService, formBuilder: FormBuilder) {
+  constructor(authService: AuthJwtService, formBuilder: FormBuilder) {
     super(authService);
     // form
     // TODO: add your controls, e.g.:
@@ -117,7 +118,7 @@ export class __NAME__FragmentComponent
 
   private updateForm(model: __NAME__Fragment): void {
     if (!model) {
-      this.form.reset();
+      this.form!.reset();
       return;
     }
     // TODO: set form controls from model, e.g.:
