@@ -119,8 +119,6 @@ In this case, to build a graph of relationships we need to merge two different s
 
 Yet, when requiring to define a complex network of relationships, we'd rather need to add a huge number of connections across objects which are designed to live in isolation. This can be done without sacrificing the editor's architecture, by adopting a more abstract level of representation.
 
-Here I'm presenting a design to include this functionality in any Cadmus editor; this is a generalized solution, even though emerging from the requirements of a specific project.
-
 ## Mappings
 
 The mapping between Cadmus source data (items and parts) and nodes is defined by a number of node mappings.
@@ -135,7 +133,7 @@ At the input side of mappings, there are these types of sources:
 
 2. **part** with pins referred to a **single** entity (e.g. a person bio part). This usually emits nodes attached to the node mapped from the container item.
 
-3. **part** with pins referred to **multiple** entities (a collection part, like one containing a list of decorations). In this case, if the part is to be used in relations it is assumed that the part emits data pins ending with a `/<ID>` suffix, where `<ID>` is the ID used to designate each entry in the part. For instance, should you have 2 decorations in a part, named `angel-1v` and `demon-2r`, and among the pins of each decoration is one representing its color named `color`, we expect the color pins for these two decorations to be `color/angel-1v` and `color/demon-2r`. This way, the mappings processor can know how to extract an ID for each decoration starting from the matched pin, by simply extracting the final part of the pin's name after the last dot. The mappings here usually emit 1 entity for each entry with an `eid` pin, linked to the entity derived from the container item.
+3. **part** with pins referred to **multiple** entities (a collection part, like one containing a list of decorations). In this case, if the part is to be used in relations it is assumed that the part emits data pins ending with a `/<ID>` suffix, where `<ID>` is the ID used to designate each entry in the part. For instance, should you have 2 decorations in a part, named `angel-1v` and `demon-2r`, and among the pins of each decoration is one representing its color named `color`, we expect the color pins for these two decorations to be `color/angel-1v` and `color/demon-2r`. This way, the mappings processor can know how to extract an ID for each decoration starting from the matched pin, by simply extracting the final part of the pin's name after the last slash. The mappings here usually emit 1 entity for each entry with an `eid` pin, linked to the entity derived from the container item.
 
 Before illustrating these scenarios in more details, we must discuss the different identifiers used in the mapping process. In this document, these are referred to with SID (source ID), UID (entity's URI-based ID), and EID (entry's ID).
 
@@ -145,16 +143,20 @@ The entity source ID (SID for short) is calculated so that the same sources alwa
 
 a) for **items**:
 
-1. the GUID of the source (item).
-2. if node comes from group or facet, the suffix `|group` or `|facet`. On passage, note that the group ID can be composite (e.g. `alpha/beta`); in this case, a mapping producing nodes for groups emits several nodes, one for each component. The top component is the first in the group ID, followed by its children (in the above sample, `beta` is child of `alpha`). Each of these nodes has an additional suffix for the component ordinal, preceded by `|`.
+1. the _GUID_ of the source (item).
+2. if the node comes from a group or a facet, the suffix `|group` or `|facet`. On passage, note that the group ID can be composite (using slash, e.g. `alpha/beta`); in this case, a mapping producing nodes for groups emits several nodes, one for each component. The top component is the first in the group ID, followed by its children (in the above sample, `beta` is child of `alpha`). Each of these nodes has an additional suffix for the component ordinal, preceded by `|`.
 
-Examples: `76066733-6f81-48dd-a653-284d5be54cfb`,`76066733-6f81-48dd-a653-284d5be54cfb|group`, `76066733-6f81-48dd-a653-284d5be54cfb|group|2`.
+Examples:
+
+- `76066733-6f81-48dd-a653-284d5be54cfb`: an entity derived from an item.
+- `76066733-6f81-48dd-a653-284d5be54cfb|group`: an entity derived from an item's group.
+- `76066733-6f81-48dd-a653-284d5be54cfb|group|2`: an entity derived from the 2nd component of an item's composite group.
 
 b) for part's **pins**:
 
 1. the _GUID_ of the source (part).
 2. if the part has a role ID, the _role ID_ preceded by `:`.
-3. the source _pin name_ preceded by `|`. If the pin name in the entity mapping is `eid` or starts with `eid@` (the pin name reserved to represent an entity ID, either simple or composite), then its value as it is must be appended after another `|`. For instance, say we have an `eid` pin from a decoration entry inside a decorations part. If `eid`=`angel-1v`, the SID will be e.g. `76066733-6f81-48dd-a653-284d5be54cfb|eid|angel-1v`.
+3. the source _pin name_ preceded by `|`. If the pin name in the entity mapping is `eid` or starts with `eid@` (the pin name reserved to represent an entity ID, either simple or composite), then its value as it is must be appended after another `|`. For instance, say we have an `eid` pin from a decoration entry, inside a decorations part. If `eid`=`angel-1v`, the SID will be like `76066733-6f81-48dd-a653-284d5be54cfb|eid|angel-1v`.
 
 The algorithm building the SID is idempotent, so you can run it any time being confident that the same input will always produce the same output. This is ensured by the fact that GUIDs are unique by definitions, and EIDs must be unique by convention, as each is defined by users to uniquely identify an entry.
 
@@ -162,40 +164,44 @@ The SID always starts with the container's GUID, so even though two users enter 
 
 ### Entity ID (UID)
 
-The entity ID is a shortened URI (where a conventional prefix replaces the namespace), calculated as defined by the entity mapping. As we want a human-friendly UID, the UID is essentially derived from the designated entity label. Further, an optional prefix is usually added to provide some more structure; and a numeric suffix can be used to disambiguate among different UIDs.
+The entity ID is a shortened URI (where a conventional prefix replaces the namespace), calculated as defined by the entity mapping. As we want a human-friendly UID, the UID is essentially derived from the designated entity _label_.
+
+Further, an optional _prefix_ is usually added to provide some more structure; and a numeric _suffix_ can be used to disambiguate among different UIDs.
 
 Thus, the UID is built by concatenating these elements:
 
 (1) **prefix**: an optional prefix defined in the node mapping.
 
-(2) **label**: the label is used as the main source to build the UID. Unless entered manually, the label is built from the label template defined in the node mapping. Once the label has been built, it is used here with filtering, i.e. the label whitespaces are normalized and replaced with underscores, the result is trimmed, only letters, digits, underscores (`_`) and dashes (`-`) are preserved, letters are all lowercased, and diacritics are removed.
+(2) **label**: the label is used as the main source to build the UID. Unless entered manually, the label is built from the label template defined in the node mapping. Once the label has been built, it is used here with filtering, i.e. the label whitespaces are normalized and replaced with underscores; the result is trimmed; only letters, digits, underscores (`_`) and dashes (`-`) are preserved; letters are all lowercased; and diacritics are removed.
 
-In the result of 1+2, any sequence of `/` is reduced to a single `/`. This makes it easier to build templates without caring about separators: e.g. a prefix template `x:persons/{group-id}/` where there is no group would generate `x:persons//`, which becomes `x:persons/`.
+Note: in the result of (1)+(2), any sequence of `/` is reduced to a single `/`. This makes it easier to build templates without caring about separators: e.g. a prefix template `x:persons/{group-id}/` where there is no group would generate `x:persons//`, which becomes `x:persons/`.
 
-(3) `#` + a numeric **suffix** is added if the result (1+2) happens to be found in `sid_lookup`.`unsuffixed`. If found, a numeric suffix is added (generated from the DB to be granted as unique).
+(3) `#` + a numeric **suffix** is added if the result of (1)+(2) happens to be already present (i.e. technically it is found in `sid_lookup`.`unsuffixed`). In this case, a numeric suffix is added (generated from the DB to be granted as unique).
 
-Note that for item titles a couple of conventions dictate that:
+Note that for _item titles_ a couple of conventions dictate that:
 
 - if the title ends with `[#...]`, then the text between `[#` and `]` is assumed as the UID. The only processing is prepending the prefix defined in the mapping, if any.
 - if the title ends with `[@...]`, then the text between `[@` and `]` is prefixed to the generated UID. If the mapping already defines a prefix, it gets prepended to this one.
 
-Once the UID gets generated, the SID/UID pair is saved in `sid_lookup`.
+Once the UID gets generated, a SID/UID pair is saved in `sid_lookup`. This links the source identified by SID (essentially, an item or a part's pin) to the entity identified by UID.
 
-For instance, an item emits an entity whose label is mapped to its title. Say the title is `Barbato da Sulmona [@correspondents]`, with a `person` facet ID, and the item's mapping has:
+For instance, say an item representing a person emits an entity, whose label is mapped to its title; the title is `Barbato da Sulmona [@correspondents]`, with a `person` facet ID. Say our item's mapping has:
 
 - `source_type` = 0 (item).
-- `prefix` = `persons/{title-prefix}/`, which gets resolved into `persons/correspondents/`.
-- `label_template` = `{title}`, resulting in `barbato_da_sulmona` (while the final prefix `correspondents`, as defined by convention, is cut into `title-prefix`).
+- `prefix` = `x:persons/{title-prefix}/`, which gets resolved into `x:persons/correspondents/`.
+- `label_template` = `{title}`, resulting in `barbato_da_sulmona` (while the final prefix `correspondents`, as defined by convention, was moved into `title-prefix`).
 
-we would then get `persons/correspondents/barbato_da_sulmona`.
+According to this mapping, we would then get the UID `x:persons/correspondents/barbato_da_sulmona`.
 
 ### Entry ID (EID)
 
-A third type of identifiers is represented by the "entry" ID. A Cadmus part corresponding to a single entity is a single "entry". In this case, its ID is simply provided by the container's item. For instance, a person-information part inside a person item just adds data to the unique entity represented by the item. So, the target entity is just the one derived from the item.
+A third type of identifiers is represented by the "entry" ID. A Cadmus part corresponding to a single entity is a single "entry". In this case, its ID is simply provided by the part's item.
 
-Conversely, a manuscript's decorations part is a collection of decorations, each corresponding to an entry and eventually having its EID (exposed via an `eid` pin). All the entries with EIDs get mapped into entities.
+For instance, a person-information part inside a person item just adds data to the unique entity represented by the item (=the person). So, the target entity is just the one derived from the item.
 
-Thus, here we call EIDs the identifiers provided by users for entries in a Cadmus collection-part. When present, such EIDs are used to build the final portion of part SIDs, as illustrated above.
+Conversely, a manuscript's decorations part is a collection of decorations, each corresponding to an entry, eventually having its EID (exposed via an `eid` pin). All the entries with EIDs get mapped into entities.
+
+Thus, here we call EIDs the identifiers provided by users for entries in a Cadmus collection-part. When present, such EIDs are used to build the final portion of part SIDs, as illustrated [above](#source-id-sid).
 
 Even though this is a remote option, EIDs can be composed using `@` to represent nesting.
 
@@ -204,40 +210,59 @@ Even though this is a remote option, EIDs can be composed using `@` to represent
 A node mapping maps the source defined by SID into:
 
 - a _single node_ (e.g. an item becomes a node).
-- the _predicate + object_ of a triple whose subject is the node mapped by the parent mapping (e.g. the label of an item becomes predicate = `rdfs:label` and object = literal).
+- the _predicate + object_ of a triple whose subject is the node mapped by the parent mapping. For instance, the title of an item can be mapped to a triple with implicit subject (the entity corresponding to the item) + predicate = `rdfs:label`, and object = literal value of the title).
 
-When the mapping has no object defined, it just generates a node. Otherwise, it also adds a triple connecting it to either a literal value or to another node. Node mappings can be nested. A child mapping always generates a triple.
+When the mapping has no object defined, it just generates a _node_. Otherwise, it also adds a _triple_ connecting it to either a literal value, or another node.
 
-The node mapping has this model:
+Finally, such node mappings can be _nested_. By definition, a child mapping always generates a triple, as it stems from a parent, which must be connected to it via a predicate.
 
-- `id` (int) PK AI: the ID of the mapping.
+The node mapping's **model** contains properties which define its metadata and input (the matching rules and its position in the mappings hierarchy) and its output (the generated nodes):
+
+(a) **input** and metadata:
+
+- `id` (int) PK AI: the ID of the mapping. This is used internally.
 - `parent_id` (int) FK: the parent mapping's ID, if any. This is used when the mapping emits a triple, and defines its subject as the target node of the parent mapping.
 - `source_type` (int): for children mappings this value is inherited.
-  - 0=user
-  - 1=item
-  - 2=item's facet
-  - 3=item's group. This can be composite (e.g. `alpha/beta`).
-  - 4=pin.
+  - 0=user: this means that the node has been manually inserted by user, rather than automatically generated by a mapping. So, a mapping never has this value, which gets assigned to all the manually inserted nodes.
+  - 1=item;
+  - 2=item's facet;
+  - 3=item's group. This can be composite (e.g. `alpha/beta`);
+  - 4=part's pin.
 - `name` (string): a user-friendly name for this mapping.
-- `ordinal` (int): usually 0. This can be set to any number to force some mappings to be executed before or after some other mappings in the context of the same depth level in the mappings hierarchy.
+- `ordinal` (int): usually 0. This can be set to any number different from 0 to force some mappings to be executed before or after some other mappings, in the context of the same depth level in the mappings hierarchy.
 - `facet_filter` (string): the optional facet filter, used to match this mapping when mapping items.
 - `group_filter` (string): the optional group filter, used to match this mapping when mapping items. This is a regular expression pattern which must be matched against the item's title for this mapping to apply.
-- `flags_filter` (int): the optional item's flags filter, used to match this mapping when mapping items. All the flags must be matched.
+- `flags_filter` (int): the optional item's flags filter, used to match this mapping when mapping items. All the flags specified must be matched.
 - `title_filter` (string): the optional item's title filter. This is a regular expression pattern which must be matched against the item's title for this mapping to apply.
-- `part_type` (string): the source part type ID.
-- `part_role` (string): the optional part's role ID.
-- `pin_name` (string): the optional pin's name. By convention, the name may end with 1 or more `@*` suffixes, each representing a scope (EID) for the pin. For instance, for a scoped pin `color@angel-1v` (=`color` pin assigned to an entry identified as `angel-1v`), the pin name to match is `color@*`, where `*`=any characters different from `@`. See below for more about pin name matching when suffixes are involved.
-- `prefix` (string): the optional prefix to prepend to the target UID. It can have placeholders `{title-prefix}` (when the prefix is extracted from the item's title according to UID generation conventions), `{facet-id}` and `{group-id}`, all meaningful only when dealing with items.
-- `label_template`: an optional template with placeholders `{title}` (=item's title, after processing conventions), `{group-id}` (=group ID), `{facet-id}` (=facet ID), `{pin-name}` (=source pin's name, without the EID `@...` suffix if any), `{pin-eid}` (=source pin's EID suffix; this can be followed by `:N` where N is a 1-based, positive or negative integer, representing the EID component to pick from the whole EID suffix when this is composite), `{pin-value}` (=the pin's value). This is used to generate a label for the target node (in turn, the label is used as a source for building the UID). It is null when the mapping just produces links. In this case, no node gets generated, and the subject of the triple is the node generated by the nearest ancestor mapping. The label mapping can use the prefix/UID conventions defined for item's titles, e.g. you can end it with `[@...]` for a prefix (to be appended to the prefix defined by the mapping itself if any), or with `[#...]` for a UID, which bypasses UID generation from the label and just picks it as it is, eventually prefixed according to the `prefix` property.
+- `part_type` (string): the source part's type ID to match.
+- `part_role` (string): the optional part's role ID to match.
+- `pin_name` (string): the optional pin's name to match. By convention, the name may end with 1 or more `@*` suffixes, each representing a scope (EID) for the pin. For instance, for a scoped pin `color@angel-1v` (=`color` pin assigned to an entry identified as `angel-1v`), the pin name to match is `color@*`, where `*`=any characters different from `@`. See below for more about pin name matching when at-suffixes are involved.
+- `description` (string): an optional human-readable description of this mapping.
+
+(b) **output**:
+
+- `prefix` (string): the optional prefix to prepend to the target UID. It can have 3 placeholders, all meaningful only when dealing with items:
+  - `{title-prefix}` (when the prefix is extracted from the item's title according to UID generation conventions);
+  - `{facet-id}`;
+  - `{group-id}`.
+- `label_template`: an optional label template. This is used to generate a label for the target node; in turn, the generated label is used as a source for building the UID. The template is null when the mapping just produces links. In this case, no node gets generated, and the subject of the triple is the node generated by the nearest ancestor mapping.
+The label mapping can use the prefix/UID conventions defined for item's titles, e.g. you can end it with `[@...]` for a prefix (to be appended to the prefix defined by the mapping itself if any), or with `[#...]` for a UID, which bypasses UID generation from the label and just picks it as it is, eventually prefixed according to the `prefix` property.
+The label template can include these placeholders:
+  - `{title}`: item's title, after processing its conventions.
+  - `{group-id}`: group ID.
+  - `{facet-id}`: facet ID.
+  - `{pin-name}`: source pin's name, without the EID `@...` suffix if any.
+  - `{pin-eid}`: source pin's EID suffix; this can be followed by `:N` where N is a 1-based, positive or negative integer, representing the EID component to pick from the whole EID suffix, when this is composite.
+  - `{pin-value}`: the pin's value.
 - `triple_s` (string): optional, this is used to specify a subject different from the parent mapping's node (which is the default): values are the same of `triple_o`.
-- `triple_p` (string): the triple's predicate:
-  - null when not used (=creating a target node only)
-  - the UID of the target predicate
+- `triple_p` (string): the triple's predicate. This can be:
+  - null when not used (=creating a target node only, no triple);
+  - the UID of the target predicate;
   - a macro:
-    - `$pin-name` (as above for `label_template`). This can be used when the pin name already is a UID, e.g. `x:date@birth=1300` where `x:date` is the UID and `birth` the EID; the result of this macro would thus be `x:date`. The corresponding node must be already defined, as it's a property and we require metadata for them.
+    - `$pin-name` (as above for `label_template`). This can be used when the pin name already is a UID, like in e.g. `x:date@birth=1300`, where `x:date` is the UID, and `birth` the EID; the result of this macro would thus be `x:date`. The corresponding node must be already defined, as it's a property, and properties require some preset metadata.
 - `triple_o` (string): the object, which can be:
-  - null, when just creating a single target node.
-  - a constant UID. In this case the target node will be created if not existing.
+  - null, when just creating a single target node (no triple);
+  - a constant UID. Differently from properties, in this case the target node will be created if it does not exist;
   - a macro:
     - `$parent`: the UID of the node generated by the parent mapping. This is a shortcut for `$ancestor:1`.
     - `$ancestor:N`: the UID of the node generated by the ancestor mapping specified by N: 1=parent, 2=parent of parent, and so forth.
@@ -249,58 +274,74 @@ The node mapping has this model:
     - `$pin-value`: the literal value got from the source pin.
     - `$pin-uid`: the UID got from the source pin value, when this is an EID; in this case too, if the target node does not exist it will be created. Both `$pin-value` and `$pin-uid` draw their value from the pin's value, but this value is used either as a literal or as an UID.
     - `$slot:TEMPLATE`: resolve this into the UID of the node generated by the mapping with a corresponding `slot` property set. The argument here is a template. This property defines a virtual "slot" named after the value of the template, whose value is the UID of the target node for this mapping. For instance, if you are mapping an EID pin like `eid`=`angel-1v`, and you set slot=`{pin-value}`, then the UID of the node generated by that mapping will be saved in the temporary mapper state under a slot keyed with the value of the template, e.g. `angel-1v`. This allows other mappings to refer to this node via the same slot key, using the `$slot` macro.
-- `triple_o_prefix`: the optional prefix to prepend to the newly generated node with O role in the triple. This can be used when nodes are implicitly created when setting their relation with the subject. Value and processing is the same as `prefix`.
-- `reversed` (boolean): true if when the object is a node S and O as defined by this mapping should be swapped, thus reversing the generated triple.
+- `triple_o_prefix`: the optional prefix to prepend to the _newly generated_ node with O role in the triple. This can be used when nodes are implicitly created, when setting their relation with the subject. Value and processing is the same as `prefix`.
+- `reversed` (boolean): true if, when the object is a node, S and O as defined by this mapping should be swapped, thus reversing the generated triple.
 - `slot` (string): an optional slot key specification for temporarily storing the target node UID of this mapping into the mapper's state. This can be used to later reference this UID from a triple mapping which is not child of this mapping, as it happens for pin mappings (pins are mapped one after another from a flat list, even when they use EIDs to represent a hierarchy).
-- `description` (string): an optional human-readable description of this mapping.
 
 ### Scoped Pin Matching
 
-Scoped pins are identified in mapping rules with a `@*` for each level, from the top to the bottom level. The `*` is a placeholder for the actual EID.
+As we have seen, most mapping rules match part's pins, usually by their name. Here, a special case of pin matching is represented by scoped pins.
 
-If the pin name matched by the mapping rule is declared as the entity ID name (usually this happens for `eid`, `eid2`, etc.), its value will provide the value for the `*` placeholder in descendant mappings. It is the "EID-designated" pin.
+_Scoped pins_ are identified in mapping rules with a `@*` for each level, from top to bottom. The `*` here is a placeholder for the actual EID value found in the pin's name.
+
+If the pin name matched by the mapping rule is declared as the entry ID name (usually this happens for `eid`, `eid2`, etc.), its value will provide the value for the `*` placeholder in descendant mappings. It is the "EID-designated" pin.
 
 When matching against a pin name, each `*` placeholder is filled by the EID-designated pin value in the hierarchy.
 
-Example: say we have events in a part; each event has an EID (`eid`), and can have a list of children EIDs (`eid2`) representing other entities variously related to the event. These pins are EID-designated pins.
+For instance, say we have events in a part; each event has an EID (`eid`), and can have a list of children EIDs (`eid2`) representing other entities variously and directly related to the event. These pins are EID-designated pins.
 
-The pins are:
+Imagine an events part where the user can edit a list of events for a person. He adds an event, assigns an arbitrary, user-friendly name to it just for reference, and selects its type from a list (connected to some ontology of event types, like birth, wedding, death, etc.). Then, he can optionally connect this event to other entities which are somehow directly related to it: in this case, he adds a related entity, and selects the type of its relation with the event from some list (again derived from some ontology).
 
-- `eid`=`birth` (arbitrary name for the event).
-- `eid`=`wedding1` (arbitrary name for the event).
-- `eid`=`wedding2` (arbitrary name for the event).
+So, say we have entered in a person events part three events: one birth, and two weddings. The pins derived from this events part are, for each of the events:
 
-- `type@birth`=`x:birth` (type for `birth` event).
+1. the pins identifiying every single event (our "entries", thus conventionally named `eid`): these are all arbitrary names assigned to each event, unique within the part, usually following some user-friendly convention. In this case, we want to represent a person's birth event, and a couple of his/her weddings.
+2. the type of each event, from some preset list.
+3. any number of entities related to each event. Every related entity has an ID and a relation type (from some preset list).
 
-- `eid2@wedding1`=`x:laura` (a related entity)
-- `type@wedding1`=`x:wedding` (type for `wedding1` event)
-- `rel@wedding1@x:laura`=`x:spouse` (type of relation between `wedding1` and `x:laura`, i.e. the rel pin attached to the entry `x:laura` attached to the entry `wedding1`).
+Thus our pins could be like:
 
-- `eid2@wedding2`=`x:maria` (a related entity)
-- `type@wedding2`=`x:wedding` (type for `wedding2` event)
-- `rel@wedding2@x:maria`=`x:spouse`.
+(1) for the birth event:
 
-Mapping rules:
+- `eid`=`birth`: arbitrary name for the event.
+- `type@birth`=`x:birth`: type for the `birth` event (a URI from some ontology).
 
-- M1: match pin `eid`.
-  - M2 child of M1: match pin `type@*`.
-  - M3 child of M1: match pin `eid2@*`.
-    - M4 child of M3: match pin `rel@*@*`.
+(2) first wedding event:
 
-Their application history:
+- `eid`=`wedding1`: arbitrary name for the event.
+- `type@wedding1`=`x:wedding`: type for the `wedding1` event.
+- `eid2@wedding1`=`x:laura`: the URI of an entity directly related to the event.
+- `rel@wedding1@x:laura`=`x:spouse`: the type of relation between `wedding1` and `x:laura`, i.e. the `rel` pin attached to the entry `x:laura` in turn attached to the entry `wedding1`.
 
-- **M1** : `eid=birth`: this produces a birth event node, unless already present. \*1=`birth`.
+(3) second wedding event:
 
-  - **M1>M2** for `type@birth` : `type@birth=x:birth`. Output: triple "S=birth ($parent); P=`a`; O=`x:birth`". Creates O node if not existing.
-  - **M1>M3** for `eid2@birth`: no match (no entity involved in the birth besides the subject).
+- `eid`=`wedding2`
+- `type@wedding2`=`x:wedding`
+- `eid2@wedding2`=`x:maria`
+- `rel@wedding2@x:maria`=`x:spouse`
 
-- **M1** : `eid=wedding1`. Output: wedding1 event node, unless already present; \*1=`wedding1`.
+The job of the part ends here. The part knows nothing about how we are going to use these pins; it just emits them in a flat list. We already use pins to provide a quick search independently from the underlying model's complexity. We now use it also for generating RDF graphs. It is up to mapping rules using these pins to generate or update a graph.
 
-  - **M1>M2** for `type@wedding1` : `type@wedding1`=`x:wedding`. Output: triple "S=wedding1 ($parent); P=`a`; O=`x:wedding`". Creates O node if not existing.
-  - **M1>M3** for `eid2@wedding1` : `eid2@wedding1=x:laura`. \*2=`x:laura`. Output: node for laura, unless already present.
-  - **M1>M3>M4** for `rel@wedding1@x:laura` : `rel@wedding1@x:laura=x:spouse`. Output: triple "S=wedding1 ($ancestor:2); P=`x:spouse`; O=`x:laura` ($parent)".
+Our sample mapping rules can be schematized as follows, representing each mapping with `Mn` and just describing its behavior unformally:
 
-- **M1** : `eid=wedding2`: this produces a wedding2 event node, unless already present. \*1=`wedding2`. This has an application path similar to that explained for wedding1.
+- `M1`: match pin `eid`, i.e. this mapping will be applied to each entry, here corresponding to an event: here, `birth`, `wedding1`, and `wedding2`.
+  - `M2` (child of M1): match pin `type@*`. This matches any pin composed of 2 parts separated by `@`, whose first part is `type`.
+  - `M3` (child of M1): match pin `eid2@*`. Similarly, this matches any pin composed of 2 parts separated by `@`, whose first part is `eid2`, representing a directly related entity.
+    - `M4` child of `M3`: match pin `rel@*@*`. This matches any pin composed of 3 parts separated by `@`, whose first part is `rel` (relation), while the other parts represent the two ends of the relation.
+
+Such mappings are applied in this order:
+
+- **M1**: `eid=birth` => birth event node, unless already present: \*1=`birth`.
+
+  - **M1/M2**: `type@birth=x:birth` => triple S=`birth` ($parent); P=`a`; O=`x:birth`. The O node will be created if not existing; yet, in most cases it will already be present as the result of importing some ontology in the graph.
+  - **M1/M3**: no match (no `eid2@birth`, i.e. no entity involved in the birth besides the subject).
+
+- **M1**: `eid=wedding1` => wedding1 event node, unless already present; \*1=`wedding1`.
+
+  - **M1/M2**: `type@wedding1`=`x:wedding` => triple S=`wedding1` ($parent); P=`a`; O=`x:wedding` (O is created if not exists).
+  - **M1/M3**: `eid2@wedding1=x:laura` => Laura event node, unless already present: \*2=`x:laura`.
+  - **M1/M3/M4** for `rel@wedding1@x:laura` : `rel@wedding1@x:laura=x:spouse` => triple S=`wedding1` ($ancestor:2); P=`x:spouse`; O=`x:laura` ($parent).
+
+- **M1**: `eid=wedding2` => `wedding2` event node, unless already present. \*1=`wedding2`. This has an application path similar to that explained for `wedding1`.
 
 ## Data Model
 
