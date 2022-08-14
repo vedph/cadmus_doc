@@ -22,3 +22,7 @@ Step 1 is required only if you are going to add new models (parts/fragments). If
 
 1. [create the frontend app](./frontend/creating.md) the frontend with its part/fragment editors libraries
 2. [adding parts](./frontend/adding-parts.md) and [fragments](./frontend/adding-fragments.md)
+
+## Other Features
+
+1. [adding preview](adding-preview.md)
