@@ -138,6 +138,9 @@ Add these settings to `appsettings.json` (replace `__PRJ__` with your project's 
     "DatabaseType": "mysql",
     "IsGraphEnabled": false
   },
+  "Preview": {
+    "IsEnabled": true
+  },
   "Mailer": {
     "IsEnabled": false,
     "SenderEmail": "webmaster@fusisoft.net",
@@ -462,6 +465,49 @@ namespace Cadmus__PRJ__Api
             });
         }
 
+        private CadmusPreviewer GetPreviewer(IServiceProvider provider)
+        {
+            // get dependencies
+            ICadmusRepository repository =
+                    provider.GetService<IRepositoryProvider>().CreateRepository();
+            ICadmusPreviewFactoryProvider factoryProvider =
+                new StandardCadmusPreviewFactoryProvider();
+
+            // nope if disabled
+            if (!Configuration.GetSection("Preview").GetSection("IsEnabled")
+                .Get<bool>())
+            {
+                return new CadmusPreviewer(repository,
+                    factoryProvider.GetFactory("{}"));
+            }
+
+            // get profile source
+            ILogger logger = provider.GetService<ILogger>();
+            IHostEnvironment env = provider.GetService<IHostEnvironment>();
+            string path = Path.Combine(env.ContentRootPath,
+                "wwwroot", "preview-profile.json");
+            if (!File.Exists(path))
+            {
+                Console.WriteLine($"Preview profile expected at {path} not found");
+                logger.Error($"Preview profile expected at {path} not found");
+                return new CadmusPreviewer(repository,
+                    factoryProvider.GetFactory("{}"));
+            }
+
+            // load profile
+            Console.WriteLine($"Loading preview profile from {path}...");
+            logger.Information($"Loading preview profile from {path}...");
+            string profile;
+            using (StreamReader reader = new(new FileStream(
+                path, FileMode.Open, FileAccess.Read, FileShare.Read), Encoding.UTF8))
+            {
+                profile = reader.ReadToEnd();
+            }
+            CadmusPreviewFactory factory = factoryProvider.GetFactory(profile);
+
+            return new CadmusPreviewer(repository, factory);
+        }
+
         /// <summary>
         /// Configures the services.
         /// </summary>
@@ -535,6 +581,9 @@ namespace Cadmus__PRJ__Api
                 return repository;
             });
 
+            // previewer
+            services.AddSingleton(p => GetPreviewer(p));
+
             // swagger
             ConfigureSwaggerServices(services);
 
@@ -578,10 +627,18 @@ namespace Cadmus__PRJ__Api
                 app.UseExceptionHandler("/Error");
                 if (Configuration.GetValue<bool>("Server:UseHSTS"))
                 {
-                    Console.WriteLine("Using HSTS");
+                    Console.WriteLine("HSTS: yes");
                     app.UseHsts();
                 }
+                else Console.WriteLine("HSTS: no");
             }
+
+            if (Configuration.GetValue<bool>("Server:UseHttpsRedirection"))
+            {
+                Console.WriteLine("HttpsRedirection: yes");
+                app.UseHttpsRedirection();
+            }
+            else Console.WriteLine("HttpsRedirection: no");
 
             app.UseHttpsRedirection();
             app.UseRouting();
