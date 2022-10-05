@@ -88,9 +88,7 @@ This configures the previewer service. When preview is not enabled, this will ju
 (1) add packages:
 
 ```bash
-npm i @myrmidon/cadmus-text-block-view
-npm i @myrmidon/cadmus-preview-ui
-npm i @myrmidon/cadmus-preview-pg
+npm i @myrmidon/cadmus-text-block-view @myrmidon/cadmus-preview-ui @myrmidon/cadmus-preview-pg
 ```
 
 (2) import these modules in the app module:
