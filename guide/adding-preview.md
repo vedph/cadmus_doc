@@ -118,11 +118,15 @@ npm i @myrmidon/cadmus-text-block-view @myrmidon/cadmus-preview-ui @myrmidon/cad
 import { CadmusTextBlockViewModule } from '@myrmidon/cadmus-text-block-view';
 import { CadmusPreviewUiModule } from '@myrmidon/cadmus-preview-ui';
 import { CadmusPreviewPgModule } from '@myrmidon/cadmus-preview-pg';
-```
 
-- `CadmusTextBlockViewModule`
-- `CadmusPreviewUiModule`
-- `CadmusPreviewPgModule`
+// add to imports:
+// ...
+imports: [
+CadmusTextBlockViewModule,
+CadmusPreviewUiModule,
+CadmusPreviewPgModule,
+]
+```
 
 (3) in app routing module add the route:
 
