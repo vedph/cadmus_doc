@@ -16,6 +16,7 @@ Quick start:
 
 Just like the Cadmus project itself, this documentation is work in progress. Its main purpose is highlighting some conceptual points standing behind the general architecture of the system. For a more theoric and non-technical introduction to the Cadmus system, please see:
 
+- [Cadmus presentation website](https://cadmus.fusi-soft.com): this is under construction, and hosted in a tempoarary URL, but it provides a basic conceptual overview with the addition of some interactive tools.
 - [my seminar presentation at VeDPH](https://www.youtube.com/watch?v=lYykjz26TCg&feature=youtu.be)
 - D. Fusi, _Sailing for a Second Navigation: Paradigms in Producing Digital Content_, «SemRom» n.s. 7 (2018) 213-276.
 
