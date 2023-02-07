@@ -8,6 +8,8 @@
   - [Web](#web)
   - [Deployment](#deployment)
 
+⚠️ NOTE: FOR MOST PART, THIS DOCUMENTATION REFERS TO LEGACY CODE. PLEASE REFER TO THE [CADMUS PAGES](https://myrmex.github.io/overview/cadmus/) FOR UP-TO-DATE DOCUMENTATION AND SYSTEM OVERVIEW.
+
 Quick start:
 
 - [setting up Docker](./deploy/docker-setup.md)
